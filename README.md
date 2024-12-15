@@ -2,7 +2,7 @@
 Um Client para Minecraft 1.8.9
 
 # Creditos, Obrigado
-"[Cloud Client Dev]
+[Cloud Client Dev]
 UI, Mods, Huds, Helpers Systems
 
 [Sk1er]
