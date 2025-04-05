@@ -1,0 +1,107 @@
+package me.miki.shindo;
+
+import me.miki.shindo.events.EventManager;
+import me.miki.shindo.features.mods.ModManager;
+import me.miki.shindo.features.options.OptionManager;
+import me.miki.shindo.features.security.SecurityManager;
+import me.miki.shindo.features.settings.SettingManager;
+import me.miki.shindo.helpers.CpsHelper;
+import me.miki.shindo.helpers.MessageHelper;
+import me.miki.shindo.helpers.file.DownloadHelper;
+import me.miki.shindo.helpers.file.FileHelper;
+import me.miki.shindo.helpers.file.LanguageHelper;
+import me.miki.shindo.helpers.font.FontHelper;
+import net.minecraft.client.Minecraft;
+
+public class Shindo {
+
+    // IMPORTANT CONSTANTS HERE
+    private static Shindo INSTANCE = new Shindo();
+    private Minecraft mc =Minecraft.getMinecraft();
+
+
+    // INFO STUFF HERE
+    public static final String NAME =    "Shindo";
+    public static final String VERSION = "v1";
+    public static final String AUTHOR =  "MikiDevAHM";
+
+    // IMPORTANT VARIABLES AND FIELDS HERE
+    private EventManager eventManager;
+    private FileHelper fileHelper;
+    private DownloadHelper downloadHelper;
+    private LanguageHelper languageHelper;
+    private SettingManager settingManager;
+    private ModManager modManager;
+    private OptionManager optionManager;
+    private HudEditor hudEditor;
+    private SecurityManager securityManager;
+    private FontHelper fontHelper;
+    private CpsHelper cpsHelper;
+    private MessageHelper messageHelper;
+
+    // MAIN METHODS
+    public void startup() {
+
+
+        registerEvents(
+                fileHelper = new FileHelper(),
+                downloadHelper = new DownloadHelper(),
+                languageHelper = new LanguageHelper(),
+                cpsHelper = new CpsHelper(),
+                settingManager = new SettingManager(),
+                modManager = new ModManager(),
+                optionManager = new OptionManager(),
+                hudEditor = new HudEditor(),
+                fontHelper = new FontHelper(),
+                messageHelper = new MessageHelper(),
+                securityManager = new SecurityManager()
+        );
+
+        eventManager.register(this);
+    }
+
+    public void shutdown() {
+
+    }
+
+    // GETTERS
+    public static Shindo getInstance() { return INSTANCE; }
+
+    public EventManager getEventManager() { return eventManager; }
+
+    public FileHelper getFileHelper() { return fileHelper; }
+
+    public DownloadHelper getDownloadHelper() { return downloadHelper; }
+
+    public LanguageHelper getLanguageHelper() { return languageHelper; }
+
+    public SettingManager getSettingManager() { return settingManager; }
+
+    public ModManager getModManager() { return modManager; }
+
+    public OptionManager getOptionManager() { return optionManager; }
+
+    public HudEditor getHudEditor() { return hudEditor; }
+
+    public FontHelper getFontHelper() { return fontHelper; }
+
+    public CpsHelper getCpsHelper() { return cpsHelper; }
+
+    public MessageHelper getMessageHelper() { return messageHelper; }
+
+    public SecurityManager getSecurityManager() { return securityManager; }
+
+
+    private void registerEvents(Object... events) {
+        for (Object event : events) {
+            eventManager.register(event);
+        }
+    }
+
+
+
+
+
+
+
+}
