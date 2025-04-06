@@ -5,12 +5,10 @@
 
 package me.miki.shindo.ui.hudeditor.impl;
 
-import dev.cloudmc.Cloud;
-import dev.cloudmc.helpers.MathHelper;
-import dev.cloudmc.helpers.render.Helper2D;
 import me.miki.shindo.Shindo;
+import me.miki.shindo.helpers.MathHelper;
+import me.miki.shindo.helpers.render.Helper2D;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.common.MinecraftForge;
 
 public abstract class HudMod {
 
