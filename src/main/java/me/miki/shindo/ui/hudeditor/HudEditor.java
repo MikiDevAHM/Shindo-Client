@@ -143,6 +143,7 @@ public class HudEditor extends GuiScreen {
                         Shindo.getInstance().getModManager().getMod(sHudMod.getName()).isToggled() &&
                                 hudMod.isDragging() &&
                                 !sHudMod.equals(hudMod) &&
+                                !sHudMod.equals(hudMod) &&
                                 Style.isSnapping()
                 ) {
                     SnapPosition snap = getSnapPosition(hudMod, sHudMod);

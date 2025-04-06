@@ -2,20 +2,25 @@ package me.miki.shindo.events;
 
 import java.util.Iterator;
 
+/**
+ * Created by Hexeption on 18/12/2016.
+ */
 public class ArrayHelper<T> implements Iterable<T> {
+
+    //TODO: Comment out the code.
 
     private T[] elements;
 
     public ArrayHelper(final T[] array) {
+
         this.elements = array;
     }
 
-    @SuppressWarnings("unchecked")
     public ArrayHelper() {
+
         this.elements = (T[]) new Object[0];
     }
 
-    @SuppressWarnings("unchecked")
     public void add(final T t) {
 
         if (t != null) {
@@ -33,7 +38,6 @@ public class ArrayHelper<T> implements Iterable<T> {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public boolean contains(final T t) {
 
         Object[] array;
@@ -48,7 +52,6 @@ public class ArrayHelper<T> implements Iterable<T> {
         return false;
     }
 
-    @SuppressWarnings("unchecked")
     public void remove(final T t) {
 
         if (this.contains(t)) {
@@ -68,27 +71,32 @@ public class ArrayHelper<T> implements Iterable<T> {
     }
 
     public T[] array() {
+
         return (T[]) this.elements;
     }
 
     public int size() {
+
         return this.array().length;
     }
 
     public void set(final T[] array) {
+
         this.elements = array;
     }
 
     public T get(final int index) {
+
         return this.array()[index];
     }
 
-    @SuppressWarnings("unchecked")
     public void clear() {
+
         this.elements = (T[]) new Object[0];
     }
 
     public boolean isEmpty() {
+
         return this.size() == 0;
     }
 
@@ -101,16 +109,19 @@ public class ArrayHelper<T> implements Iterable<T> {
 
             @Override
             public boolean hasNext() {
+
                 return this.index < ArrayHelper.this.size() && ArrayHelper.this.get(this.index) != null;
             }
 
             @Override
             public T next() {
+
                 return ArrayHelper.this.get(this.index++);
             }
 
             @Override
             public void remove() {
+
                 ArrayHelper.this.remove(ArrayHelper.this.get(this.index));
             }
         };

@@ -58,6 +58,8 @@ public class Shindo {
                 securityManager = new SecurityManager()
         );
 
+        fontHelper.init();
+
         eventManager.register(this);
     }
 
