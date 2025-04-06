@@ -1654,6 +1654,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     {
         try
         {
+            // BORDERLESS EVENT IMPLEMENTATION
             BorderlessEvent event = new BorderlessEvent(!fullscreen);
             event.call();
 
@@ -1863,7 +1864,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 int i = Mouse.getEventButton();
                 KeyBinding.setKeyBindState(i - 100, Mouse.getEventButtonState());
 
-                // MOUSE EVENT
+                // MOUSE EVENT IMPLEMENTATION
                 MouseEvent event = new MouseEvent(i);
                 event.call();
 
@@ -2301,7 +2302,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             this.myNetworkManager.processReceivedPackets();
         }
 
+        // TICK EVENT IMPLEMENTATION
         new TickEvent().call();
+
         this.mcProfiler.endSection();
         this.systemTime = getSystemTime();
     }

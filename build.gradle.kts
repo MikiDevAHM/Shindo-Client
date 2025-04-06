@@ -43,6 +43,9 @@ dependencies {
     implementation("com.mojang:realms:1.7.59")
     implementation("com.mojang:authlib:1.5.21")
     implementation("tv.twitch:twitch:6.5")
+
+    // SHINDO LIBS
+    implementation(fileTree("/libs"))
 }
 
 kotlin {

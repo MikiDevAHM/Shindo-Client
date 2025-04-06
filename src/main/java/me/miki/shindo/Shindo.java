@@ -11,6 +11,7 @@ import me.miki.shindo.helpers.file.DownloadHelper;
 import me.miki.shindo.helpers.file.FileHelper;
 import me.miki.shindo.helpers.file.LanguageHelper;
 import me.miki.shindo.helpers.font.FontHelper;
+import me.miki.shindo.ui.hudeditor.HudEditor;
 import net.minecraft.client.Minecraft;
 
 public class Shindo {

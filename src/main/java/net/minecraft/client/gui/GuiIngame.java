@@ -6,6 +6,9 @@ import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+
+import me.miki.shindo.events.impl.RenderEvent;
+import me.miki.shindo.ui.hudeditor.HudEditor;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -373,6 +376,10 @@ public class GuiIngame extends Gui
                 int k = sr.getScaledWidth() / 2 - 90 + j * 20 + 2;
                 int l = sr.getScaledHeight() - 16 - 3;
                 this.renderHotbarItem(j, k, l, partialTicks, entityplayer);
+            }
+
+            if (!(mc.currentScreen instanceof HudEditor)) {
+                new RenderEvent(partialTicks).call();
             }
 
             RenderHelper.disableStandardItemLighting();

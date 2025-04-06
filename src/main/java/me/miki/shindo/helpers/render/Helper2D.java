@@ -92,7 +92,7 @@ public class Helper2D {
         } else {
             ColorHelper.color(color);
         }
-        ResourceLocation resourceLocation = new ResourceLocation(location);
+        ResourceLocation resourceLocation = new ResourceLocation("shindo/" + location);
         mc.getTextureManager().bindTexture(resourceLocation);
         GlStateManager.enableBlend();
         GL11.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

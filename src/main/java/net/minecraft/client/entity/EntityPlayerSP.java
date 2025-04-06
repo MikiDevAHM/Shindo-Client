@@ -1,5 +1,7 @@
 package net.minecraft.client.entity;
 
+import me.miki.shindo.events.impl.SendChatEvent;
+import me.miki.shindo.events.impl.UpdateEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -167,6 +169,9 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void onUpdate()
     {
+        // UPDATE EVENT IMPLEMENTATION
+        new UpdateEvent().call();
+
         if (this.worldObj.isBlockLoaded(new BlockPos(this.posX, 0.0D, this.posZ)))
         {
             super.onUpdate();
@@ -297,6 +302,12 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void sendChatMessage(String message)
     {
+        SendChatEvent event = new SendChatEvent(message);
+        event.call();
+        if (event.isCancelled()) {
+            return;
+        }
+        
         this.sendQueue.addToSendQueue(new C01PacketChatMessage(message));
     }
 
