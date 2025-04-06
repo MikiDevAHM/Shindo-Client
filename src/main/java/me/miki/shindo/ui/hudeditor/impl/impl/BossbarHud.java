@@ -5,15 +5,12 @@
 
 package me.miki.shindo.ui.hudeditor.impl.impl;
 
-import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.hudeditor.HudEditor;
-import dev.cloudmc.gui.hudeditor.impl.HudMod;
-import dev.cloudmc.helpers.render.GLHelper;
-import dev.cloudmc.helpers.render.Helper2D;
-import net.minecraft.client.gui.Gui;
+import me.miki.shindo.Shindo;
+import me.miki.shindo.events.EventTarget;
+import me.miki.shindo.events.impl.RenderEvent;
+import me.miki.shindo.helpers.render.GLHelper;
+import me.miki.shindo.ui.hudeditor.impl.HudMod;
 import net.minecraft.entity.boss.BossStatus;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class BossbarHud extends HudMod {
 
@@ -31,10 +28,10 @@ public class BossbarHud extends HudMod {
         GLHelper.endScale();
     }
 
-    @SubscribeEvent
-    public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
+    @EventTarget
+    public void onRender2D(RenderEvent e) {
         GLHelper.startScale(getX(), getY(), getSize());
-        if (Shindo.getInstance().getModManager().getMod(getName()).isToggled() && !(mc.currentScreen instanceof HudEditor)) {
+        if (Shindo.getInstance().getModManager().getMod(getName()).isToggled()) {
             if (BossStatus.bossName != null && BossStatus.statusBarTime > 0) {
                 renderBossHealth();
             }
