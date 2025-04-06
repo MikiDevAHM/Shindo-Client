@@ -32,6 +32,9 @@ public class OptionManager {
         addOption(new Option("Performance"));
         addOption(new Option("Rounded Corners", true));
 
+        addOption(new Option("Tweaks"));
+        addOption(new Option("Hit Delay Fix", true));
+
         addOption(new Option("Controls"));
         addOption(new Option("ModMenu Keybinding", Keyboard.KEY_RSHIFT));
     }
