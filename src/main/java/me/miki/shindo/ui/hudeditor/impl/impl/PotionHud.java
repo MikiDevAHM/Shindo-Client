@@ -5,19 +5,18 @@
 
 package me.miki.shindo.ui.hudeditor.impl.impl;
 
-import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.Style;
-import dev.cloudmc.gui.hudeditor.HudEditor;
-import dev.cloudmc.gui.hudeditor.impl.HudMod;
-import dev.cloudmc.helpers.render.GLHelper;
-import dev.cloudmc.helpers.render.Helper2D;
+import me.miki.shindo.Shindo;
+import me.miki.shindo.events.EventTarget;
+import me.miki.shindo.events.impl.RenderEvent;
+import me.miki.shindo.helpers.render.GLHelper;
+import me.miki.shindo.helpers.render.Helper2D;
+import me.miki.shindo.ui.Style;
+import me.miki.shindo.ui.hudeditor.impl.HudMod;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.Collection;
 
@@ -29,8 +28,8 @@ public class PotionHud extends HudMod {
     Potion potion2 = Potion.potionTypes[10];
     Potion potion3 = Potion.potionTypes[16];
 
-    public PotionHud(String name, int x, int y) {
-        super(name, x, y);
+    public PotionHud() {
+        super("Potion Status", 10, 10);
         setW(120);
         setH(30);
     }
@@ -60,11 +59,11 @@ public class PotionHud extends HudMod {
         GLHelper.endScale();
     }
 
-    @SubscribeEvent
-    public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
+    @EventTarget
+    public void onRender2D(RenderEvent e) {
         GLHelper.startScale(getX(), getY(), getSize());
         Collection<PotionEffect> collection = mc.thePlayer.getActivePotionEffects();
-        if (Shindo.getInstance().getModManager().getMod(getName()).isToggled() && !(mc.currentScreen instanceof HudEditor)) {
+        if (Shindo.getInstance().getModManager().getMod(getName()).isToggled()) {
             if (isModern()) {
                 if (isBackground() && !collection.isEmpty()) {
                     Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, 0x50000000, 0);

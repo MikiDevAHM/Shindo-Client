@@ -1,14 +1,14 @@
 package me.miki.shindo.features.security.impl;
 
 import me.miki.shindo.events.EventTarget;
-import me.miki.shindo.events.impl.PacketReciveEvent;
+import me.miki.shindo.events.impl.PacketReceiveEvent;
 import me.miki.shindo.features.security.Security;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 
 public class TeleportSecurity extends Security {
 
 	@EventTarget
-	public void onReceivePacket(PacketReciveEvent event) {
+	public void onReceivePacket(PacketReceiveEvent event) {
 		if (event.getPacket() instanceof S08PacketPlayerPosLook) {
 			
 			S08PacketPlayerPosLook pos = ((S08PacketPlayerPosLook) event.getPacket());

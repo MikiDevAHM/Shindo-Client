@@ -7,14 +7,14 @@ import java.nio.charset.StandardCharsets;
 
 import me.miki.shindo.Shindo;
 import me.miki.shindo.events.EventTarget;
-import me.miki.shindo.events.impl.PacketReciveEvent;
+import me.miki.shindo.events.impl.PacketReceiveEvent;
 import me.miki.shindo.features.security.Security;
 import net.minecraft.network.play.server.S48PacketResourcePackSend;
 
 public class ResourcePackSecurity extends Security {
 
 	@EventTarget
-	public void onReceivePacket(PacketReciveEvent event) {
+	public void onReceivePacket(PacketReceiveEvent event) {
         if (event.getPacket() instanceof S48PacketResourcePackSend) {
             S48PacketResourcePackSend pack = ((S48PacketResourcePackSend) event.getPacket());
 

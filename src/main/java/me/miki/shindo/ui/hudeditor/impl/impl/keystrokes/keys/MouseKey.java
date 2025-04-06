@@ -68,6 +68,6 @@ public class MouseKey {
     }
 
     private int getCPS(int mouseButton) {
-        return Cloud.INSTANCE.cpsHelper.getCPS(mouseButton);
+        return Shindo.getInstance().getCpsHelper().getCPS(mouseButton);
     }
 }

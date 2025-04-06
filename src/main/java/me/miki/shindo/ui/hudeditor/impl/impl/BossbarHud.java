@@ -9,13 +9,15 @@ import me.miki.shindo.Shindo;
 import me.miki.shindo.events.EventTarget;
 import me.miki.shindo.events.impl.RenderEvent;
 import me.miki.shindo.helpers.render.GLHelper;
+import me.miki.shindo.helpers.render.Helper2D;
 import me.miki.shindo.ui.hudeditor.impl.HudMod;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.boss.BossStatus;
 
 public class BossbarHud extends HudMod {
 
-    public BossbarHud(String name, int x, int y) {
-        super(name, x, y);
+    public BossbarHud() {
+        super("Bossbar", 10, 10);
     }
 
     @Override

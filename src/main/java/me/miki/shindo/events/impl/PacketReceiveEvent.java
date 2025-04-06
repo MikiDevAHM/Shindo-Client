@@ -3,11 +3,11 @@ package me.miki.shindo.events.impl;
 import me.miki.shindo.events.Event;
 import net.minecraft.network.Packet;
 
-public class PacketReciveEvent extends Event {
+public class PacketReceiveEvent extends Event {
 
     private Packet<?> packet;
 
-    public PacketReciveEvent(Packet<?> packet) {
+    public PacketReceiveEvent(Packet<?> packet) {
         this.packet = packet;
     }
 

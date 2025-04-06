@@ -5,13 +5,23 @@
 
 package me.miki.shindo.ui.hudeditor;
 
+import me.miki.shindo.Shindo;
+import me.miki.shindo.events.EventTarget;
+import me.miki.shindo.events.impl.KeyEvent;
+import me.miki.shindo.helpers.MathHelper;
+import me.miki.shindo.helpers.ResolutionHelper;
 import me.miki.shindo.helpers.animation.Animate;
 import me.miki.shindo.helpers.animation.Easing;
+import me.miki.shindo.helpers.render.GLHelper;
+import me.miki.shindo.helpers.render.Helper2D;
+import me.miki.shindo.ui.Style;
 import me.miki.shindo.ui.hudeditor.impl.HudMod;
 import me.miki.shindo.ui.hudeditor.impl.impl.*;
 import me.miki.shindo.ui.hudeditor.impl.impl.keystrokes.KeystrokesHud;
+import me.miki.shindo.ui.modmenu.ModMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -45,24 +55,18 @@ public class HudEditor extends GuiScreen {
      */
 
     public void init() {
-        addHudMod(new SprintHud("ToggleSprint", index, offset));
-        addHudMod(new SneakHud("ToggleSneak", index, offset));
-        addHudMod(new FpsHud("FPS", index, offset));
-        addHudMod(new KeystrokesHud("Keystrokes", index, offset));
+        addHudMod(new SprintHud());
+        addHudMod(new FpsHud());
+        addHudMod(new KeystrokesHud());
         addHudMod(new ArmorHud());
-        addHudMod(new CoordinatesHud("Coordinates", index, offset));
-        addHudMod(new ServerAddressHud("Server Address", index, offset));
-        addHudMod(new PingHud("Ping", index, offset));
-        addHudMod(new CpsHud("CPS", index, offset));
-        addHudMod(new PotionHud("Potion Status", index, offset));
-        addHudMod(new TimeHud("Time", index, offset));
-        addHudMod(new SpeedIndicatorHud("Speed Indicator", index, offset));
-        addHudMod(new BlockinfoHud("BlockInfo", index, offset));
-        addHudMod(new ReachdisplayHud("ReachDisplay", index, offset));
-        addHudMod(new DayCounterHud("Day Counter", index, offset));
-        addHudMod(new ScoreboardHud("Scoreboard", index, offset));
-        addHudMod(new BossbarHud("Bossbar", index, offset));
-        addHudMod(new DirectionHud("Direction", index, offset));
+        addHudMod(new CoordinatesHud());
+        addHudMod(new PingHud());
+        addHudMod(new CpsHud());
+        addHudMod(new PotionHud());
+        addHudMod(new TimeHud());
+        addHudMod(new ScoreboardHud());
+        addHudMod(new BossbarHud());
+
     }
 
     /**
@@ -83,8 +87,8 @@ public class HudEditor extends GuiScreen {
         animateLogo.update();
         GLHelper.startScissor(0, height / 2 - 78, width, 73);
         Shindo.getInstance().getFontHelper().size40.drawString(
-                Cloud.modName,
-                width / 2f - Shindo.getInstance().getFontHelper().size40.getStringWidth(Cloud.modName) / 2f,
+                Shindo.NAME,
+                width / 2f - Shindo.getInstance().getFontHelper().size40.getStringWidth(Shindo.NAME) / 2f,
                 height / 2f + 36 - animateLogo.getValueI(),
                 color
         );
@@ -92,7 +96,7 @@ public class HudEditor extends GuiScreen {
         Helper2D.drawPicture(
                 width / 2 - 25,
                 height / 2 - 8 - animateLogo.getValueI(),
-                50, 50, Style.getColor(70).getRGB(), "cloudlogo.png"
+                50, 50, Style.getColor(70).getRGB(), "logo.png"
         );
          */
         GLHelper.endScissor();
@@ -142,30 +146,9 @@ public class HudEditor extends GuiScreen {
                         Shindo.getInstance().getModManager().getMod(sHudMod.getName()).isToggled() &&
                                 hudMod.isDragging() &&
                                 !sHudMod.equals(hudMod) &&
-                                !sHudMod.equals(hudMod) &&
                                 Style.isSnapping()
                 ) {
-                    SnapPosition snap = new SnapPosition();
-                    snap.setSnapping(true);
-                    int snapRange = 5;
-                    if (MathHelper.withinBoundsRange(hudMod.getX(), sHudMod.getX(), snapRange))
-                        snap.setAll(sHudMod.getX(), sHudMod.getX(), false);
-                    else if (MathHelper.withinBoundsRange(hudMod.getX() + hudMod.getW() * hudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), snapRange))
-                        snap.setAll(sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize() - hudMod.getW() * hudMod.getSize(), false);
-                    else if (MathHelper.withinBoundsRange(hudMod.getX() + hudMod.getW() * hudMod.getSize(), sHudMod.getX(), snapRange))
-                        snap.setAll(sHudMod.getX(), sHudMod.getX() - hudMod.getW() * hudMod.getSize(), false);
-                    else if (MathHelper.withinBoundsRange(hudMod.getX(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), snapRange))
-                        snap.setAll(sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), false);
-                    else if (MathHelper.withinBoundsRange(hudMod.getY(), sHudMod.getY(), snapRange))
-                        snap.setAll(sHudMod.getY(), sHudMod.getY(), true);
-                    else if (MathHelper.withinBoundsRange(hudMod.getY() + hudMod.getH() * hudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), snapRange))
-                        snap.setAll(sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize() - hudMod.getH() * hudMod.getSize(), true);
-                    else if (MathHelper.withinBoundsRange(hudMod.getY() + hudMod.getH() * hudMod.getSize(), sHudMod.getY(), snapRange))
-                        snap.setAll(sHudMod.getY(), sHudMod.getY() - hudMod.getH() * hudMod.getSize(), true);
-                    else if (MathHelper.withinBoundsRange(hudMod.getY(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), snapRange))
-                        snap.setAll(sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), true);
-                    else
-                        snap.setSnapping(false);
+                    SnapPosition snap = getSnapPosition(hudMod, sHudMod);
 
                     if (snap.isSnapping()) {
                         if (!snap.isHorizontal()) {
@@ -185,6 +168,32 @@ public class HudEditor extends GuiScreen {
         Helper2D.drawPicture(15, height - 45, 30, 30, color, Style.isDarkMode() ? "icon/dark.png" : "icon/light.png");
         Helper2D.drawRoundedRectangle(60, height - animateSnapping.getValueI(), 40, 40, 2, Style.getColor(40).getRGB(), roundedCorners ? 0 : -1);
         Helper2D.drawPicture(65, height + 5 - animateSnapping.getValueI(), 30, 30, color, Style.isSnapping() ? "icon/grid.png" : "icon/nogrid.png");
+    }
+
+    @NotNull
+    private static SnapPosition getSnapPosition(HudMod hudMod, HudMod sHudMod) {
+        SnapPosition snap = new SnapPosition();
+        snap.setSnapping(true);
+        int snapRange = 5;
+        if (MathHelper.withinBoundsRange(hudMod.getX(), sHudMod.getX(), snapRange))
+            snap.setAll(sHudMod.getX(), sHudMod.getX(), false);
+        else if (MathHelper.withinBoundsRange(hudMod.getX() + hudMod.getW() * hudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), snapRange))
+            snap.setAll(sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize() - hudMod.getW() * hudMod.getSize(), false);
+        else if (MathHelper.withinBoundsRange(hudMod.getX() + hudMod.getW() * hudMod.getSize(), sHudMod.getX(), snapRange))
+            snap.setAll(sHudMod.getX(), sHudMod.getX() - hudMod.getW() * hudMod.getSize(), false);
+        else if (MathHelper.withinBoundsRange(hudMod.getX(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), snapRange))
+            snap.setAll(sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), false);
+        else if (MathHelper.withinBoundsRange(hudMod.getY(), sHudMod.getY(), snapRange))
+            snap.setAll(sHudMod.getY(), sHudMod.getY(), true);
+        else if (MathHelper.withinBoundsRange(hudMod.getY() + hudMod.getH() * hudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), snapRange))
+            snap.setAll(sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize() - hudMod.getH() * hudMod.getSize(), true);
+        else if (MathHelper.withinBoundsRange(hudMod.getY() + hudMod.getH() * hudMod.getSize(), sHudMod.getY(), snapRange))
+            snap.setAll(sHudMod.getY(), sHudMod.getY() - hudMod.getH() * hudMod.getSize(), true);
+        else if (MathHelper.withinBoundsRange(hudMod.getY(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), snapRange))
+            snap.setAll(sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), true);
+        else
+            snap.setSnapping(false);
+        return snap;
     }
 
     /**
@@ -289,12 +298,5 @@ public class HudEditor extends GuiScreen {
             }
         }
         return null;
-    }
-
-    @SubscribeEvent
-    public void onKey(InputEvent.KeyInputEvent e) {
-        if (Keyboard.isKeyDown(Shindo.getInstance().getOptionManager().getOptionByName("ModMenu Keybinding").getKey())) {
-            mc.displayGuiScreen(Shindo.getInstance().getHudEditor());
-        }
     }
 }

@@ -3,7 +3,7 @@ package me.miki.shindo.features.security.impl;
 import java.util.regex.Pattern;
 
 import me.miki.shindo.events.EventTarget;
-import me.miki.shindo.events.impl.PacketReciveEvent;
+import me.miki.shindo.events.impl.PacketReceiveEvent;
 import me.miki.shindo.events.impl.SendChatEvent;
 import me.miki.shindo.features.security.Security;
 import net.minecraft.network.play.server.S02PacketChat;
@@ -15,7 +15,7 @@ public class Log4jSecurity extends Security {
 	private Pattern pattern = Pattern.compile(".*\\$\\{[^}]*\\}.*");
 	
 	@EventTarget
-	public void onReceivePacket(PacketReciveEvent event) {
+	public void onReceivePacket(PacketReceiveEvent event) {
 		
 		 if (event.getPacket() instanceof S29PacketSoundEffect) {
 			 

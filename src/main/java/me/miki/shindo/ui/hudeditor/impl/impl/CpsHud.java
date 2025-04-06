@@ -5,19 +5,18 @@
 
 package me.miki.shindo.ui.hudeditor.impl.impl;
 
-import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.Style;
-import dev.cloudmc.gui.hudeditor.HudEditor;
-import dev.cloudmc.gui.hudeditor.impl.HudMod;
-import dev.cloudmc.helpers.render.GLHelper;
-import dev.cloudmc.helpers.render.Helper2D;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import me.miki.shindo.Shindo;
+import me.miki.shindo.events.EventTarget;
+import me.miki.shindo.events.impl.RenderEvent;
+import me.miki.shindo.helpers.render.GLHelper;
+import me.miki.shindo.helpers.render.Helper2D;
+import me.miki.shindo.ui.Style;
+import me.miki.shindo.ui.hudeditor.impl.HudMod;
 
 public class CpsHud extends HudMod {
 
-    public CpsHud(String name, int x, int y) {
-        super(name, x, y);
+    public CpsHud() {
+        super("CPS", 10, 10);
         setW(60);
         setH(20);
     }
@@ -52,10 +51,10 @@ public class CpsHud extends HudMod {
         GLHelper.endScale();
     }
 
-    @SubscribeEvent
-    public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
+    @EventTarget
+    public void onRender2D(RenderEvent e) {
         GLHelper.startScale(getX(), getY(), getSize());
-        if (Shindo.getInstance().getModManager().getMod(getName()).isToggled() && !(mc.currentScreen instanceof HudEditor)) {
+        if (Shindo.getInstance().getModManager().getMod(getName()).isToggled()) {
             if (isModern()) {
                 if (isBackground()) {
                     Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, 0x50000000, 0);
@@ -98,10 +97,10 @@ public class CpsHud extends HudMod {
     }
 
     private int getLeftCPS() {
-        return Cloud.INSTANCE.cpsHelper.getCPS(0);
+        return Shindo.getInstance().getCpsHelper().getCPS(0);
     }
 
     private int getRightCPS() {
-        return Cloud.INSTANCE.cpsHelper.getCPS(1);
+        return Shindo.getInstance().getCpsHelper().getCPS(1);
     }
 }

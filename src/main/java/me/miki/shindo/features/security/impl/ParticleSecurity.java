@@ -1,7 +1,7 @@
 package me.miki.shindo.features.security.impl;
 
 import me.miki.shindo.events.EventTarget;
-import me.miki.shindo.events.impl.PacketReciveEvent;
+import me.miki.shindo.events.impl.PacketReceiveEvent;
 import me.miki.shindo.features.security.Security;
 import net.minecraft.network.play.server.S2APacketParticles;
 
@@ -10,7 +10,7 @@ public class ParticleSecurity extends Security {
 	private int particles;
 	
 	@EventTarget
-	public void onReceivePacket(PacketReciveEvent event) {
+	public void onReceivePacket(PacketReceiveEvent event) {
 		if (event.getPacket() instanceof S2APacketParticles) {
 			S2APacketParticles particle = ((S2APacketParticles) event.getPacket());
 			

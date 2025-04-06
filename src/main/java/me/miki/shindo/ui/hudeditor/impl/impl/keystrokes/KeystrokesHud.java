@@ -5,16 +5,15 @@
 
 package me.miki.shindo.ui.hudeditor.impl.impl.keystrokes;
 
-import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.Style;
-import dev.cloudmc.gui.hudeditor.HudEditor;
-import dev.cloudmc.gui.hudeditor.impl.HudMod;
-import dev.cloudmc.gui.hudeditor.impl.impl.keystrokes.keys.KeyboardKey;
-import dev.cloudmc.gui.hudeditor.impl.impl.keystrokes.keys.MouseKey;
-import dev.cloudmc.helpers.render.GLHelper;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+import me.miki.shindo.Shindo;
+import me.miki.shindo.events.EventTarget;
+import me.miki.shindo.events.impl.RenderEvent;
+import me.miki.shindo.events.impl.TickEvent;
+import me.miki.shindo.helpers.render.GLHelper;
+import me.miki.shindo.ui.Style;
+import me.miki.shindo.ui.hudeditor.impl.HudMod;
+import me.miki.shindo.ui.hudeditor.impl.impl.keystrokes.keys.KeyboardKey;
+import me.miki.shindo.ui.hudeditor.impl.impl.keystrokes.keys.MouseKey;
 
 public class KeystrokesHud extends HudMod {
 
@@ -26,8 +25,8 @@ public class KeystrokesHud extends HudMod {
     MouseKey mouseKey0 = new MouseKey();
     MouseKey mouseKey1 = new MouseKey();
 
-    public KeystrokesHud(String name, int x, int y) {
-        super(name, x, y);
+    public KeystrokesHud() {
+        super("Keystrokes", 10, 10);
         setW(80);
         setH(80);
     }
@@ -50,10 +49,10 @@ public class KeystrokesHud extends HudMod {
         GLHelper.endScale();
     }
 
-    @SubscribeEvent
-    public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
+    @EventTarget
+    public void onRender2D(RenderEvent e) {
         GLHelper.startScale(getX(), getY(), getSize());
-        if (Shindo.getInstance().getModManager().getMod(getName()).isToggled() && !(mc.currentScreen instanceof HudEditor)) {
+        if (Shindo.getInstance().getModManager().getMod(getName()).isToggled()) {
             keyUp.renderKey(getX() + 28, getY() + 2, 24, 24, isModern(), mc.gameSettings.keyBindForward, 0x50000000, getColor(), isBackground());
             keyDown.renderKey(getX() + 28, getY() + 28, 24, 24, isModern(), mc.gameSettings.keyBindBack, 0x50000000, getColor(), isBackground());
             keyLeft.renderKey(getX() + 2, getY() + 28, 24, 24, isModern(), mc.gameSettings.keyBindLeft, 0x50000000, getColor(), isBackground());
@@ -67,8 +66,8 @@ public class KeystrokesHud extends HudMod {
         GLHelper.endScale();
     }
 
-    @SubscribeEvent
-    public void onTick(TickEvent.ClientTickEvent e) {
+    @EventTarget
+    public void onTick(TickEvent e) {
         if (isClicks()) {
             setH(106);
         } else {

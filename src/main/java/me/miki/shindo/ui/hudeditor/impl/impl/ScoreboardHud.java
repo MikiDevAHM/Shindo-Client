@@ -7,18 +7,17 @@ package me.miki.shindo.ui.hudeditor.impl.impl;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.hudeditor.HudEditor;
-import dev.cloudmc.gui.hudeditor.impl.HudMod;
-import dev.cloudmc.helpers.render.GLHelper;
-import dev.cloudmc.helpers.render.Helper2D;
+import me.miki.shindo.Shindo;
+import me.miki.shindo.events.EventTarget;
+import me.miki.shindo.events.impl.RenderEvent;
+import me.miki.shindo.helpers.render.GLHelper;
+import me.miki.shindo.helpers.render.Helper2D;
+import me.miki.shindo.ui.hudeditor.impl.HudMod;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,8 +25,8 @@ import java.util.stream.Collectors;
 
 public class ScoreboardHud extends HudMod {
 
-    public ScoreboardHud(String name, int x, int y) {
-        super(name, x, y);
+    public ScoreboardHud() {
+        super("Scoreboard", 10, 10);
     }
 
     @Override
@@ -40,10 +39,10 @@ public class ScoreboardHud extends HudMod {
         GLHelper.endScale();
     }
 
-    @SubscribeEvent
-    public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
+    @EventTarget
+    public void onRender2D(RenderEvent e) {
         GLHelper.startScale(getX(), getY(), getSize());
-        if (Shindo.getInstance().getModManager().getMod(getName()).isToggled() && !(mc.currentScreen instanceof HudEditor)) {
+        if (Shindo.getInstance().getModManager().getMod(getName()).isToggled()) {
             ScoreObjective scoreobjective = mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
             if (scoreobjective != null) {
                 drawScoreboard(scoreobjective, isBackground(), isRemoveNumbers());
