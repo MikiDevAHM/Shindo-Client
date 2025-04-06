@@ -6,8 +6,6 @@
 package me.miki.shindo.ui.hudeditor;
 
 import me.miki.shindo.Shindo;
-import me.miki.shindo.events.EventTarget;
-import me.miki.shindo.events.impl.KeyEvent;
 import me.miki.shindo.helpers.MathHelper;
 import me.miki.shindo.helpers.ResolutionHelper;
 import me.miki.shindo.helpers.animation.Animate;
@@ -22,7 +20,6 @@ import me.miki.shindo.ui.modmenu.ModMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.io.IOException;

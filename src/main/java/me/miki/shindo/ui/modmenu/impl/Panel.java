@@ -8,6 +8,7 @@ package me.miki.shindo.ui.modmenu.impl;
 import me.miki.shindo.Shindo;
 import me.miki.shindo.features.mods.Mod;
 import me.miki.shindo.features.mods.Type;
+import me.miki.shindo.features.options.Option;
 import me.miki.shindo.helpers.MathHelper;
 import me.miki.shindo.helpers.ResolutionHelper;
 import me.miki.shindo.helpers.animation.Animate;
@@ -20,11 +21,13 @@ import me.miki.shindo.ui.modmenu.impl.sidebar.TextBox;
 import me.miki.shindo.ui.modmenu.impl.sidebar.mods.Button;
 import me.miki.shindo.ui.modmenu.impl.sidebar.options.Options;
 import me.miki.shindo.ui.modmenu.impl.sidebar.options.type.*;
+import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
 
 public class Panel {
 
+    private static final Minecraft mc = Minecraft.getMinecraft();
     private final ArrayList<Button> buttonList = new ArrayList<>();
     private final ArrayList<Options> optionsList = new ArrayList<>();
     private final String[] sideButtons = {"Mods", "Settings"};

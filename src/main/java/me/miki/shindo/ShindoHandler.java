@@ -13,7 +13,7 @@ import org.lwjgl.input.Keyboard;
 public class ShindoHandler
 {
 
-    private Minecraft mc =Minecraft.getMinecraft();
+    private final Minecraft mc = Minecraft.getMinecraft();
 
     private Shindo INSTANCE;
 

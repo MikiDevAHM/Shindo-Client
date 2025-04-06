@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.Random;
+
+import me.miki.shindo.features.mods.impl.NickHiderMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -669,7 +671,7 @@ public class FontRenderer implements IResourceManagerReloadListener
             this.setColor(this.red, this.blue, this.green, this.alpha);
             this.posX = x;
             this.posY = y;
-            this.renderStringAtPos(text, dropShadow);
+            this.renderStringAtPos(NickHiderMod.replaceNickname(text), dropShadow);
             return (int)this.posX;
         }
     }
@@ -679,6 +681,8 @@ public class FontRenderer implements IResourceManagerReloadListener
      */
     public int getStringWidth(String text)
     {
+        NickHiderMod.replaceNickname(text);
+        
         if (text == null)
         {
             return 0;

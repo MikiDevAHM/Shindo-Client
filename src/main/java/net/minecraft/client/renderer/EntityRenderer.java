@@ -10,6 +10,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
+
+import me.miki.shindo.Shindo;
+import me.miki.shindo.features.mods.impl.ZoomMod;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.material.Material;
@@ -595,6 +598,13 @@ public class EntityRenderer implements IResourceManagerReloadListener
         }
     }
 
+    public float modifyFOV(GameSettings gameSettings) {
+        if (Shindo.getInstance().getModManager().getMod("Zoom").isToggled()) {
+            return ZoomMod.getFOV();
+        }
+        return gameSettings.fovSetting;
+    }
+
     /**
      * Changes the field of view of the player depending on if they are underwater or not
      */
@@ -611,7 +621,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
             if (useFOVSetting)
             {
-                f = this.mc.gameSettings.fovSetting;
+                f = modifyFOV(mc.gameSettings);
 
                 if (Config.isDynamicFov())
                 {
@@ -669,6 +679,8 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
     private void hurtCameraEffect(float partialTicks)
     {
+        if (Shindo.getInstance().getModManager().getMod("NoHurtCam").isToggled()) return;
+
         if (this.mc.getRenderViewEntity() instanceof EntityLivingBase)
         {
             EntityLivingBase entitylivingbase = (EntityLivingBase)this.mc.getRenderViewEntity();
@@ -906,7 +918,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
         this.hurtCameraEffect(partialTicks);
 
-        if (this.mc.gameSettings.viewBobbing)
+        if (this.mc.gameSettings.viewBobbing && !Shindo.getInstance().getOptionManager().getOptionByName("Minimal View Bobbing").isCheckToggled())
         {
             this.setupViewBobbing(partialTicks);
         }

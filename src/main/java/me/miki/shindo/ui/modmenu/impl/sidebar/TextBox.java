@@ -38,7 +38,7 @@ public class TextBox {
         GLHelper.startScissor(x, y, w, h);
         Helper2D.drawRoundedRectangle(x, y, w, h, 2, Style.getColor(30).getRGB(), 0);
         Helper2D.drawPicture(x + offset + 2, y + offset + 3, 15, 15, 0x50ffffff, "icon/search.png");
-        if(text.equals("")) {
+        if(text.isEmpty()) {
             Shindo.getInstance().getFontHelper().size20.drawString(placeHolderText, x + offset + 20, y + offset + 6, 0x50ffffff);
         } else {
             Shindo.getInstance().getFontHelper().size20.drawString(text, x + offset + 20, y + offset + 6, -1);
@@ -93,7 +93,7 @@ public class TextBox {
     }
 
     public void removeText() {
-        if (text.length() > 0) {
+        if (!text.isEmpty()) {
             if (allSelected) {
                 allSelected = false;
                 cursorPosition = 0;

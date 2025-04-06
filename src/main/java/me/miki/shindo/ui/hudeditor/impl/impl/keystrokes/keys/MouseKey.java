@@ -5,10 +5,10 @@
 
 package me.miki.shindo.ui.hudeditor.impl.impl.keystrokes.keys;
 
-import dev.cloudmc.Cloud;
-import dev.cloudmc.helpers.render.Helper2D;
-import dev.cloudmc.helpers.animation.Animate;
-import dev.cloudmc.helpers.animation.Easing;
+import me.miki.shindo.Shindo;
+import me.miki.shindo.helpers.animation.Animate;
+import me.miki.shindo.helpers.animation.Easing;
+import me.miki.shindo.helpers.render.Helper2D;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Mouse;
 
@@ -16,7 +16,8 @@ import java.awt.*;
 
 public class MouseKey {
 
-    private Animate animate = new Animate();
+    private static final Minecraft mc = Minecraft.getMinecraft();
+    private final Animate animate = new Animate();
 
     public MouseKey() {
         animate.setEase(Easing.CUBIC_IN).setMin(0).setMax(100).setSpeed(1000);
