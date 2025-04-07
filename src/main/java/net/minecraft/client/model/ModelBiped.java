@@ -1,5 +1,6 @@
 package net.minecraft.client.model;
 
+import me.miki.shindo.Shindo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
@@ -132,7 +133,6 @@ public class ModelBiped extends ModelBase
         this.bipedHead.rotateAngleX = headPitch / (180F / (float)Math.PI);
         this.bipedRightArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 2.0F * limbSwingAmount * 0.5F;
         this.bipedLeftArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F;
-        this.bipedRightArm.rotateAngleZ = 0.0F;
         this.bipedLeftArm.rotateAngleZ = 0.0F;
         this.bipedRightLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
         this.bipedLeftLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
@@ -163,14 +163,15 @@ public class ModelBiped extends ModelBase
             case 2:
             default:
                 break;
-
             case 1:
                 this.bipedRightArm.rotateAngleX = this.bipedRightArm.rotateAngleX * 0.5F - ((float)Math.PI / 10F) * (float)this.heldItemRight;
                 break;
-
             case 3:
                 this.bipedRightArm.rotateAngleX = this.bipedRightArm.rotateAngleX * 0.5F - ((float)Math.PI / 10F) * (float)this.heldItemRight;
                 this.bipedRightArm.rotateAngleY = -0.5235988F;
+                if (Shindo.getInstance().getModManager().getMod("Animation").isToggled() && Shindo.getInstance().getSettingManager().getSettingByModAndName("Animation", "Block Animation").isCheckToggled()) {
+                    this.bipedRightArm.rotateAngleY = 0.0F;
+                }
         }
 
         this.bipedLeftArm.rotateAngleY = 0.0F;
@@ -196,7 +197,6 @@ public class ModelBiped extends ModelBase
             this.bipedRightArm.rotateAngleY += this.bipedBody.rotateAngleY * 2.0F;
             this.bipedRightArm.rotateAngleZ += MathHelper.sin(this.swingProgress * (float)Math.PI) * -0.4F;
         }
-
         if (this.isSneak)
         {
             this.bipedBody.rotateAngleX = 0.5F;

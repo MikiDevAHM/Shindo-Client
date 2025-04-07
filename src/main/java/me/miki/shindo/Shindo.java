@@ -17,8 +17,8 @@ import net.minecraft.client.Minecraft;
 public class Shindo {
 
     // IMPORTANT CONSTANTS HERE
-    private static Shindo INSTANCE = new Shindo();
-    private Minecraft mc =Minecraft.getMinecraft();
+    private static final Shindo INSTANCE = new Shindo();
+    private final Minecraft mc =Minecraft.getMinecraft();
 
 
     // INFO STUFF HERE
@@ -27,6 +27,7 @@ public class Shindo {
     public static final String AUTHOR =  "MikiDevAHM";
 
     // IMPORTANT VARIABLES AND FIELDS HERE
+    private ShindoHandler HANDLER;
     private EventManager eventManager;
     private FileHelper fileHelper;
     private DownloadHelper downloadHelper;
@@ -55,7 +56,8 @@ public class Shindo {
                 hudEditor = new HudEditor(),
                 fontHelper = new FontHelper(),
                 messageHelper = new MessageHelper(),
-                securityManager = new SecurityManager()
+                securityManager = new SecurityManager(),
+                HANDLER = new ShindoHandler()
         );
 
         fontHelper.init();

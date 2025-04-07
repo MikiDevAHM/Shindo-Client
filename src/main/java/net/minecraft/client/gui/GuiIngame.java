@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
+import me.miki.shindo.Shindo;
 import me.miki.shindo.events.impl.RenderEvent;
 import me.miki.shindo.ui.hudeditor.HudEditor;
 import net.minecraft.block.material.Material;
@@ -513,6 +514,7 @@ public class GuiIngame extends Gui
 
     protected boolean showCrosshair()
     {
+        if (Shindo.getInstance().getModManager().getMod("Crosshair").isToggled()) return false;
         if (this.mc.gameSettings.showDebugInfo && !this.mc.thePlayer.hasReducedDebug() && !this.mc.gameSettings.reducedDebugInfo)
         {
             return false;
@@ -551,6 +553,7 @@ public class GuiIngame extends Gui
 
     private void renderScoreboard(ScoreObjective objective, ScaledResolution scaledRes)
     {
+        if (Shindo.getInstance().getModManager().getMod("Scoreboard").isToggled()) return;
         Scoreboard scoreboard = objective.getScoreboard();
         Collection<Score> collection = scoreboard.getSortedScores(objective);
         List<Score> list = Lists.newArrayList(Iterables.filter(collection, new Predicate<Score>()
@@ -901,6 +904,8 @@ public class GuiIngame extends Gui
      */
     private void renderBossHealth()
     {
+        if (Shindo.getInstance().getModManager().getMod("Bossbar").isToggled()) return;
+
         if (BossStatus.bossName != null && BossStatus.statusBarTime > 0)
         {
             --BossStatus.statusBarTime;

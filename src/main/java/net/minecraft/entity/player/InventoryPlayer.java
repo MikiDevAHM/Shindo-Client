@@ -1,6 +1,8 @@
 package net.minecraft.entity.player;
 
 import java.util.concurrent.Callable;
+
+import me.miki.shindo.features.mods.impl.ZoomMod;
 import net.minecraft.block.Block;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
@@ -161,6 +163,8 @@ public class InventoryPlayer implements IInventory
      */
     public void changeCurrentItem(int direction)
     {
+        if (ZoomMod.isZoom()) return;
+
         if (direction > 0)
         {
             direction = 1;

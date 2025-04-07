@@ -1,5 +1,6 @@
 package net.minecraft.client.renderer;
 
+import me.miki.shindo.Shindo;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -17,10 +18,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemMap;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.src.Config;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumWorldBlockLayer;
@@ -317,6 +315,14 @@ public class ItemRenderer
 
     private void doBlockTransformations()
     {
+        if (Shindo.getInstance().getSettingManager().getSettingByModAndName("Animation", "Block Animation").isCheckToggled()) {
+            GlStateManager.translate(-0.24F, 0.17F, 0.0F);
+            GlStateManager.rotate(30.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(-80.0F, 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate(60.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.translate(0.0F, 0.18F, 0.00F);
+            return;
+        }
         GlStateManager.translate(-0.5F, 0.2F, 0.0F);
         GlStateManager.rotate(30.0F, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(-80.0F, 1.0F, 0.0F, 0.0F);
@@ -332,6 +338,8 @@ public class ItemRenderer
     {
         if (!Config.isShaders() || !Shaders.isSkipRenderHand())
         {
+            boolean animationModToggled = Shindo.getInstance().getModManager().getMod("Animation").isToggled();
+
             float f = 1.0F - (this.prevEquippedProgress + (this.equippedProgress - this.prevEquippedProgress) * partialTicks);
             AbstractClientPlayer abstractclientplayer = this.mc.thePlayer;
             float f1 = abstractclientplayer.getSwingProgress(partialTicks);
@@ -362,22 +370,32 @@ public class ItemRenderer
                         case EAT:
                         case DRINK:
                             this.performDrinking(abstractclientplayer, partialTicks);
-                            this.transformFirstPersonItem(f, 0.0F);
+                            this.transformFirstPersonItem(f, animationModToggled &&
+                                    Shindo.getInstance().getSettingManager().getSettingByModAndName("Animation", "Eat/Drink Animation").isCheckToggled()
+                                    ? f1 : 0.0F);
                             break;
 
                         case BLOCK:
-                            this.transformFirstPersonItem(f, 0.0F);
+                            this.transformFirstPersonItem(f, animationModToggled &&
+                                    Shindo.getInstance().getSettingManager().getSettingByModAndName("Animation", "Block Animation").isCheckToggled()
+                                    ? f1 : 0.0F);
                             this.doBlockTransformations();
                             break;
 
                         case BOW:
-                            this.transformFirstPersonItem(f, 0.0F);
+                            this.transformFirstPersonItem(f, animationModToggled &&
+                                    Shindo.getInstance().getSettingManager().getSettingByModAndName("Animation", "Bow Animation").isCheckToggled()
+                                    ? f1 : 0.0F);
                             this.doBowTransformations(partialTicks, abstractclientplayer);
                     }
                 }
                 else
                 {
                     this.doItemUsedTransformations(f1);
+                    if (this.itemToRender.getItem() instanceof ItemFishingRod && animationModToggled &&
+                            Shindo.getInstance().getSettingManager().getSettingByModAndName("Animation", "Fishing Rod").isCheckToggled()) {
+                        GlStateManager.translate(0.0F, 0.0F, -0.35F);
+                    }
                     this.transformFirstPersonItem(f, f1);
                 }
 
@@ -540,7 +558,7 @@ public class ItemRenderer
             float f7 = 0.0F - f / 2.0F;
             float f8 = f7 + f;
             float f9 = -0.5F;
-            GlStateManager.translate((float)(-(i * 2 - 1)) * 0.24F, -0.3F, 0.0F);
+            GlStateManager.translate((float)(-(i * 2 - 1)) * 0.24F, -0.3F - Shindo.getInstance().getOptionManager().getOptionByName("Fire Height").getCurrentNumber() / 100f, 0.0F);
             GlStateManager.rotate((float)(i * 2 - 1) * 10.0F, 0.0F, 1.0F, 0.0F);
             worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
             worldrenderer.setSprite(textureatlassprite);

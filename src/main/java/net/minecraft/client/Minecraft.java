@@ -41,6 +41,7 @@ import me.miki.shindo.events.impl.BorderlessEvent;
 import me.miki.shindo.events.impl.KeyEvent;
 import me.miki.shindo.events.impl.MouseEvent;
 import me.miki.shindo.events.impl.TickEvent;
+import me.miki.shindo.helpers.animation.DeltaTime;
 import me.miki.shindo.helpers.logger.ShindoLogger;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -362,6 +363,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
     /** Profiler currently displayed in the debug screen pie chart */
     private String debugProfilerName = "root";
+
+    long lastFrame = Sys.getTime();
 
     public Minecraft(GameConfiguration gameConfig)
     {
@@ -1082,6 +1085,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage
      */
     private void runGameLoop() throws IOException
     {
+        long currentTime = (Sys.getTime() * 1000) / Sys.getTimerResolution();
+        int deltaTime = (int) (currentTime - lastFrame);
+        lastFrame = currentTime;
+        DeltaTime.setDeltaTime(deltaTime);
+
         long i = System.nanoTime();
         this.mcProfiler.startSection("root");
 

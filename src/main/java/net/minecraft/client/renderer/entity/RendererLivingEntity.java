@@ -3,6 +3,8 @@ package net.minecraft.client.renderer.entity;
 import com.google.common.collect.Lists;
 import java.nio.FloatBuffer;
 import java.util.List;
+
+import me.miki.shindo.Shindo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
@@ -16,6 +18,7 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EnumPlayerModelParts;
@@ -692,8 +695,24 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
         }
     }
 
+    public Entity canRenderNametag(RenderManager instance) {
+        if (Shindo.getInstance().getModManager().getMod("NameTag").isToggled()) {
+            if (Shindo.getInstance().getSettingManager().getSettingByModAndName(
+                    "NameTag", "NameTag in 3rd Person").isCheckToggled()) {
+                return null;
+            }
+        }
+
+        return instance.livingPlayer;
+    }
+
     protected boolean canRenderName(T entity)
     {
+        if(Shindo.getInstance().getModManager().getMod("NameTag").isToggled()) {
+            if(Shindo.getInstance().getSettingManager().getSettingByModAndName("NameTag", "Disable Player NameTags").isCheckToggled()) {
+                return false;
+            }
+        }
         EntityPlayerSP entityplayersp = Minecraft.getMinecraft().thePlayer;
 
         if (entity instanceof EntityPlayer && entity != entityplayersp)
@@ -725,7 +744,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
             }
         }
 
-        return Minecraft.isGuiEnabled() && entity != this.renderManager.livingPlayer && !entity.isInvisibleToPlayer(entityplayersp) && entity.riddenByEntity == null;
+        return Minecraft.isGuiEnabled() && entity != canRenderNametag(renderManager) && !entity.isInvisibleToPlayer(entityplayersp) && entity.riddenByEntity == null;
     }
 
     public void setRenderOutlines(boolean renderOutlinesIn)
