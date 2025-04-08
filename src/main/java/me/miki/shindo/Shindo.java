@@ -14,6 +14,10 @@ import me.miki.shindo.helpers.font.FontHelper;
 import me.miki.shindo.ui.hudeditor.HudEditor;
 import net.minecraft.client.Minecraft;
 
+/**
+ * @description Shindo Client Main Class
+ * @author MikiDevAHM
+ */
 public class Shindo {
 
     // IMPORTANT CONSTANTS HERE
@@ -27,8 +31,7 @@ public class Shindo {
     public static final String AUTHOR =  "MikiDevAHM";
 
     // IMPORTANT VARIABLES AND FIELDS HERE
-    private ShindoHandler HANDLER;
-    private EventManager eventManager;
+    private ShindoHandler shindoHandler;
     private FileHelper fileHelper;
     private DownloadHelper downloadHelper;
     private LanguageHelper languageHelper;
@@ -57,12 +60,12 @@ public class Shindo {
                 fontHelper = new FontHelper(),
                 messageHelper = new MessageHelper(),
                 securityManager = new SecurityManager(),
-                HANDLER = new ShindoHandler()
+                shindoHandler = new ShindoHandler()
         );
 
         fontHelper.init();
 
-        eventManager.register(this);
+        EventManager.register(this);
     }
 
     public void shutdown() {
@@ -71,8 +74,6 @@ public class Shindo {
 
     // GETTERS
     public static Shindo getInstance() { return INSTANCE; }
-
-    public EventManager getEventManager() { return eventManager; }
 
     public FileHelper getFileHelper() { return fileHelper; }
 
@@ -96,10 +97,12 @@ public class Shindo {
 
     public SecurityManager getSecurityManager() { return securityManager; }
 
+    public ShindoHandler getShindoHandler() { return shindoHandler; }
+
 
     private void registerEvents(Object... events) {
         for (Object event : events) {
-            eventManager.register(event);
+            EventManager.register(event);
         }
     }
 

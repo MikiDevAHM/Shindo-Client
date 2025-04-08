@@ -6,6 +6,7 @@
 package me.miki.shindo.ui.modmenu.impl.sidebar.options;
 
 import me.miki.shindo.Shindo;
+import me.miki.shindo.events.EventManager;
 import me.miki.shindo.features.options.Option;
 import me.miki.shindo.ui.modmenu.impl.Panel;
 
@@ -19,7 +20,7 @@ public abstract class Options {
     private boolean updated;
 
     public Options(Option options, Panel panel, int y) {
-        Shindo.getInstance().getEventManager().register(this);
+        EventManager.register(this);
         this.option = options;
         this.panel = panel;
         this.open = false;

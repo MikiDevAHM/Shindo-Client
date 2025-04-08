@@ -6,6 +6,7 @@
 package me.miki.shindo.ui.hudeditor.impl;
 
 import me.miki.shindo.Shindo;
+import me.miki.shindo.events.EventManager;
 import me.miki.shindo.helpers.MathHelper;
 import me.miki.shindo.helpers.render.Helper2D;
 import net.minecraft.client.Minecraft;
@@ -20,7 +21,7 @@ public abstract class HudMod {
     private float size;
 
     public HudMod(String name, int x, int y) {
-        Shindo.getInstance().getEventManager().register(this);
+        EventManager.register(this);
         this.name = name;
         this.x = x;
         this.y = y;

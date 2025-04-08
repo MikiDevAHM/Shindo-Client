@@ -7,6 +7,7 @@ package me.miki.shindo.features.mods;
 
 
 import me.miki.shindo.Shindo;
+import me.miki.shindo.events.EventManager;
 import net.minecraft.client.Minecraft;
 
 public class Mod {
@@ -24,11 +25,11 @@ public class Mod {
     }
 
     public void onEnable() {
-        Shindo.getInstance().getEventManager().register(this);
+        EventManager.register(this);
     }
 
     public void onDisable() {
-        Shindo.getInstance().getEventManager().unregister(this);
+        EventManager.unregister(this);
     }
 
     public String getName() {

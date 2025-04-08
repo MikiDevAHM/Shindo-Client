@@ -7,6 +7,7 @@ package me.miki.shindo.ui.modmenu.impl.sidebar.mods.impl;
 
 
 import me.miki.shindo.Shindo;
+import me.miki.shindo.events.EventManager;
 import me.miki.shindo.features.settings.Setting;
 import me.miki.shindo.ui.modmenu.impl.sidebar.mods.Button;
 
@@ -20,7 +21,7 @@ public abstract class Settings {
     private boolean updated;
 
     public Settings(Setting setting, Button button, int y) {
-        Shindo.getInstance().getEventManager().register(this);
+        EventManager.register(this);
         this.setting = setting;
         this.button = button;
         this.open = false;
