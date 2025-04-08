@@ -3,6 +3,7 @@ package me.miki.shindo.helpers.download;
 import me.miki.shindo.Shindo;
 import me.miki.shindo.helpers.download.file.DownloadFile;
 import me.miki.shindo.helpers.download.file.DownloadZipFile;
+import me.miki.shindo.helpers.file.FileHelper;
 import me.miki.shindo.helpers.file.FileManager;
 import me.miki.shindo.helpers.multithreading.Multithreading;
 import me.miki.shindo.helpers.network.HttpHelper;
@@ -38,12 +39,12 @@ public class DownloadManager {
 
                 DownloadZipFile dzf = (DownloadZipFile) df;
 
-                if(FileUtils.getDirectorySize(dzf.getOutputDir()) != dzf.getUnzippedSize()) {
+                if(FileHelper.getDirectorySize(dzf.getOutputDir()) != dzf.getUnzippedSize()) {
 
                     File outputFile = new File(dzf.getOutputDir(), dzf.getFileName());
 
                     HttpHelper.downloadFile(dzf.getUrl(), outputFile);
-                    FileUtils.unzip(outputFile, dzf.getOutputDir());
+                    FileHelper.unzip(outputFile, dzf.getOutputDir());
                     outputFile.delete();
                 }
             } else {
@@ -67,7 +68,7 @@ public class DownloadManager {
 
                 DownloadZipFile dzf = (DownloadZipFile) df;
 
-                if(FileUtils.getDirectorySize(dzf.getOutputDir()) != dzf.getUnzippedSize()) {
+                if(FileHelper.getDirectorySize(dzf.getOutputDir()) != dzf.getUnzippedSize()) {
                     startDownloads();
                 }
             } else {
