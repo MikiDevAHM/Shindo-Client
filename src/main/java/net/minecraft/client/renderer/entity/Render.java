@@ -1,5 +1,6 @@
 package net.minecraft.client.renderer.entity;
 
+import me.miki.shindo.Shindo;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -368,24 +369,29 @@ public abstract class Render<T extends Entity> implements IEntityRenderer
     {
         double d0 = entityIn.getDistanceSqToEntity(this.renderManager.livingPlayer);
 
+        boolean nameTagToggled = Shindo.getInstance().getModManager().getMod("NameTag").isToggled();
+        int color = Shindo.getInstance().getSettingManager().getSettingByModAndName("NameTag", "Font Color").getColor().getRGB();
+        float alpha = nameTagToggled ? Shindo.getInstance().getSettingManager().getSettingByModAndName("NameTag", "Opacity").getCurrentNumber() / 255f : 0.25f;
+        float scale = nameTagToggled ? Shindo.getInstance().getSettingManager().getSettingByModAndName("NameTag", "Size").getCurrentNumber() : 1;
+        float yPos = nameTagToggled ? Shindo.getInstance().getSettingManager().getSettingByModAndName("NameTag", "Y Position").getCurrentNumber() - 2.5f : 0;
+
         if (d0 <= (double)(maxDistance * maxDistance))
         {
             FontRenderer fontrenderer = this.getFontRendererFromRenderManager();
             float f = 1.6F;
             float f1 = 0.016666668F * f;
             GlStateManager.pushMatrix();
-            GlStateManager.translate((float)x + 0.0F, (float)y + entityIn.height + 0.5F, (float)z);
+            GlStateManager.translate((float) x + 0.0F, (float) y + entityIn.height + 0.5F + yPos, (float) z);
             GL11.glNormal3f(0.0F, 1.0F, 0.0F);
             GlStateManager.rotate(-this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
             GlStateManager.rotate(this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
-            GlStateManager.scale(-f1, -f1, f1);
+            GlStateManager.scale(-f1 * scale, -f1 * scale, f1);
             GlStateManager.disableLighting();
             GlStateManager.depthMask(false);
             GlStateManager.disableDepth();
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-            Tessellator tessellator = Tessellator.getInstance();
-            WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+
             int i = 0;
 
             if (str.equals("deadmau5"))
@@ -394,18 +400,20 @@ public abstract class Render<T extends Entity> implements IEntityRenderer
             }
 
             int j = fontrenderer.getStringWidth(str) / 2;
+            Tessellator tessellator = Tessellator.getInstance();
+            WorldRenderer worldrenderer = tessellator.getWorldRenderer();
             GlStateManager.disableTexture2D();
             worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-            worldrenderer.pos((double)(-j - 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-            worldrenderer.pos((double)(-j - 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-            worldrenderer.pos((double)(j + 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-            worldrenderer.pos((double)(j + 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            worldrenderer.pos((double)(-j - 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, alpha).endVertex();
+            worldrenderer.pos((double)(-j - 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, alpha).endVertex();
+            worldrenderer.pos((double)(j + 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, alpha).endVertex();
+            worldrenderer.pos((double)(j + 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, alpha).endVertex();
             tessellator.draw();
             GlStateManager.enableTexture2D();
-            fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2, i, 553648127);
+            fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2, i, nameTagToggled ? color : 553648127);
             GlStateManager.enableDepth();
             GlStateManager.depthMask(true);
-            fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2, i, -1);
+            fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2, i, nameTagToggled ? color : -1);
             GlStateManager.enableLighting();
             GlStateManager.disableBlend();
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

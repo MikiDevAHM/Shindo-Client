@@ -5,6 +5,7 @@ import me.miki.shindo.events.impl.KeyEvent;
 import me.miki.shindo.events.impl.PacketReceiveEvent;
 import me.miki.shindo.events.impl.TickEvent;
 import me.miki.shindo.events.impl.UpdateEvent;
+import me.miki.shindo.ui.modmenu.ClickGui;
 import me.miki.shindo.ui.modmenu.ModMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.play.server.S2EPacketCloseWindow;
@@ -33,7 +34,7 @@ public class ShindoHandler
     @EventTarget
     public void onKey(KeyEvent e) {
         if (Keyboard.isKeyDown(Shindo.getInstance().getOptionManager().getOptionByName("ModMenu Keybinding").getKey())) {
-            mc.displayGuiScreen(Shindo.getInstance().getHudEditor());
+            mc.displayGuiScreen(new ClickGui());
         }
     }
 
