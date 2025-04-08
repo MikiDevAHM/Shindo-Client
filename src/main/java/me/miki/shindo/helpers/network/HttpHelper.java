@@ -18,7 +18,6 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import me.miki.shindo.helpers.logger.ShindoLogger;
-import org.jetbrains.annotations.NotNull;
 
 public class HttpHelper {
 
@@ -179,8 +178,7 @@ public class HttpHelper {
 		}
 	}
 	
-    @NotNull
-    public static String punycode(@NotNull String url) {
+    public static String punycode(String url) {
     	
         int protoEnd = url.indexOf("://");
 
