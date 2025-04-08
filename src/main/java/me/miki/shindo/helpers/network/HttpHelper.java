@@ -27,9 +27,9 @@ public class HttpHelper {
     private static final int PUNYCODE_DAMP = 700;
     private static final int PUNYCODE_INITIAL_BIAS = 72;
     private static final int PUNYCODE_INITIAL_N = 128;
-    
+
     private static String ACCEPTED_RESPONSE = "application/json";
-    private static Gson gson = new Gson();
+    private static final Gson gson = new Gson();
     
     public static JsonObject readJson(HttpURLConnection connection) {
         return gson.fromJson(readResponse(connection), JsonObject.class);
@@ -38,6 +38,7 @@ public class HttpHelper {
     public static JsonObject postJson(String url, Object request) {
     	
         HttpURLConnection connection = setupConnection(url, UserAgents.MOZILLA, 5000, false);
+        assert connection != null;
         connection.setDoOutput(true);
         connection.addRequestProperty("Content-Type", ACCEPTED_RESPONSE);
         connection.addRequestProperty("Accept", ACCEPTED_RESPONSE);
@@ -81,10 +82,12 @@ public class HttpHelper {
 
             if (headers != null) {
                 for (String header : headers.keySet()) {
+                    assert connection != null;
                     connection.addRequestProperty(header, headers.get(header));
                 }
             }
 
+            assert connection != null;
             InputStream is = connection.getResponseCode() != 200 ? connection.getErrorStream() : connection.getInputStream();
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             
@@ -296,9 +299,9 @@ public class HttpHelper {
     	
         StringBuilder output = new StringBuilder();
 
-        for(int i = 0; i < input.length; i++) {
-            if(input[i] < 128) {
-                output.append((char) input[i]);
+        for (int j : input) {
+            if (j < 128) {
+                output.append((char) j);
             }
         }
 
@@ -314,23 +317,21 @@ public class HttpHelper {
         while(h < input.length) {
         	
             int m = Integer.MAX_VALUE;
-            
-            for(int i = 0; i < input.length; i++) {
-                if(input[i] >= n && input[i] < m)
-                    m = input[i];
+
+            for (int j : input) {
+                if (j >= n && j < m)
+                    m = j;
             }
 
             delta = delta + (m - n) * (h + 1);
             n = m;
 
-            for(int i = 0; i < input.length; i++) {
-            	
-                int c = input[i];
+            for (int c : input) {
 
-                if(c < n)
+                if (c < n)
                     delta++;
 
-                if(c == n) {
+                if (c == n) {
                     punycodeEncodeNumber(output, delta, bias);
                     bias = punycodeBiasAdapt(delta, h + 1, h == b);
                     delta = 0;
