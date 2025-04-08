@@ -1,7 +1,5 @@
 package net.minecraft.entity.player;
 
-import java.util.concurrent.Callable;
-
 import me.miki.shindo.features.mods.impl.ZoomMod;
 import net.minecraft.block.Block;
 import net.minecraft.crash.CrashReport;
@@ -17,6 +15,8 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ReportedException;
+
+import java.util.concurrent.Callable;
 
 public class InventoryPlayer implements IInventory
 {

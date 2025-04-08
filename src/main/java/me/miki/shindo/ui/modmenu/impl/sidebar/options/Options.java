@@ -5,7 +5,6 @@
 
 package me.miki.shindo.ui.modmenu.impl.sidebar.options;
 
-import me.miki.shindo.Shindo;
 import me.miki.shindo.events.EventManager;
 import me.miki.shindo.features.options.Option;
 import me.miki.shindo.ui.modmenu.impl.Panel;

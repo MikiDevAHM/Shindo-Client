@@ -6,7 +6,6 @@
 package me.miki.shindo.ui.modmenu.impl.sidebar.mods.impl;
 
 
-import me.miki.shindo.Shindo;
 import me.miki.shindo.events.EventManager;
 import me.miki.shindo.features.settings.Setting;
 import me.miki.shindo.ui.modmenu.impl.sidebar.mods.Button;

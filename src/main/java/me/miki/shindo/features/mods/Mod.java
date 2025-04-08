@@ -6,7 +6,6 @@
 package me.miki.shindo.features.mods;
 
 
-import me.miki.shindo.Shindo;
 import me.miki.shindo.events.EventManager;
 import net.minecraft.client.Minecraft;
 

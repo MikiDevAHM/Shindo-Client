@@ -1,7 +1,5 @@
 package me.miki.shindo.features.security.impl;
 
-import java.util.regex.Pattern;
-
 import me.miki.shindo.events.EventTarget;
 import me.miki.shindo.events.impl.PacketReceiveEvent;
 import me.miki.shindo.events.impl.SendChatEvent;
@@ -9,6 +7,8 @@ import me.miki.shindo.features.security.Security;
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.network.play.server.S29PacketSoundEffect;
 import net.minecraft.util.IChatComponent;
+
+import java.util.regex.Pattern;
 
 public class Log4jSecurity extends Security {
 

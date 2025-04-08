@@ -1,15 +1,15 @@
 package me.miki.shindo.features.security.impl;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-
 import me.miki.shindo.Shindo;
 import me.miki.shindo.events.EventTarget;
 import me.miki.shindo.events.impl.PacketReceiveEvent;
 import me.miki.shindo.features.security.Security;
 import net.minecraft.network.play.server.S48PacketResourcePackSend;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 public class ResourcePackSecurity extends Security {
 

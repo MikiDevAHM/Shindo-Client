@@ -1,23 +1,16 @@
 package me.miki.shindo.helpers.network;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import me.miki.shindo.helpers.logger.ShindoLogger;
+
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import me.miki.shindo.helpers.logger.ShindoLogger;
 
 public class HttpHelper {
 

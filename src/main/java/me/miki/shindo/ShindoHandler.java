@@ -5,6 +5,8 @@ import me.miki.shindo.events.impl.KeyEvent;
 import me.miki.shindo.events.impl.PacketReceiveEvent;
 import me.miki.shindo.events.impl.TickEvent;
 import me.miki.shindo.events.impl.UpdateEvent;
+import me.miki.shindo.helpers.OptifineHelper;
+import me.miki.shindo.helpers.TargetHelper;
 import me.miki.shindo.ui.modmenu.ModMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.play.server.S2EPacketCloseWindow;
@@ -21,13 +23,9 @@ public class ShindoHandler
         INSTANCE = Shindo.getInstance();
     }
 
-    public void init() {
-
-    }
-
     @EventTarget
     public void onTick(TickEvent e) {
-
+        OptifineHelper.disableFastRender();
     }
 
     @EventTarget
@@ -39,7 +37,7 @@ public class ShindoHandler
 
     @EventTarget
     public void onUpdate(UpdateEvent e) {
-
+        TargetHelper.onUpdate();
     }
 
     @EventTarget

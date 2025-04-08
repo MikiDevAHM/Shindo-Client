@@ -1,4 +1,40 @@
 package me.miki.shindo.helpers;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
+
 public class TargetHelper {
+
+
+    private static AbstractClientPlayer target;
+    private static final Minecraft mc = Minecraft.getMinecraft();
+    private static TimerHelper timer = new TimerHelper();
+
+    public static void onUpdate() {
+
+        if (mc.objectMouseOver != null && mc.objectMouseOver.entityHit != null && mc.objectMouseOver.entityHit != target) {
+            if (mc.objectMouseOver.entityHit instanceof AbstractClientPlayer && ServerHelper.isInTablist(mc.objectMouseOver.entityHit)) {
+                target = (AbstractClientPlayer) mc.objectMouseOver.entityHit;
+                timer.reset();
+            }
+        } else if (timer.delay(2500) && mc.objectMouseOver == null) {
+            target = null;
+            timer.reset();
+        }
+
+        if (target != null) {
+
+            if (target.isDead || mc.thePlayer.isDead) {
+                target = null;
+            } else {
+                if (target.isInvisible() || target.getDistanceToEntity(mc.thePlayer) > 12) {
+                    target = null;
+                }
+            }
+        }
+    }
+
+    public static AbstractClientPlayer getTarget() {
+        return target;
+    }
 }

@@ -7,10 +7,10 @@ import me.miki.shindo.features.security.SecurityManager;
 import me.miki.shindo.features.settings.SettingManager;
 import me.miki.shindo.helpers.CpsHelper;
 import me.miki.shindo.helpers.MessageHelper;
-import me.miki.shindo.helpers.file.DownloadHelper;
-import me.miki.shindo.helpers.file.FileHelper;
-import me.miki.shindo.helpers.file.LanguageHelper;
+import me.miki.shindo.helpers.download.DownloadManager;
+import me.miki.shindo.helpers.file.FileManager;
 import me.miki.shindo.helpers.font.FontHelper;
+import me.miki.shindo.helpers.lang.LanguageManager;
 import me.miki.shindo.ui.hudeditor.HudEditor;
 import net.minecraft.client.Minecraft;
 
@@ -32,9 +32,9 @@ public class Shindo {
 
     // IMPORTANT VARIABLES AND FIELDS HERE
     private ShindoHandler shindoHandler;
-    private FileHelper fileHelper;
-    private DownloadHelper downloadHelper;
-    private LanguageHelper languageHelper;
+    private FileManager fileManager;
+    private DownloadManager downloadManager;
+    private LanguageManager languageManager;
     private SettingManager settingManager;
     private ModManager modManager;
     private OptionManager optionManager;
@@ -49,9 +49,9 @@ public class Shindo {
 
 
         registerEvents(
-                fileHelper = new FileHelper(),
-                downloadHelper = new DownloadHelper(),
-                languageHelper = new LanguageHelper(),
+                fileManager = new FileManager(),
+                downloadManager = new DownloadManager(),
+                languageManager = new LanguageManager(),
                 cpsHelper = new CpsHelper(),
                 settingManager = new SettingManager(),
                 modManager = new ModManager(),
@@ -75,11 +75,11 @@ public class Shindo {
     // GETTERS
     public static Shindo getInstance() { return INSTANCE; }
 
-    public FileHelper getFileHelper() { return fileHelper; }
+    public FileManager getFileManager() { return fileManager; }
 
-    public DownloadHelper getDownloadHelper() { return downloadHelper; }
+    public DownloadManager getDownloadManager() { return downloadManager; }
 
-    public LanguageHelper getLanguageHelper() { return languageHelper; }
+    public LanguageManager getLanguageManager() { return languageManager; }
 
     public SettingManager getSettingManager() { return settingManager; }
 

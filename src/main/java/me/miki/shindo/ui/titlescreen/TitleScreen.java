@@ -7,7 +7,6 @@ package me.miki.shindo.ui.titlescreen;
 
 import me.miki.shindo.Shindo;
 import me.miki.shindo.helpers.font.GlyphPageFontRenderer;
-import me.miki.shindo.helpers.render.Helper2D;
 import me.miki.shindo.ui.titlescreen.buttons.IconButton;
 import me.miki.shindo.ui.titlescreen.buttons.TextButton;
 import net.minecraft.client.gui.GuiMultiplayer;

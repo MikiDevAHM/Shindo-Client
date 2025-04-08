@@ -1,16 +1,15 @@
 package me.miki.shindo.helpers.render;
 
-import java.awt.Color;
-
 import me.miki.shindo.helpers.ColorHelper;
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
+import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
 
 public class RenderHelper {
 	
