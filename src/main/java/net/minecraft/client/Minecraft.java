@@ -3347,4 +3347,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     {
         this.connectedToRealms = isConnected;
     }
+
+    public Timer getTimer() {
+        return this.timer;
+    }
 }
