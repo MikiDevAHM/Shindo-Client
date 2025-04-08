@@ -67,4 +67,13 @@ public class SettingManager {
         }
         return null;
     }
+
+    public Setting getSettingByName(String name) {
+        for (Setting setting : settingList) {
+            if (setting.getName().equalsIgnoreCase(name)) {
+                return setting;
+            }
+        }
+        return null;
+    }
 }

@@ -6,31 +6,55 @@
 package me.miki.shindo.features.options;
 
 
+import com.google.gson.annotations.Expose;
+
 import java.awt.*;
 
 public class Option {
 
+    @Expose
     private String name;
 
+    @Expose
     private String mode;
 
+    @Expose
     private String[] options;
+
+    @Expose
     private String currentMode;
+
+    @Expose
     private int modeIndex;
 
+    @Expose
     private Color color;
+
+    @Expose
     private Color sideColor;
+
+    @Expose
     private float sideSlider;
+
+    @Expose
     private float[] mainSlider;
 
+    @Expose
     private boolean checkToggled;
 
+    @Expose
     private float maxNumber, currentNumber;
 
+    @Expose
     private boolean[][] cells;
+
+    @Expose
     private int key;
 
+    @Expose
     private String placeholderText, text;
+
+    @Expose
     private int cursorPosition;
 
     /**

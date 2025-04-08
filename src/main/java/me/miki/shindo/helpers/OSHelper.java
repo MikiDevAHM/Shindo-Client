@@ -28,7 +28,7 @@ public class OSHelper {
         return mc.mcDataDir.getAbsolutePath() + File.separator;
     }
 
-    public static String getCloudDirectory() {
+    public static String getShindoDirectory() {
         return getMinecraftDirectory() + "shindo" + File.separator;
     }
 }

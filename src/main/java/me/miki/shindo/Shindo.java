@@ -1,5 +1,7 @@
 package me.miki.shindo;
 
+import me.miki.shindo.config.ConfigLoader;
+import me.miki.shindo.config.ConfigSaver;
 import me.miki.shindo.events.EventManager;
 import me.miki.shindo.features.mods.ModManager;
 import me.miki.shindo.features.options.OptionManager;
@@ -11,6 +13,7 @@ import me.miki.shindo.helpers.download.DownloadManager;
 import me.miki.shindo.helpers.file.FileManager;
 import me.miki.shindo.helpers.font.FontHelper;
 import me.miki.shindo.helpers.lang.LanguageManager;
+import me.miki.shindo.helpers.logger.ShindoLogger;
 import me.miki.shindo.ui.hudeditor.HudEditor;
 import net.minecraft.client.Minecraft;
 
@@ -63,13 +66,26 @@ public class Shindo {
                 shindoHandler = new ShindoHandler()
         );
 
+        try {
+            if (!ConfigSaver.configExists()) {
+                ConfigSaver.saveConfig();
+            }
+            ConfigLoader.loadConfig();
+        } catch (Exception e) {
+            ShindoLogger.error("Failed to load config file.", e);
+        }
+
         fontHelper.init();
 
         EventManager.register(this);
     }
 
     public void shutdown() {
-
+        try {
+            ConfigSaver.saveConfig();
+        } catch (Exception e) {
+            ShindoLogger.error("Failed to save config file.", e);
+        }
     }
 
     // GETTERS
@@ -98,7 +114,6 @@ public class Shindo {
     public SecurityManager getSecurityManager() { return securityManager; }
 
     public ShindoHandler getShindoHandler() { return shindoHandler; }
-
 
     private void registerEvents(Object... events) {
         for (Object event : events) {
