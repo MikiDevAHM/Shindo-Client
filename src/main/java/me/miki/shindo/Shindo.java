@@ -76,6 +76,7 @@ public class Shindo {
         }
 
         fontHelper.init();
+        shindoHandler.init();
 
         EventManager.register(this);
     }

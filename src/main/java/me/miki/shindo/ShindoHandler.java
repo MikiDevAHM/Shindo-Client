@@ -23,6 +23,10 @@ public class ShindoHandler
         INSTANCE = Shindo.getInstance();
     }
 
+    public void init() {
+        OptifineHelper.removeOptifineZoom();
+    }
+
     @EventTarget
     public void onTick(TickEvent e) {
         OptifineHelper.disableFastRender();
