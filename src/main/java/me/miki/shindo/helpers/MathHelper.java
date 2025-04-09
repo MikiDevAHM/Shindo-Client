@@ -19,6 +19,10 @@ public class MathHelper {
         return Math.round(value * scale) / scale;
     }
 
+    public static int addIntToInt(int var, int amount, int times) {
+        return var + (amount * times);
+    }
+
     /**
      * Checks if your mouse is inside a given rectangle
      *
