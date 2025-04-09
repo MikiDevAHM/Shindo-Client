@@ -5,23 +5,24 @@
 
 package me.miki.shindo.config;
 
+import com.google.gson.annotations.Expose;
 import me.miki.shindo.features.options.Option;
 
 import java.util.ArrayList;
 
 public class Config {
 
-    private final ArrayList<ModConfig> modConfigList;
-    private final ArrayList<Option> optionsConfigList;
-    private boolean darkMode;
-    private boolean snapping;
+    @Expose
+    private final ArrayList<ModConfig> modConfigList = new ArrayList<>();
 
-    public Config() {
-        modConfigList = new ArrayList<>();
-        optionsConfigList = new ArrayList<>();
-        darkMode = false;
-        snapping = true;
-    }
+    @Expose
+    private final ArrayList<Option> optionsConfigList = new ArrayList<>();
+
+    @Expose
+    private boolean darkMode = false;
+
+    @Expose
+    private boolean snapping = true;
 
     public void addConfig(ModConfig modConfig) {
         modConfigList.add(modConfig);

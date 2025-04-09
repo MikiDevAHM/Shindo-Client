@@ -1,8 +1,8 @@
-package me.miki.shindo.helpers.download;
+package me.miki.shindo.features.download;
 
 import me.miki.shindo.Shindo;
-import me.miki.shindo.helpers.download.file.DownloadFile;
-import me.miki.shindo.helpers.download.file.DownloadZipFile;
+import me.miki.shindo.features.download.file.DownloadFile;
+import me.miki.shindo.features.download.file.DownloadZipFile;
 import me.miki.shindo.helpers.file.FileHelper;
 import me.miki.shindo.helpers.file.FileManager;
 import me.miki.shindo.helpers.multithreading.Multithreading;

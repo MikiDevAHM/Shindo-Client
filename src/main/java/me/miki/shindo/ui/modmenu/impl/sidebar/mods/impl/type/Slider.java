@@ -77,9 +77,22 @@ public class Slider extends Settings {
 
         float xPos = (button.getPanel().getX() + button.getPanel().getW() - sliderWidth - 20) + sliderPos - 3;
         Helper2D.drawRoundedRectangle(
-                (int) (posHelper.isDirection() ? xPos - posHelper.getDifference() - posHelper.getValue() : xPos - posHelper.getDifference() + posHelper.getValue()),
-                button.getPanel().getY() + button.getPanel().getH() + getY() + 5,
-                7, 16, 1, Style.getColor(80).getRGB(),
+                button.getPanel().getX() + button.getPanel().getW() - sliderWidth - 20,
+                button.getPanel().getY() + button.getPanel().getH() + getY() + 10,
+                (int) sliderPos, 5, 2, Style.getColorPallet(6).getRGB(),
+                roundedCorners ? 0 : -1
+        );
+
+        Helper2D.drawRoundedRectangle(
+                (int) (posHelper.isDirection() ? xPos - posHelper.getDifference() - posHelper.getValue() : xPos - posHelper.getDifference() + posHelper.getValue()) - 2,
+                button.getPanel().getY() + button.getPanel().getH() + getY() + 8,
+                9, 9, 2, Style.getColorPallet(1).getRGB(),
+                roundedCorners ? 0 : -1
+        );
+        Helper2D.drawRoundedRectangle(
+                (int) (posHelper.isDirection() ? xPos - posHelper.getDifference() - posHelper.getValue() : xPos - posHelper.getDifference() + posHelper.getValue()) - 1,
+                button.getPanel().getY() + button.getPanel().getH() + getY() + 9,
+                7, 7, 2, Style.getColorPallet(17).getRGB(),
                 roundedCorners ? 0 : -1
         );
     }

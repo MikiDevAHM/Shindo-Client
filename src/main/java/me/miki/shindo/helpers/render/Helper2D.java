@@ -74,6 +74,43 @@ public class Helper2D {
     }
 
     /**
+     *
+     * @param startX The first X position
+     * @param endX   The second X position
+     * @param y      The Y position
+     * @param color  The color
+     */
+    public static void drawHorizontalLine(int startX, int endX, int y, int color) {
+        if (endX < startX)
+        {
+            int i = startX;
+            startX = endX;
+            endX = i;
+        }
+
+        Gui.drawRect(startX, y, endX + 1, y + 1, color);
+    }
+
+    /**
+     *
+     * @param x      The X position
+     * @param startY The first Y position
+     * @param endY   The second Y position
+     * @param color  The color
+     */
+    public static void drawVerticalLine(int x, int startY, int endY, int color)
+    {
+        if (endY < startY)
+        {
+            int i = startY;
+            startY = endY;
+            endY = i;
+        }
+
+        Gui.drawRect(x, startY + 1, x + 1, endY, color);
+    }
+
+    /**
      * Draws a given picture
      *
      * @param x        Left X coordinate of the image

@@ -9,10 +9,11 @@ import me.miki.shindo.features.security.SecurityManager;
 import me.miki.shindo.features.settings.SettingManager;
 import me.miki.shindo.helpers.CpsHelper;
 import me.miki.shindo.helpers.MessageHelper;
-import me.miki.shindo.helpers.download.DownloadManager;
+import me.miki.shindo.features.command.CommandManager;
+import me.miki.shindo.features.download.DownloadManager;
 import me.miki.shindo.helpers.file.FileManager;
 import me.miki.shindo.helpers.font.FontHelper;
-import me.miki.shindo.helpers.lang.LanguageManager;
+import me.miki.shindo.features.lang.LanguageManager;
 import me.miki.shindo.helpers.logger.ShindoLogger;
 import me.miki.shindo.ui.hudeditor.HudEditor;
 import net.minecraft.client.Minecraft;
@@ -35,6 +36,8 @@ public class Shindo {
 
     // IMPORTANT VARIABLES AND FIELDS HERE
     private ShindoHandler shindoHandler;
+    private ShindoAPI shindoAPI;
+    private EventManager eventManager;
     private FileManager fileManager;
     private DownloadManager downloadManager;
     private LanguageManager languageManager;
@@ -46,6 +49,7 @@ public class Shindo {
     private FontHelper fontHelper;
     private CpsHelper cpsHelper;
     private MessageHelper messageHelper;
+    private CommandManager commandManager;
 
     // MAIN METHODS
     public void startup() {
@@ -63,7 +67,10 @@ public class Shindo {
                 fontHelper = new FontHelper(),
                 messageHelper = new MessageHelper(),
                 securityManager = new SecurityManager(),
-                shindoHandler = new ShindoHandler()
+                commandManager = new CommandManager(),
+                shindoHandler = new ShindoHandler(),
+                shindoAPI = new ShindoAPI()
+
         );
 
         try {
@@ -77,8 +84,9 @@ public class Shindo {
 
         fontHelper.init();
         shindoHandler.init();
+        shindoAPI.init();
 
-        EventManager.register(this);
+        eventManager.register(this);
     }
 
     public void shutdown() {
@@ -87,10 +95,16 @@ public class Shindo {
         } catch (Exception e) {
             ShindoLogger.error("Failed to save config file.", e);
         }
+
+        eventManager.unregister(this);
     }
 
     // GETTERS
     public static Shindo getInstance() { return INSTANCE; }
+
+    public ShindoAPI getShindoAPI() { return shindoAPI; }
+
+    public EventManager getEventManager() { return eventManager; }
 
     public FileManager getFileManager() { return fileManager; }
 
@@ -114,11 +128,13 @@ public class Shindo {
 
     public SecurityManager getSecurityManager() { return securityManager; }
 
+    public CommandManager getCommandManager() { return commandManager; }
+
     public ShindoHandler getShindoHandler() { return shindoHandler; }
 
     private void registerEvents(Object... events) {
         for (Object event : events) {
-            EventManager.register(event);
+            eventManager.register(event);
         }
     }
 

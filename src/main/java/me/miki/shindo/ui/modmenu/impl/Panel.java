@@ -30,7 +30,7 @@ public class Panel {
     private static final Minecraft mc = Minecraft.getMinecraft();
     private final ArrayList<Button> buttonList = new ArrayList<>();
     private final ArrayList<Options> optionsList = new ArrayList<>();
-    private final String[] sideButtons = {"Mods", "Settings"};
+    private final String[] sideButtons = {"Mods", "Settings", "Tweaker", "Chat", "Music" };
     private final Animate animateSideBar = new Animate();
     private final Animate animateTransition = new Animate();
     private final ScrollHelper scrollHelperMods = new ScrollHelper(0, 270, 35, 300);
@@ -132,21 +132,21 @@ public class Panel {
     public void renderPanel(int mouseX, int mouseY) {
         boolean roundedCorners = Shindo.getInstance().getOptionManager().getOptionByName("Rounded Corners").isCheckToggled();
         int color = Shindo.getInstance().getOptionManager().getOptionByName("Color").getColor().getRGB();
-        Helper2D.drawRoundedRectangle(x, y, w, h, 2, Style.getColor(80).getRGB(), roundedCorners ? 1 : -1);
+        Helper2D.drawRoundedRectangle(x, y + 30, w, h - 28, 2, Style.getColorPallet(2).getRGB(), roundedCorners ? 1 : -1);
         Helper2D.drawRoundedRectangle(x,
-                selected == 1 ? y + 30 : y + 60, w,
-                selected == 1 ? h + 270 : h + 240, 2,
-                Style.getColor(50).getRGB(), roundedCorners ? 2 : -1
+                selected == 0 ? y + 60 : y + 30, w,
+                selected == 0 ? h + 240 : h + 270, 2,
+                Style.getColorPallet(2).getRGB(), roundedCorners ? 2 : -1
         );
         if (selected == 0)
-            Helper2D.drawRectangle(x, y + 30, w, 30, Style.getColor(70).getRGB());
+            Helper2D.drawRectangle(x, y + 30, w, 30, Style.getColorPallet(3).getRGB());
 
-        boolean hovered = MathHelper.withinBox(x + w - 25, y + 5, 20, 20, mouseX, mouseY);
-        Helper2D.drawRoundedRectangle(x + w - 25, y + 5, 20, 20, 2, Style.getColor(hovered ? 70 : 50).getRGB(), roundedCorners ? 0 : -1);
-        Helper2D.drawPicture(x + w - 25, y + 5, 20, 20, color, "icon/cross.png");
+        boolean hovered = MathHelper.withinBox(x + w + 10, y - 15, 30, 30, mouseX, mouseY);
+        Helper2D.drawRoundedRectangle(x + w + 10, y - 15, 30, 30, 2, Style.getColorPallet(hovered ? 6 : 3).getRGB(), roundedCorners ? 0 : -1);
+        Helper2D.drawPicture(x + w + 10, y - 15, 30, 30, color, "icon/cross.png");
 
         // Helper2D.drawPicture(x + 2, y - 1, 35, 35, color, "cloudlogo.png");
-        Shindo.getInstance().getFontHelper().size40.drawString(Shindo.NAME, x + 37, y + 6, color);
+        //Shindo.getInstance().getFontHelper().size40.drawString(Shindo.NAME + " Client", x + 37, y + 6, color);
 
         /*
         Buttons are only drawn if the Sidebar is on the mods tab
@@ -168,7 +168,7 @@ public class Panel {
                         y + h + 5,
                         length + 25,
                         20, 2,
-                        Style.getColor(selectedType.equals(type) ? 120 : 50).getRGB(),
+                        Style.getColorPallet(selectedType.equals(type) ? 5 : 4).getRGB(),
                         roundedCorners ? 0 : -1
                 );
                 Helper2D.drawPicture(x + offset + 8, y + h + 8, 15, 15, -1, "icon/" + type.getIcon());
@@ -239,18 +239,35 @@ public class Panel {
 
         animateSideBar.update();
 
-        Helper2D.drawRoundedRectangle(x - 50, y, 40, h + 300, 2, Style.getColor(50).getRGB(), roundedCorners ? 0 : -1);
+        Helper2D.drawRoundedRectangle(x - 3, y - 23, w + 6, 46, 2, Style.getColorPallet(2).getRGB(), roundedCorners ? 0 : -1);
 
-        int value = selected == 1 ? animateSideBar.getValueI() : 40 - animateSideBar.getValueI();
-        Helper2D.drawRoundedRectangle(x - 50, y + value, 40, 40, 2, Style.getColor(50).getRGB(), roundedCorners ? 0 : -1);
 
+
+
+        drawTopBar();
         int index = 0;
+        int space = 0;
         for (String button : sideButtons) {
-            Shindo.getInstance().getFontHelper().size15.drawString(button, x - 30 - Shindo.getInstance().getFontHelper().size15.getStringWidth(button) / 2f, y + 30 + index * 40, color);
-            Helper2D.drawPicture(x - 40, y + 5 + index * 40, 20, 20, color, "icon/button/sidebar/" + button.toLowerCase() + ".png");
+
+            Shindo.getInstance().getFontHelper().size15.drawString(button, x + 25 - Shindo.getInstance().getFontHelper().size15.getStringWidth(button) / 2f + index * 40 + MathHelper.addIntToInt(space, 5, index), y + 10 , color);
+            Helper2D.drawPicture(x + 15 + index * 40 + MathHelper.addIntToInt(space, 5, index), y - 12, 20, 20, color, "icon/button/sidebar/" + button.toLowerCase() + ".png");
 
             index++;
         }
+
+
+    }
+
+    private void drawTopBar() {
+        boolean roundedCorners = Shindo.getInstance().getOptionManager().getOptionByName("Rounded Corners").isCheckToggled();
+        int space = 0;
+        int value = 0;
+        for (int i = 0 ; i <= 10; i++) {
+            Helper2D.drawRoundedRectangle(x + 5 + i * 40 + MathHelper.addIntToInt(space, 5, i), y - 20, 40, 40, 2, Style.getColorPallet(4).getRGB(), roundedCorners ? 0 : -1);
+        }
+
+        Helper2D.drawRoundedRectangle(x + 5 + MathHelper.addIntToInt(value, 1, selected)  * 40 + MathHelper.addIntToInt(space, 5, selected), y - 20 , 40 , 40, 2, Style.getColorPallet(6).getRGB(), roundedCorners ? 0 : -1);
+
     }
 
     /**
@@ -265,10 +282,11 @@ public class Panel {
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         if (mouseButton == 0) {
             int index = 0;
+            int space = 0;
             for (String button : sideButtons) {
-                if (MathHelper.withinBox(x - 50, y + index * 40, 40, 39, mouseX, mouseY)) {
+                if (MathHelper.withinBox(x + index * 40 + MathHelper.addIntToInt(space, 5, index), y - 20 , 40 , 40, mouseX, mouseY)) {
                     if (selected != index) {
-                        animateSideBar.reset();
+                        //animateSideBar.reset();
                         animateTransition.reset();
                     }
                     selected = index;
@@ -289,7 +307,7 @@ public class Panel {
             }
 
 
-            if (MathHelper.withinBox(x + w - 25, y + 5, 20, 20, mouseX, mouseY)) {
+            if (MathHelper.withinBox(x + w + 10, y - 15, 30, 30, mouseX, mouseY)) {
                 mc.displayGuiScreen(Shindo.getInstance().getHudEditor());
             }
         }

@@ -5,21 +5,20 @@ import net.minecraft.client.gui.ScaledResolution;
 
 public class ResolutionHelper {
 
-    private static final Minecraft mc = Minecraft.getMinecraft();
     private static ScaledResolution scaledResolution;
 
     public static int getHeight() {
-        scaledResolution = new ScaledResolution(mc);
+        scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
         return scaledResolution.getScaledHeight();
     }
 
     public static int getWidth() {
-        scaledResolution = new ScaledResolution(mc);
+        scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
         return scaledResolution.getScaledWidth();
     }
 
     public static int getFactor() {
-        scaledResolution = new ScaledResolution(mc);
+        scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
         return scaledResolution.getScaleFactor();
     }
 }

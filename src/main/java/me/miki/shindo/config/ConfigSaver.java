@@ -11,7 +11,6 @@ import me.miki.shindo.Shindo;
 import me.miki.shindo.features.mods.Mod;
 import me.miki.shindo.features.options.Option;
 import me.miki.shindo.features.settings.Setting;
-import me.miki.shindo.helpers.OSHelper;
 import me.miki.shindo.ui.Style;
 
 import java.awt.*;
@@ -30,7 +29,7 @@ public class ConfigSaver {
     public static void saveConfig() throws IOException {
         createDir();
 
-        FileWriter writer = new FileWriter(OSHelper.getShindoDirectory() + "config.json");
+        FileWriter writer = new FileWriter("shindo/config.json");
 
         Config config = new Config();
 
@@ -43,7 +42,6 @@ public class ConfigSaver {
         for (Mod mod : Shindo.getInstance().getModManager().getMods()) {
             ArrayList<Setting> settings = Shindo.getInstance().getSettingManager().getSettingsByMod(mod);
 
-            // Garantir que settings não seja null
             if (settings == null) {
                 settings = new ArrayList<>();
             }
@@ -60,8 +58,9 @@ public class ConfigSaver {
             );
             config.addConfig(modConfig);
 
+
             System.out.println("Salvando configurações para o módulo: " + mod.getName());
-            System.out.println("Settings: " + new Gson().toJson(settings));
+            System.out.println("Settings: " + gson.toJson(settings));
         }
 
         for(Option option : Shindo.getInstance().getOptionManager().getOptions()){
@@ -71,7 +70,7 @@ public class ConfigSaver {
         config.setDarkMode(Style.isDarkMode());
         config.setSnapping(Style.isSnapping());
 
-        String json = new Gson().toJson(config);
+        String json = gson.toJson(config);
         writer.write(json);
         writer.close();
     }
@@ -81,7 +80,7 @@ public class ConfigSaver {
      */
 
     private static void createDir() {
-        File file = new File(OSHelper.getShindoDirectory());
+        File file = new File("shindo");
         if (!file.exists()) {
             try {
                 Files.createDirectory(file.toPath());
@@ -97,7 +96,7 @@ public class ConfigSaver {
      */
 
     private static void createFile() {
-        File file = new File(OSHelper.getShindoDirectory() + "config.json");
+        File file = new File("shindo/config.json");
         if (!file.exists()) {
             try {
                 Files.createFile(file.toPath());
@@ -114,7 +113,7 @@ public class ConfigSaver {
      */
 
     public static boolean configExists() {
-        File file = new File(OSHelper.getShindoDirectory() + "config.json");
+        File file = new File("shindo/config.json");
         return file.exists();
     }
 }

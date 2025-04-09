@@ -36,8 +36,8 @@ dependencies {
     implementation("org.apache.httpcomponents:httpclient:4.5.6")
     implementation("commons-logging:commons-logging:1.2")
     implementation("org.apache.httpcomponents:httpcore:4.4.10")
-    implementation("org.apache.logging.log4j:log4j-core:2.0-beta9")
-    implementation("org.apache.logging.log4j:log4j-api:2.0-beta9")
+    implementation("org.apache.logging.log4j:log4j-core:2.17.2")
+    implementation("org.apache.logging.log4j:log4j-api:2.17.2")
     implementation("org.lwjgl.lwjgl:lwjgl:2.9.3")
     implementation("org.lwjgl.lwjgl:lwjgl_util:2.9.3")
     implementation("com.mojang:realms:1.7.59")
@@ -62,5 +62,6 @@ tasks.register<JavaExec>("runClient") {
     } else {
         jvmArgs("-Djava.library.path=../natives/linux")
     }
+    jvmArgs("-Dlog4j2.debug")
     workingDir = project.projectDir.resolve("run")
 }

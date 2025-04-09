@@ -54,10 +54,16 @@ public class ColorHelper {
      */
 
     public static Color getColorAtPixel(float x, float y) {
+        Minecraft mc = Minecraft.getMinecraft();
+        if (mc == null || mc.displayWidth <= 0 || mc.displayHeight <= 0) {
+            return Color.BLACK; // fallback
+        }
+
+        int factor = ResolutionHelper.getFactor();
         FloatBuffer floatBuffer = BufferUtils.createFloatBuffer(3);
         GL11.glReadPixels(
-                (int) (x * ResolutionHelper.getFactor()),
-                (int) (mc.displayHeight - y * ResolutionHelper.getFactor()),
+                (int) (x * factor ),
+                (int) (mc.displayHeight - y * factor),
                 1, 1, GL11.GL_RGB, GL11.GL_FLOAT, floatBuffer
         );
         float red = floatBuffer.get(0);

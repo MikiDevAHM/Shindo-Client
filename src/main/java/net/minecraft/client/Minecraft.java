@@ -1392,13 +1392,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             {
                 this.inGameHasFocus = true;
                 this.mouseHelper.grabMouseCursor();
-                for (KeyBinding keyBinding : gameSettings.keyBindings) {
-                    try {
-                        KeyBinding.setKeyBindState(keyBinding.getKeyCode(), keyBinding.getKeyCode() < 256 && Keyboard.isKeyDown(keyBinding.getKeyCode()));
-                    } catch (Exception e) {
-                        ShindoLogger.error("KeyBinding Exception", e);
-                    }
-                }
                 this.displayGuiScreen((GuiScreen)null);
                 this.leftClickCounter = 10000;
             }

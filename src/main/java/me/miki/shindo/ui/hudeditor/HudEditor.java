@@ -98,13 +98,13 @@ public class HudEditor extends GuiScreen {
          */
         GLHelper.endScissor();
 
-        animate.update().setReversed(!MathHelper.withinBox(width / 2 - 50, height / 2 - 6, 100, 20, mouseX, mouseY));
+        boolean hovered = MathHelper.withinBox(width / 2 - 50, height / 2 - 6, 100, 20, mouseX, mouseY);
 
         Helper2D.drawRoundedRectangle(
                 width / 2 - 50,
                 height / 2 - 6,
                 100, 20, 2,
-                Style.getColor(animate.getValueI() + 30).getRGB(),
+                Style.getColorPallet(hovered ? 6 : 3).getRGB(),
                 roundedCorners ? 0 : -1
         );
         Shindo.getInstance().getFontHelper().size20.drawString(

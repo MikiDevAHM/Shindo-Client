@@ -23,6 +23,8 @@ public class OptionManager {
         addOption(new Option("Font Changer", "Arial", 0,
                 GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
         addOption(new Option("Color", new Color(255, 255, 255), new Color(255, 0, 0), 0, new float[]{0, 0}));
+        //String[] mode = {"Portuguese", "English"};
+        //addOption(new Option("Language", "Portuguese", 0, mode));
 
         addOption(new Option("Misc"));
         addOption(new Option("Minimal View Bobbing", true));
@@ -34,6 +36,7 @@ public class OptionManager {
 
         addOption(new Option("Tweaks"));
         addOption(new Option("Hit Delay Fix", true));
+        addOption(new Option("Mouse Delay Fix", true));
 
         addOption(new Option("Controls"));
         addOption(new Option("ModMenu Keybinding", Keyboard.KEY_RSHIFT));

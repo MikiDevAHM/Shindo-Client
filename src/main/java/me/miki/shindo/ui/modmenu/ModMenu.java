@@ -53,7 +53,7 @@ public class ModMenu extends GuiScreen {
             panel.setY(height - animateModMenu.getValueI());
         }
         panel.renderPanel(mouseX, mouseY);
-        panel.updatePosition(mouseX, mouseY);
+        //panel.updatePosition(mouseX, mouseY);
 
         /*
         Draws the time at the top right

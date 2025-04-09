@@ -11,20 +11,19 @@ import me.miki.shindo.Shindo;
 import me.miki.shindo.features.mods.Mod;
 import me.miki.shindo.features.options.Option;
 import me.miki.shindo.features.settings.Setting;
-import me.miki.shindo.helpers.OSHelper;
 import me.miki.shindo.ui.Style;
 
 import java.awt.*;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 
 public class ConfigLoader {
 
     /**
      * Loads the config from .minecraft/shindo/config.json
      */
-    public static void loadConfig() throws IOException {
-        FileReader reader = new FileReader(OSHelper.getShindoDirectory() + "config.json");
+    public static void loadConfig() throws FileNotFoundException {
+        FileReader reader = new FileReader("shindo/config.json");
 
         // Use GsonBuilder para respeitar @Expose
         Gson gson = new GsonBuilder()
@@ -66,7 +65,7 @@ public class ConfigLoader {
                 }
 
                 System.out.println("Carregando configurações para o módulo: " + modConfig.getName());
-                System.out.println("Settings: " + new Gson().toJson(modConfig.getSettings()));
+                System.out.println("Settings: " + gson.toJson(modConfig.getSettings()));
             }
         }
 

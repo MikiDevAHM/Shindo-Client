@@ -1,4 +1,4 @@
-package me.miki.shindo.helpers.download.file;
+package me.miki.shindo.features.download.file;
 
 import java.io.File;
 

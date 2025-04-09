@@ -277,10 +277,11 @@ public class EntityPlayerSP extends AbstractClientPlayer
     {
         SendChatEvent event = new SendChatEvent(message);
         event.call();
+
         if (event.isCancelled()) {
             return;
         }
-        
+
         this.sendQueue.addToSendQueue(new C01PacketChatMessage(message));
     }
 

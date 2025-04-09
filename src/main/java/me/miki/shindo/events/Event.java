@@ -1,5 +1,7 @@
 package me.miki.shindo.events;
 
+import me.miki.shindo.helpers.logger.ShindoLogger;
+
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -58,19 +60,18 @@ public abstract class Event {
         this.cancelled = cancelled;
     }
 
-    private static final void call(final Event event) {
+    private static  void call(final Event event) {
 
-        final ArrayHelper<Data> dataList = EventManager.get(event.getClass());
+        ArrayHelper<Data> dataList = EventManager.get(event.getClass());
 
         if (dataList != null) {
-            for (final Data data : dataList) {
-
+            for (Data data : dataList) {
                 try {
                     data.target.invoke(data.source, event);
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    ShindoLogger.error("IllegalAccessException", e);
                 } catch (InvocationTargetException e) {
-                    e.printStackTrace();
+                    ShindoLogger.error("InvocationTargetException", e);
                 }
 
             }
