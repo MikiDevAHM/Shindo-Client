@@ -13,7 +13,13 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.stb.STBImage;
+
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -130,9 +136,68 @@ public class Helper2D {
         ResourceLocation resourceLocation = new ResourceLocation("shindo/" + location);
         mc.getTextureManager().bindTexture(resourceLocation);
         GlStateManager.enableBlend();
-        GL11.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         Gui.drawModalRectWithCustomSizedTexture(x, y, 0.0F, 0.0F, w, h, w, h);
         GlStateManager.disableBlend();
+    }
+
+    public static int loadTexture(File file) {
+        ByteBuffer imageBuffer = null;
+        try (InputStream is = new FileInputStream(file);
+             ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+
+            byte[] buffer = new byte[8192];
+            int read;
+            while ((read = is.read(buffer)) != -1) {
+                baos.write(buffer, 0, read);
+            }
+
+            byte[] imageBytes = baos.toByteArray();
+            imageBuffer = BufferUtils.createByteBuffer(imageBytes.length);
+            imageBuffer.put(imageBytes);
+            imageBuffer.flip();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        IntBuffer width = BufferUtils.createIntBuffer(1);
+        IntBuffer height = BufferUtils.createIntBuffer(1);
+        IntBuffer channels = BufferUtils.createIntBuffer(1);
+
+        STBImage.stbi_set_flip_vertically_on_load(true);
+        ByteBuffer image = STBImage.stbi_load_from_memory(imageBuffer, width, height, channels, 4);
+        if (image == null) {
+            throw new RuntimeException("Failed to load image: " + STBImage.stbi_failure_reason());
+        }
+
+        int textureID = GL11.glGenTextures();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA,
+                width.get(0), height.get(0), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, image);
+
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+
+        STBImage.stbi_image_free(image);
+
+        return textureID;
+    }
+
+    public static void drawTexture(int textureID, float x, float y, float width, float height) {
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glBegin(GL11.GL_QUADS);
+
+        GL11.glTexCoord2f(0, 0); GL11.glVertex2f(x, y);
+        GL11.glTexCoord2f(1, 0); GL11.glVertex2f(x + width, y);
+        GL11.glTexCoord2f(1, 1); GL11.glVertex2f(x + width, y + height);
+        GL11.glTexCoord2f(0, 1); GL11.glVertex2f(x, y + height);
+
+        GL11.glEnd();
     }
 
     /**
@@ -256,9 +321,9 @@ public class Helper2D {
      */
 
     public static void drawCircle(float x, float y, float r, int h, int j, int color) {
-        GL11.glEnable(GL_BLEND);
-        GL11.glDisable(GL11.GL_CULL_FACE);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
+        glDisable(GL_CULL_FACE);
+        glDisable(GL_TEXTURE_2D);
         glBegin(GL_TRIANGLE_FAN);
 
         ColorHelper.color(color);
@@ -274,8 +339,8 @@ public class Helper2D {
         }
 
         glEnd();
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_CULL_FACE);
-        GL11.glDisable(GL_BLEND);
+        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_CULL_FACE);
+        glDisable(GL_BLEND);
     }
 }

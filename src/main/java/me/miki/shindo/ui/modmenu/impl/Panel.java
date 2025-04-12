@@ -9,6 +9,8 @@ import me.miki.shindo.Shindo;
 import me.miki.shindo.features.mods.Mod;
 import me.miki.shindo.features.mods.Type;
 import me.miki.shindo.features.options.Option;
+import me.miki.shindo.features.screenshot.Screenshot;
+import me.miki.shindo.features.screenshot.ScreenshotManager;
 import me.miki.shindo.helpers.MathHelper;
 import me.miki.shindo.helpers.ResolutionHelper;
 import me.miki.shindo.helpers.animation.Animate;
@@ -30,11 +32,12 @@ public class Panel {
     private static final Minecraft mc = Minecraft.getMinecraft();
     private final ArrayList<Button> buttonList = new ArrayList<>();
     private final ArrayList<Options> optionsList = new ArrayList<>();
-    private final String[] sideButtons = {"Mods", "Settings", "Tweaker", "Chat", "Music" };
+    private final String[] sideButtons = {"Mods", "Settings", "Prints", "Chat", "Tweaker" };
     private final Animate animateSideBar = new Animate();
     private final Animate animateTransition = new Animate();
     private final ScrollHelper scrollHelperMods = new ScrollHelper(0, 270, 35, 300);
     private final ScrollHelper scrollHelperOptions = new ScrollHelper(0, 300, 35, 300);
+    private final ScrollHelper scrollHelperScreenshots = new ScrollHelper(0, 300, 35, 300);
     private final TextBox textBox = new TextBox("Search", 0, 0, 150, 20);
     private int x, y, w, h;
     private int offsetX, offsetY;
@@ -42,6 +45,8 @@ public class Panel {
     private boolean anyButtonOpen;
     private int selected = 0;
     private Type selectedType = Type.All;
+
+    private Screenshot currentScreenshot;
 
     public Panel() {
         this.x = ResolutionHelper.getWidth() / 2 - 250;
@@ -122,6 +127,15 @@ public class Panel {
         }
     }
 
+    public void initPanel() {
+
+        ScreenshotManager screenshotManager = Shindo.getInstance().getScreenshotManager();
+
+        if(currentScreenshot == null && !screenshotManager.getScreenshots().isEmpty()) {
+            currentScreenshot = screenshotManager.getScreenshots().get(0);
+        }
+    }
+
     /**
      * Renders the panel background, the sidebar and all the buttons
      *
@@ -155,6 +169,7 @@ public class Panel {
         animateTransition.update();
         scrollHelperMods.update();
         scrollHelperOptions.update();
+        scrollHelperScreenshots.update();
 
         Shindo.getInstance().getMessageHelper().renderMessage();
 
@@ -230,6 +245,26 @@ public class Panel {
                     options.setY((int) position);
                     height += options.getH();
                 }
+            }
+        } else if (selected == 2) {
+
+            Shindo instance = Shindo.getInstance();
+            ScreenshotManager manager = instance.getScreenshotManager();
+
+            int addX = 42;
+            int addY = 12;
+            int offsetX = 0;
+            int index = 1;
+
+            manager.loadScreenshots();
+
+            if (currentScreenshot == null && !manager.getScreenshots().isEmpty()) {
+                currentScreenshot = manager.getScreenshots().get(0);
+            }
+
+
+            if (currentScreenshot != null) {
+
             }
         }
 

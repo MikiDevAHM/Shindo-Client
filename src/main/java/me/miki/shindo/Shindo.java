@@ -3,19 +3,21 @@ package me.miki.shindo;
 import me.miki.shindo.config.ConfigLoader;
 import me.miki.shindo.config.ConfigSaver;
 import me.miki.shindo.events.EventManager;
+import me.miki.shindo.features.command.CommandManager;
+import me.miki.shindo.features.download.DownloadManager;
+import me.miki.shindo.features.lang.LanguageManager;
 import me.miki.shindo.features.mods.ModManager;
 import me.miki.shindo.features.options.OptionManager;
+import me.miki.shindo.features.screenshot.ScreenshotManager;
 import me.miki.shindo.features.security.SecurityManager;
 import me.miki.shindo.features.settings.SettingManager;
 import me.miki.shindo.helpers.CpsHelper;
 import me.miki.shindo.helpers.MessageHelper;
-import me.miki.shindo.features.command.CommandManager;
-import me.miki.shindo.features.download.DownloadManager;
 import me.miki.shindo.helpers.file.FileManager;
 import me.miki.shindo.helpers.font.FontHelper;
-import me.miki.shindo.features.lang.LanguageManager;
 import me.miki.shindo.helpers.logger.ShindoLogger;
 import me.miki.shindo.ui.hudeditor.HudEditor;
+import me.miki.shindoapi.ShindoAPI;
 import net.minecraft.client.Minecraft;
 
 /**
@@ -50,6 +52,7 @@ public class Shindo {
     private CpsHelper cpsHelper;
     private MessageHelper messageHelper;
     private CommandManager commandManager;
+    private ScreenshotManager screenshotManager;
 
     // MAIN METHODS
     public void startup() {
@@ -68,6 +71,7 @@ public class Shindo {
                 messageHelper = new MessageHelper(),
                 securityManager = new SecurityManager(),
                 commandManager = new CommandManager(),
+                screenshotManager = new ScreenshotManager(),
                 shindoHandler = new ShindoHandler(),
                 shindoAPI = new ShindoAPI()
 
@@ -86,7 +90,7 @@ public class Shindo {
         shindoHandler.init();
         shindoAPI.init();
 
-        eventManager.register(this);
+        EventManager.register(this);
     }
 
     public void shutdown() {
@@ -96,7 +100,7 @@ public class Shindo {
             ShindoLogger.error("Failed to save config file.", e);
         }
 
-        eventManager.unregister(this);
+        EventManager.unregister(this);
     }
 
     // GETTERS
@@ -130,11 +134,13 @@ public class Shindo {
 
     public CommandManager getCommandManager() { return commandManager; }
 
+    public ScreenshotManager getScreenshotManager() { return screenshotManager; }
+
     public ShindoHandler getShindoHandler() { return shindoHandler; }
 
     private void registerEvents(Object... events) {
         for (Object event : events) {
-            eventManager.register(event);
+            EventManager.register(event);
         }
     }
 
