@@ -6,6 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.IResourcePack;
+import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -229,4 +231,20 @@ public class PatcherBugFixer extends Patcher {
     public static void save(int mouseX, int mouseY) {
         Minecraft.getMinecraft().gameSettings.saveOptions();
     }
+
+    /*
+     * @Mixin(GuiScreenResourcePacks.class)
+     *
+     * @Inject(method = "actionPerformed", at = @At(value = "INVOKE", target = "Ljava/util/Collections;reverse(Ljava/util/List;)V", remap = false))
+     */
+    public static void clearHandles() {
+        ResourcePackRepository repository = Minecraft.getMinecraft().getResourcePackRepository();
+        for (ResourcePackRepository.Entry entry : repository.getRepositoryEntries()) {
+            IResourcePack current = repository.getResourcePackInstance();
+            if (current == null || !entry.getResourcePackName().equals(current.getPackName())) {
+                entry.closeResourcePack();
+            }
+        }
+    }
+
 }
