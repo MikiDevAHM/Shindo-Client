@@ -5,12 +5,15 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.INetHandler;
+import net.minecraft.network.Packet;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import org.lwjgl.input.Keyboard;
@@ -247,4 +250,19 @@ public class PatcherBugFixer extends Patcher {
         }
     }
 
+    /*
+     * @Mixin(targets = "net.minecraft.network.PacketThreadUtil$1")
+     *
+     * @Redirect(method = "run", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Packet;processPacket(Lnet/minecraft/network/INetHandler;)V"))
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static void ignorePacketsFromClosedConnections(Packet packet, INetHandler handler) {
+        if (handler instanceof NetHandlerPlayClient) {
+            if (((NetHandlerPlayClient) handler).getNetworkManager().isChannelOpen()) {
+                packet.processPacket(handler);
+            }
+        } else {
+            packet.processPacket(handler);
+        }
+    }
 }

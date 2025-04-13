@@ -1,5 +1,6 @@
 package net.minecraft.network;
 
+import me.miki.shindo.features.patcher.impl.bugfix.PatcherBugFixer;
 import net.minecraft.network.play.server.S01PacketJoinGame;
 import net.minecraft.network.play.server.S07PacketRespawn;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
@@ -19,7 +20,7 @@ public class PacketThreadUtil
                 public void run()
                 {
                     PacketThreadUtil.clientPreProcessPacket(p_180031_0_);
-                    p_180031_0_.processPacket(p_180031_1_);
+                    PatcherBugFixer.ignorePacketsFromClosedConnections(p_180031_0_, p_180031_1_);
                 }
             });
             throw ThreadQuickExitException.INSTANCE;
