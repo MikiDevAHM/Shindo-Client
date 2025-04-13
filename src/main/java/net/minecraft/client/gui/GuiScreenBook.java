@@ -510,7 +510,9 @@ public class GuiScreenBook extends GuiScreen
 
                 if (ichatcomponent1 != null)
                 {
+                    super.drawScreen(mouseX, mouseY, partialTicks);
                     this.handleComponentHover(ichatcomponent1, mouseX, mouseY);
+                    return;
                 }
             }
         }

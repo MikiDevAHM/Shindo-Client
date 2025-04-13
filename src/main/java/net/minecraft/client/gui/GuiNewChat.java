@@ -1,6 +1,7 @@
 package net.minecraft.client.gui;
 
 import com.google.common.collect.Lists;
+import me.miki.shindo.features.patcher.impl.bugfix.PatcherBugFixer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -258,6 +259,7 @@ public class GuiNewChat extends Gui
 
                 if (j <= MathHelper.floor_float((float)this.getChatWidth() / this.getChatScale()) && k < this.mc.fontRendererObj.FONT_HEIGHT * l + l)
                 {
+                    PatcherBugFixer.stopEventsOutsideWindow(mouseX, mouseY, scaledresolution, i, f, j, k, l, this);
                     int i1 = k / this.mc.fontRendererObj.FONT_HEIGHT + this.scrollPos;
 
                     if (i1 >= 0 && i1 < this.drawnChatLines.size())
@@ -312,7 +314,7 @@ public class GuiNewChat extends Gui
         {
             ChatLine chatline = (ChatLine)iterator.next();
 
-            if (chatline.getChatLineID() == id)
+            if (PatcherBugFixer.checkIfChatLineIsNull(chatline) == id)
             {
                 iterator.remove();
             }
@@ -324,7 +326,7 @@ public class GuiNewChat extends Gui
         {
             ChatLine chatline1 = (ChatLine)iterator.next();
 
-            if (chatline1.getChatLineID() == id)
+            if (PatcherBugFixer.checkIfChatLineIsNull(chatline1) == id)
             {
                 iterator.remove();
                 break;

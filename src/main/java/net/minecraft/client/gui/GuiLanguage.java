@@ -162,5 +162,9 @@ public class GuiLanguage extends GuiScreen
             GuiLanguage.this.drawCenteredString(GuiLanguage.this.fontRendererObj, ((Language)this.languageMap.get(this.langCodeList.get(entryID))).toString(), this.width / 2, p_180791_3_ + 1, 16777215);
             GuiLanguage.this.fontRendererObj.setBidiFlag(GuiLanguage.this.languageManager.getCurrentLanguage().isBidirectional());
         }
+
+        public void onGuiClosed() {
+            mc.ingameGUI.getChatGUI().refreshChat();
+        }
     }
 }

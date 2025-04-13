@@ -3,6 +3,7 @@ package net.minecraft.client.gui;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import me.miki.shindo.features.patcher.impl.bugfix.PatcherBugFixer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.stream.GuiTwitchUserMode;
 import net.minecraft.client.renderer.GlStateManager;
@@ -630,7 +631,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
      */
     public void handleKeyboardInput() throws IOException
     {
-        if (Keyboard.getEventKeyState())
+        if (PatcherBugFixer.checkCharacter())
         {
             this.keyTyped(Keyboard.getEventCharacter(), Keyboard.getEventKey());
         }

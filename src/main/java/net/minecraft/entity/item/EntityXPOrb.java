@@ -1,5 +1,6 @@
 package net.minecraft.entity.item;
 
+import me.miki.shindo.features.patcher.impl.bugfix.PatcherBugFixer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -126,7 +127,8 @@ public class EntityXPOrb extends Entity
         if (this.closestPlayer != null)
         {
             double d1 = (this.closestPlayer.posX - this.posX) / d0;
-            double d2 = (this.closestPlayer.posY + (double)this.closestPlayer.getEyeHeight() - this.posY) / d0;
+            // ORIGINAL double d2 = (this.closestPlayer.posY + (double)closestPlayer.getEyeHeight() - this.posY) / d0;
+            double d2 = (this.closestPlayer.posY + (double) PatcherBugFixer.lowerHeight(closestPlayer) - this.posY) / d0;
             double d3 = (this.closestPlayer.posZ - this.posZ) / d0;
             double d4 = Math.sqrt(d1 * d1 + d2 * d2 + d3 * d3);
             double d5 = 1.0D - d4;

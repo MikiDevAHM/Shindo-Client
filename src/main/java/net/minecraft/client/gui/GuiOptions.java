@@ -239,4 +239,8 @@ public class GuiOptions extends GuiScreen implements GuiYesNoCallback
         this.drawCenteredString(this.fontRendererObj, this.field_146442_a, this.width / 2, 15, 16777215);
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
+
+    public void onGuiClosed() {
+        mc.gameSettings.saveOptions();
+    }
 }

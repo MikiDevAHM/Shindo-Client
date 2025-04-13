@@ -5,7 +5,8 @@
 ### Credits
 > [CloudClient](https://github.com/CloudClientDev) ,
 > [SoarClient](https://github.com/Soar-Client/Legacy-SoarClient) ,
-> [GradleMCP](https://github.com/refactorinqq/gradlemcp/tree/master)
+> [GradleMCP](https://github.com/refactorinqq/gradlemcp/tree/master) ,
+> [Patcher](https://github.com/Sk1erLLC/Patcher)
 
 ### Useful gradle commands
 
@@ -23,7 +24,7 @@
 ./gradlew --stop
 ```
 
-Works only on Windows
+Works only on Windows (COMING SOON TO LINUX)
 
 ## License
 

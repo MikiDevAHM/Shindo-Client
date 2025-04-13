@@ -1,5 +1,6 @@
 package net.minecraft.client.renderer;
 
+import me.miki.shindo.features.patcher.impl.bugfix.PatcherBugFixer;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -77,7 +78,8 @@ public class BlockFluidRenderer
                 double d0 = (double)blockPosIn.getX();
                 double d1 = (double)blockPosIn.getY();
                 double d2 = (double)blockPosIn.getZ();
-                float f11 = 0.001F;
+                // original float f11 = 0.001F
+                float f11 = PatcherBugFixer.fixFluidStitching();
 
                 if (flag)
                 {

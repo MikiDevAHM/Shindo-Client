@@ -1,5 +1,6 @@
 package net.minecraft.entity;
 
+import me.miki.shindo.features.patcher.impl.bugfix.PatcherBugFixer;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -1142,6 +1143,7 @@ public abstract class Entity implements ICommandSender
      */
     public void spawnRunningParticles()
     {
+        PatcherBugFixer.checkGroundState(this);
         if (this.isSprinting() && !this.isInWater())
         {
             this.createRunningParticles();
@@ -1234,7 +1236,8 @@ public abstract class Entity implements ICommandSender
     public float getBrightness(float partialTicks)
     {
         BlockPos blockpos = new BlockPos(this.posX, this.posY + (double)this.getEyeHeight(), this.posZ);
-        return this.worldObj.isBlockLoaded(blockpos) ? this.worldObj.getLightBrightness(blockpos) : 0.0F;
+        // ORIGINAL return this.worldObj.isBlockLoaded(blockpos) ? this.worldObj.getLightBrightness(blockpos) : 0.0F;
+        return PatcherBugFixer.alwaysReturnTrue(worldObj, blockpos) ? this.worldObj.getLightBrightness(blockpos) : 0.0F;
     }
 
     /**
@@ -2788,4 +2791,5 @@ public abstract class Entity implements ICommandSender
 
         EnchantmentHelper.applyArthropodEnchantments(entityLivingBaseIn, entityIn);
     }
+
 }

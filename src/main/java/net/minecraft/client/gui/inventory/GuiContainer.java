@@ -1,6 +1,7 @@
 package net.minecraft.client.gui.inventory;
 
 import com.google.common.collect.Sets;
+import me.miki.shindo.features.patcher.impl.bugfix.PatcherBugFixer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -67,9 +68,9 @@ public abstract class GuiContainer extends GuiScreen
     protected final Set<Slot> dragSplittingSlots = Sets.<Slot>newHashSet();
     protected boolean dragSplitting;
     private int dragSplittingLimit;
-    private int dragSplittingButton;
+    public int dragSplittingButton;
     private boolean ignoreMouseUp;
-    private int dragSplittingRemnant;
+    public int dragSplittingRemnant;
     private long lastClickTime;
     private Slot lastClickSlot;
     private int lastClickButton;
@@ -317,6 +318,7 @@ public abstract class GuiContainer extends GuiScreen
 
             for (Slot slot : this.dragSplittingSlots)
             {
+                PatcherBugFixer.fixRemnants(this);
                 ItemStack itemstack1 = itemstack.copy();
                 int i = slot.getStack() == null ? 0 : slot.getStack().stackSize;
                 Container.computeStackSize(this.dragSplittingSlots, this.dragSplittingLimit, itemstack1, i);

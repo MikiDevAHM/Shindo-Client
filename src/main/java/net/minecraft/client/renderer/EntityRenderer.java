@@ -5,6 +5,7 @@ import com.google.common.base.Predicates;
 import com.google.gson.JsonSyntaxException;
 import me.miki.shindo.Shindo;
 import me.miki.shindo.features.mods.impl.ZoomMod;
+import me.miki.shindo.features.patcher.impl.bugfix.PatcherBugFixer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.material.Material;
@@ -1851,8 +1852,9 @@ public class EntityRenderer implements IResourceManagerReloadListener
             Shaders.beginWater();
         }
 
+        PatcherBugFixer.enablePolygonOffset();
         renderglobal.renderBlockLayer(EnumWorldBlockLayer.TRANSLUCENT, (double)partialTicks, pass, entity);
-
+        PatcherBugFixer.disablePolygonOffset();
         if (flag)
         {
             Shaders.endWater();

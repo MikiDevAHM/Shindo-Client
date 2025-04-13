@@ -4,6 +4,7 @@ import com.ibm.icu.text.ArabicShaping;
 import com.ibm.icu.text.ArabicShapingException;
 import com.ibm.icu.text.Bidi;
 import me.miki.shindo.features.mods.impl.NickHiderMod;
+import me.miki.shindo.features.patcher.impl.bugfix.PatcherBugFixer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -402,6 +403,7 @@ public class FontRenderer implements IResourceManagerReloadListener
         if (dropShadow)
         {
             i = this.renderString(text, x + 1.0F, y + 1.0F, color, true);
+            PatcherBugFixer.resetStyle(this);
             i = Math.max(i, this.renderString(text, x, y, color, false));
         }
         else
@@ -437,7 +439,7 @@ public class FontRenderer implements IResourceManagerReloadListener
     /**
      * Reset all style flag fields in the class to false; called at the start of string rendering
      */
-    private void resetStyles()
+    public void resetStyles()
     {
         this.randomStyle = false;
         this.boldStyle = false;

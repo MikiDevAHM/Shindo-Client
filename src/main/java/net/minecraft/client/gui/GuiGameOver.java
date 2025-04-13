@@ -1,5 +1,6 @@
 package net.minecraft.client.gui;
 
+import me.miki.shindo.features.patcher.impl.bugfix.PatcherBugFixer;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -12,7 +13,7 @@ public class GuiGameOver extends GuiScreen implements GuiYesNoCallback
     /**
      * The integer value containing the number of ticks that have passed since the player's death
      */
-    private int enableButtonsTimer;
+    public int enableButtonsTimer;
     private boolean field_146346_f = false;
 
     /**
@@ -21,6 +22,7 @@ public class GuiGameOver extends GuiScreen implements GuiYesNoCallback
      */
     public void initGui()
     {
+        PatcherBugFixer.allowClickable(this);
         this.buttonList.clear();
 
         if (this.mc.theWorld.getWorldInfo().isHardcoreModeEnabled())

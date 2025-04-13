@@ -13,13 +13,13 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.stb.STBImage;
 
-import java.io.*;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -141,47 +141,48 @@ public class Helper2D {
         GlStateManager.disableBlend();
     }
 
+    /*
+     * || USAGE ||
+     * File file = new File("assets/texturas/exemplo.png");
+     * int textureID = Helper2D.loadTexture(file);
+     * Helper2D.drawTexture(textureID, 100, 100, 64, 64);
+     */
     public static int loadTexture(File file) {
-        ByteBuffer imageBuffer = null;
-        try (InputStream is = new FileInputStream(file);
-             ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-
-            byte[] buffer = new byte[8192];
-            int read;
-            while ((read = is.read(buffer)) != -1) {
-                baos.write(buffer, 0, read);
-            }
-
-            byte[] imageBytes = baos.toByteArray();
-            imageBuffer = BufferUtils.createByteBuffer(imageBytes.length);
-            imageBuffer.put(imageBytes);
-            imageBuffer.flip();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(file);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        int width = image.getWidth();
+        int height = image.getHeight();
 
-        IntBuffer width = BufferUtils.createIntBuffer(1);
-        IntBuffer height = BufferUtils.createIntBuffer(1);
-        IntBuffer channels = BufferUtils.createIntBuffer(1);
+        int[] pixelsRaw = new int[width * height];
+        image.getRGB(0, 0, width, height, pixelsRaw, 0, width);
 
-        STBImage.stbi_set_flip_vertically_on_load(true);
-        ByteBuffer image = STBImage.stbi_load_from_memory(imageBuffer, width, height, channels, 4);
-        if (image == null) {
-            throw new RuntimeException("Failed to load image: " + STBImage.stbi_failure_reason());
+        ByteBuffer pixels = ByteBuffer.allocateDirect(width * height * 4);
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int pixel = pixelsRaw[y * width + x];
+
+                pixels.put((byte) ((pixel >> 16) & 0xFF)); // Red
+                pixels.put((byte) ((pixel >> 8) & 0xFF));  // Green
+                pixels.put((byte) (pixel & 0xFF));         // Blue
+                pixels.put((byte) ((pixel >> 24) & 0xFF)); // Alpha
+            }
         }
+
+        pixels.flip();
 
         int textureID = GL11.glGenTextures();
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
 
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA,
-                width.get(0), height.get(0), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, image);
-
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 
-        STBImage.stbi_image_free(image);
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0,
+                GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixels);
 
         return textureID;
     }

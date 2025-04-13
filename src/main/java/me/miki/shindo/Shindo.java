@@ -5,10 +5,8 @@ import me.miki.shindo.config.ConfigSaver;
 import me.miki.shindo.events.EventManager;
 import me.miki.shindo.features.command.CommandManager;
 import me.miki.shindo.features.download.DownloadManager;
-import me.miki.shindo.features.lang.LanguageManager;
 import me.miki.shindo.features.mods.ModManager;
 import me.miki.shindo.features.options.OptionManager;
-import me.miki.shindo.features.screenshot.ScreenshotManager;
 import me.miki.shindo.features.security.SecurityManager;
 import me.miki.shindo.features.settings.SettingManager;
 import me.miki.shindo.helpers.CpsHelper;
@@ -42,7 +40,6 @@ public class Shindo {
     private EventManager eventManager;
     private FileManager fileManager;
     private DownloadManager downloadManager;
-    private LanguageManager languageManager;
     private SettingManager settingManager;
     private ModManager modManager;
     private OptionManager optionManager;
@@ -52,7 +49,6 @@ public class Shindo {
     private CpsHelper cpsHelper;
     private MessageHelper messageHelper;
     private CommandManager commandManager;
-    private ScreenshotManager screenshotManager;
 
     // MAIN METHODS
     public void startup() {
@@ -61,7 +57,6 @@ public class Shindo {
         registerEvents(
                 fileManager = new FileManager(),
                 downloadManager = new DownloadManager(),
-                languageManager = new LanguageManager(),
                 cpsHelper = new CpsHelper(),
                 settingManager = new SettingManager(),
                 modManager = new ModManager(),
@@ -71,7 +66,6 @@ public class Shindo {
                 messageHelper = new MessageHelper(),
                 securityManager = new SecurityManager(),
                 commandManager = new CommandManager(),
-                screenshotManager = new ScreenshotManager(),
                 shindoHandler = new ShindoHandler(),
                 shindoAPI = new ShindoAPI()
 
@@ -91,6 +85,8 @@ public class Shindo {
         shindoAPI.init();
 
         EventManager.register(this);
+
+        mc.updateDisplay();
     }
 
     public void shutdown() {
@@ -114,8 +110,6 @@ public class Shindo {
 
     public DownloadManager getDownloadManager() { return downloadManager; }
 
-    public LanguageManager getLanguageManager() { return languageManager; }
-
     public SettingManager getSettingManager() { return settingManager; }
 
     public ModManager getModManager() { return modManager; }
@@ -133,8 +127,6 @@ public class Shindo {
     public SecurityManager getSecurityManager() { return securityManager; }
 
     public CommandManager getCommandManager() { return commandManager; }
-
-    public ScreenshotManager getScreenshotManager() { return screenshotManager; }
 
     public ShindoHandler getShindoHandler() { return shindoHandler; }
 

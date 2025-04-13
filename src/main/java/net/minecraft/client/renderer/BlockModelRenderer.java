@@ -1,5 +1,6 @@
 package net.minecraft.client.renderer;
 
+import me.miki.shindo.features.patcher.impl.bugfix.PatcherBugFixer;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -606,10 +607,14 @@ public class BlockModelRenderer
             float f1 = BlockModelRenderer.fixAoLightValue(blockAccessIn.getBlockState(blockpos2).getBlock().getAmbientOcclusionLightValue());
             float f2 = BlockModelRenderer.fixAoLightValue(blockAccessIn.getBlockState(blockpos3).getBlock().getAmbientOcclusionLightValue());
             float f3 = BlockModelRenderer.fixAoLightValue(blockAccessIn.getBlockState(blockpos4).getBlock().getAmbientOcclusionLightValue());
-            boolean flag = blockAccessIn.getBlockState(blockpos1.offset(facingIn)).getBlock().isTranslucent();
-            boolean flag1 = blockAccessIn.getBlockState(blockpos2.offset(facingIn)).getBlock().isTranslucent();
-            boolean flag2 = blockAccessIn.getBlockState(blockpos3.offset(facingIn)).getBlock().isTranslucent();
-            boolean flag3 = blockAccessIn.getBlockState(blockpos4.offset(facingIn)).getBlock().isTranslucent();
+            // ORIGINAL blockAccessIn.getBlockState(blockpos1.offset(facingIn)).getBlock().isTranslucent();
+            boolean flag = PatcherBugFixer.betterSmoothLighting(blockAccessIn.getBlockState(blockpos1.offset(facingIn)).getBlock());
+            // ORIGINAL blockAccessIn.getBlockState(blockpos2.offset(facingIn)).getBlock().isTranslucent();
+            boolean flag1 = PatcherBugFixer.betterSmoothLighting(blockAccessIn.getBlockState(blockpos2.offset(facingIn)).getBlock());
+            // ORIGINAL blockAccessIn.getBlockState(blockpos3.offset(facingIn)).getBlock().isTranslucent();
+            boolean flag2 = PatcherBugFixer.betterSmoothLighting(blockAccessIn.getBlockState(blockpos3.offset(facingIn)).getBlock());
+            // ORIGINAL blockAccessIn.getBlockState(blockpos4.offset(facingIn)).getBlock().isTranslucent();
+            boolean flag3 = PatcherBugFixer.betterSmoothLighting(blockAccessIn.getBlockState(blockpos4.offset(facingIn)).getBlock());
             float f4;
             int i1;
 

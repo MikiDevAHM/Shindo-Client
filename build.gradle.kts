@@ -62,6 +62,5 @@ tasks.register<JavaExec>("runClient") {
     } else {
         jvmArgs("-Djava.library.path=../natives/linux")
     }
-    jvmArgs("-Dlog4j2.debug")
     workingDir = project.projectDir.resolve("run")
 }

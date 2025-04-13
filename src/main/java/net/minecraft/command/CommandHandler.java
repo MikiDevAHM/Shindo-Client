@@ -3,6 +3,7 @@ package net.minecraft.command;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import me.miki.shindo.features.patcher.impl.bugfix.PatcherBugFixer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
@@ -33,7 +34,8 @@ public class CommandHandler implements ICommandManager
         String[] astring = rawCommand.split(" ");
         String s = astring[0];
         astring = dropFirstString(astring);
-        ICommand icommand = (ICommand)this.commandMap.get(s);
+        // ORIGINAL ICommand icommand = (ICommand) commandMap.get(s);
+        ICommand icommand = (ICommand) PatcherBugFixer.makeLowerCaseForGet(commandMap.get(s));
         int i = this.getUsernameIndex(icommand, astring);
         int j = 0;
 
@@ -119,7 +121,8 @@ public class CommandHandler implements ICommandManager
      */
     public ICommand registerCommand(ICommand command)
     {
-        this.commandMap.put(command.getCommandName(), command);
+        // ORIGINAL this.commandMap.put(command.getCommandName(), command);
+        PatcherBugFixer.makeLowerCaseForPut(commandMap.put(command.getCommandName(), command));
         this.commandSet.add(command);
 
         for (String s : command.getCommandAliases())
@@ -156,7 +159,8 @@ public class CommandHandler implements ICommandManager
 
             for (Entry<String, ICommand> entry : this.commandMap.entrySet())
             {
-                if (CommandBase.doesStringStartWith(s, (String)entry.getKey()) && ((ICommand)entry.getValue()).canCommandSenderUseCommand(sender))
+                // ORIGINAL if (CommandBase.doesStringStartWith(s, (String)entry.getKey()) && ((ICommand)entry.getValue()).canCommandSenderUseCommand(sender))
+                if (CommandBase.doesStringStartWith(PatcherBugFixer.makeLowerCaseForTabComplete(s), (String)entry.getKey()) && ((ICommand)entry.getValue()).canCommandSenderUseCommand(sender))
                 {
                     list.add(entry.getKey());
                 }
@@ -168,7 +172,8 @@ public class CommandHandler implements ICommandManager
         {
             if (astring.length > 1)
             {
-                ICommand icommand = (ICommand)this.commandMap.get(s);
+                // ORIGINAL ICommand icommand = (ICommand)commandMap.get(s);
+                ICommand icommand = (ICommand) PatcherBugFixer.makeLowerCaseForGet(commandMap.get(s));
 
                 if (icommand != null && icommand.canCommandSenderUseCommand(sender))
                 {
