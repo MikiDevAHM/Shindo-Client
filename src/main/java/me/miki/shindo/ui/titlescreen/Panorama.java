@@ -6,7 +6,6 @@
 
 package me.miki.shindo.ui.titlescreen;
 
-import me.miki.shindo.helpers.render.Helper2D;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -194,6 +193,6 @@ public class Panorama extends GuiScreen {
         GlStateManager.disableAlpha();
         renderSkybox(partialTicks);
         GlStateManager.enableAlpha();
-        Helper2D.drawRectangle(0, 0, width, height, 0x70000000);
+        //Helper2D.drawRectangle(0, 0, width, height, 0x70000000);
     }
 }
