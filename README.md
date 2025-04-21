@@ -1,31 +1,37 @@
+
 # Shindo Client
 
-[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by/4.0/)
+Um Client para Minecraft Multijogador.
 
-### Credits
-> [CloudClient](https://github.com/CloudClientDev) ,
-> [SoarClient](https://github.com/Soar-Client/Legacy-SoarClient) ,
-> [GradleMCP](https://github.com/refactorinqq/gradlemcp/tree/master) ,
-> [Patcher](https://github.com/Sk1erLLC/Patcher)
 
-### Useful gradle commands
 
-```sh
-# Compile the client into a JAR
+
+## Créditos
+
+ - [Cloud Client](https://github.com/CloudClientDev)
+ - [Soar Client](https://github.com/Soar-Client/Legacy-SoarClient)
+ - [GradleMCP](https://github.com/refactorinqq/gradlemcp/tree/master)
+ - [Patcher](https://github.com/Sk1erLLC/Patcher)
+
+
+## Comandos Gradle
+
+```bash
+# Compila o Client para um JAR
 ./gradlew build
 
-# Remove old build files
+# Remove Arquivos Antigos
 ./gradlew clean
 
-# Launch the Minecraft client
+# Inicia o Client
 ./gradlew runClient
 
-# Kill gradle if it's doing stupid things
+# Mata o Processo do Gradle se ele estiver Fazendo Coisas Estupidas
 ./gradlew --stop
 ```
 
-Works only on Windows (COMING SOON TO LINUX)
+Funciona Apenas no Windows
+## Licença
 
-## License
+O [Shindo Client](github.com/MikiDevAHM/Shindo-Client) feito por [MikiDevAHM](https://github.com/MikiDevAHM) é licenciado sob [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1)
 
-<p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><a property="dct:title" rel="cc:attributionURL" href="https://github.com/MikiDevAHM/Shindo-Client">Shindo Client</a> by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://github.com/MikiDevAHM">MikiDevAHM</a> is licensed under <a href="http://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY 4.0<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"></a></p>
