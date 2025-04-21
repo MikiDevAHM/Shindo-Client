@@ -41,7 +41,7 @@ public class Slider extends Settings {
 
         Shindo.getInstance().getFontHelper().size30.drawString(
                 setting.getName(),
-                button.getPanel().getX() + 20,
+                button.getPanel().getX() + 80,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 6,
                 color
         );
@@ -56,7 +56,7 @@ public class Slider extends Settings {
         Helper2D.drawRoundedRectangle(
                 button.getPanel().getX() + button.getPanel().getW() - sliderWidth - 20,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 10,
-                150, 5, 2, Style.getColor(50).getRGB(),
+                150, 5, 2, Style.getColorTheme(4).getRGB(),
                 roundedCorners ? 0 : -1
         );
 
@@ -79,20 +79,20 @@ public class Slider extends Settings {
         Helper2D.drawRoundedRectangle(
                 button.getPanel().getX() + button.getPanel().getW() - sliderWidth - 20,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 10,
-                (int) sliderPos, 5, 2, Style.getColorPallet(6).getRGB(),
+                (int) sliderPos, 5, 2, Style.getColorTheme(7).getRGB(),
                 roundedCorners ? 0 : -1
         );
 
         Helper2D.drawRoundedRectangle(
                 (int) (posHelper.isDirection() ? xPos - posHelper.getDifference() - posHelper.getValue() : xPos - posHelper.getDifference() + posHelper.getValue()) - 2,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 8,
-                9, 9, 2, Style.getColorPallet(1).getRGB(),
+                9, 9, 2, Style.getColorTheme(1).getRGB(),
                 roundedCorners ? 0 : -1
         );
         Helper2D.drawRoundedRectangle(
                 (int) (posHelper.isDirection() ? xPos - posHelper.getDifference() - posHelper.getValue() : xPos - posHelper.getDifference() + posHelper.getValue()) - 1,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 9,
-                7, 7, 2, Style.getColorPallet(17).getRGB(),
+                7, 7, 2, Style.getColorTheme(19).getRGB(),
                 roundedCorners ? 0 : -1
         );
     }

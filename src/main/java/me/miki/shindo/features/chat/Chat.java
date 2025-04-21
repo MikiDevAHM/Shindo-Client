@@ -1,16 +1,10 @@
-/*
- * Copyright (c) 2022 DupliCAT
- * GNU Lesser General Public License v3.0
- */
-
-package me.miki.shindo.features.options;
-
+package me.miki.shindo.features.chat;
 
 import com.google.gson.annotations.Expose;
 
 import java.awt.*;
 
-public class Option {
+public class Chat {
 
     @Expose
     private String name;
@@ -28,6 +22,15 @@ public class Option {
     private int modeIndex;
 
     @Expose
+    private boolean checkToggled;
+
+    @Expose
+    private float maxNumber, currentNumber;
+
+    @Expose
+    private int key;
+
+    @Expose
     private Color color;
 
     @Expose
@@ -39,34 +42,11 @@ public class Option {
     @Expose
     private float[] mainSlider;
 
-    @Expose
-    private boolean checkToggled;
-
-    @Expose
-    private float maxNumber, currentNumber;
-
-    @Expose
-    private boolean[][] cells;
-
-    @Expose
-    private int key;
-
-    @Expose
-    private String placeholderText, text;
-
-    @Expose
-    private int cursorPosition;
-
-    @Expose
-    private boolean expanded = true;
-
-
-
     /**
      * An option which can be toggled on and off
      */
 
-    public Option(String name, boolean checkToggled) {
+    public Chat(String name, boolean checkToggled) {
         this.mode = "CheckBox";
         this.name = name;
 
@@ -77,7 +57,7 @@ public class Option {
      * An option with a slider which can go from 0 to a given number
      */
 
-    public Option(String name, float maxNumber, float currentNumber) {
+    public Chat(String name, float maxNumber, float currentNumber) {
         this.mode = "Slider";
         this.name = name;
 
@@ -89,7 +69,7 @@ public class Option {
      * An option which allows you to select a String from an Array of Strings also called Modes
      */
 
-    public Option(String name, String currentMode, int modeIndex, String[] options) {
+    public Chat(String name, String currentMode, int modeIndex, String[] options) {
         this.mode = "ModePicker";
         this.name = name;
 
@@ -102,7 +82,7 @@ public class Option {
      * An option which allows you to choose a specific color
      */
 
-    public Option(String name, Color color, Color sideColor, float sideSlider, float[] mainSlider) {
+    public Chat(String name, Color color, Color sideColor, float sideSlider, float[] mainSlider) {
         this.mode = "ColorPicker";
         this.name = name;
 
@@ -112,36 +92,16 @@ public class Option {
         this.mainSlider = mainSlider;
     }
 
-    /**
-     * An option which allows you to "draw" on an 11 x 11 grid, used for the crosshair mod
-     */
-
-    public Option(String name, boolean[][] cells) {
-        this.mode = "CellGrid";
-        this.name = name;
-
-        this.cells = cells;
-    }
-
-    public Option(String name, int key) {
+    public Chat(String name, int key) {
         this.mode = "Keybinding";
         this.name = name;
 
         this.key = key;
     }
 
-    public Option(String name) {
+    public Chat(String name) {
         this.mode = "Category";
         this.name = name;
-    }
-
-    public Option(String name, String placeholderText, String text, int cursorPosition){
-        this.mode = "TextBox";
-        this.name = name;
-
-        this.placeholderText = placeholderText;
-        this.text = text;
-        this.cursorPosition = cursorPosition;
     }
 
     public String getName() {
@@ -200,6 +160,22 @@ public class Option {
         this.modeIndex = modeIndex;
     }
 
+    public String[] getOptions() {
+        return options;
+    }
+
+    public void setOptions(String[] options) {
+        this.options = options;
+    }
+
+    public int getKey() {
+        return key;
+    }
+
+    public void setKey(int key) {
+        this.key = key;
+    }
+
     public Color getColor() {
         return color;
     }
@@ -231,61 +207,5 @@ public class Option {
 
     public void setMainSlider(float[] mainSlider) {
         this.mainSlider = mainSlider;
-    }
-
-    public String[] getOptions() {
-        return options;
-    }
-
-    public void setOptions(String[] options) {
-        this.options = options;
-    }
-
-    public boolean[][] getCells() {
-        return cells;
-    }
-
-    public void setCells(boolean[][] cells) {
-        this.cells = cells;
-    }
-
-    public int getKey() {
-        return key;
-    }
-
-    public void setKey(int key) {
-        this.key = key;
-    }
-
-    public String getPlaceholderText() {
-        return placeholderText;
-    }
-
-    public void setPlaceholderText(String placeholderText) {
-        this.placeholderText = placeholderText;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public int getCursorPosition() {
-        return cursorPosition;
-    }
-
-    public void setCursorPosition(int cursorPosition) {
-        this.cursorPosition = cursorPosition;
-    }
-
-    public boolean isExpanded() {
-        return expanded;
-    }
-
-    public void setExpanded(boolean expanded) {
-        this.expanded = expanded;
     }
 }

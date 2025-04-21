@@ -3,18 +3,18 @@
  * GNU Lesser General Public License v3.0
  */
 
-package me.miki.shindo.ui.modmenu.impl.sidebar.options.type;
+package me.miki.shindo.ui.modmenu.impl.sidebar.chats.type;
 
 import me.miki.shindo.Shindo;
-import me.miki.shindo.features.options.Option;
+import me.miki.shindo.features.chat.Chat;
 import me.miki.shindo.helpers.MathHelper;
 import me.miki.shindo.helpers.hud.PositionHelper;
 import me.miki.shindo.helpers.render.Helper2D;
 import me.miki.shindo.ui.Style;
 import me.miki.shindo.ui.modmenu.impl.Panel;
-import me.miki.shindo.ui.modmenu.impl.sidebar.options.Options;
+import me.miki.shindo.ui.modmenu.impl.sidebar.chats.Chats;
 
-public class Slider extends Options {
+public class Slider extends Chats {
 
     private final PositionHelper posHelper = new PositionHelper(125);
 
@@ -22,9 +22,9 @@ public class Slider extends Options {
     private float sliderPos;
     private final int sliderWidth = 150;
 
-    public Slider(Option option, Panel panel, int y) {
-        super(option, panel, y);
-        sliderPos = option.getCurrentNumber() / (option.getMaxNumber() / sliderWidth);
+    public Slider(Chat chat, Panel panel, int y) {
+        super(chat, panel, y);
+        sliderPos = chat.getCurrentNumber() / (chat.getMaxNumber() / sliderWidth);
     }
 
     /**
@@ -35,20 +35,20 @@ public class Slider extends Options {
      */
 
     @Override
-    public void renderOption(int mouseX, int mouseY) {
+    public void renderChats(int mouseX, int mouseY) {
         boolean roundedCorners = Shindo.getInstance().getOptionManager().getOptionByName("Rounded Corners").isCheckToggled();
         int color = Shindo.getInstance().getOptionManager().getOptionByName("Color").getColor().getRGB();
 
         Shindo.getInstance().getFontHelper().size30.drawString(
-                option.getName(),
+                chat.getName(),
                 panel.getX() + 80,
                 panel.getY() + panel.getH() + getY() + 6,
                 color
         );
         Shindo.getInstance().getFontHelper().size20.drawString(
-                String.valueOf(MathHelper.round(option.getCurrentNumber(), 1)),
+                String.valueOf(MathHelper.round(chat.getCurrentNumber(), 1)),
                 panel.getX() + panel.getW() - 175 -
-                        Shindo.getInstance().getFontHelper().size20.getStringWidth(String.valueOf(MathHelper.round(option.getCurrentNumber(), 1))),
+                        Shindo.getInstance().getFontHelper().size20.getStringWidth(String.valueOf(MathHelper.round(chat.getCurrentNumber(), 1))),
                 panel.getY() + panel.getH() + getY() + 9,
                 color
         );
@@ -69,7 +69,7 @@ public class Slider extends Options {
             } else if (sliderPos > sliderWidth) {
                 sliderPos = sliderWidth;
             }
-            option.setCurrentNumber(sliderPos * (option.getMaxNumber() / sliderWidth));
+            chat.setCurrentNumber(sliderPos * (chat.getMaxNumber() / sliderWidth));
         }
 
         posHelper.post(sliderPos);

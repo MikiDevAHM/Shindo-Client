@@ -31,7 +31,7 @@ public class CellGrid extends Options {
     public void renderOption(int mouseX, int mouseY) {
         Shindo.getInstance().getFontHelper().size30.drawString(
                 option.getName(),
-                panel.getX() + 20,
+                panel.getX() + 80,
                 panel.getY() + panel.getH() + 6 + getY(),
                 Shindo.getInstance().getOptionManager().getOptionByName("Color").getColor().getRGB()
         );
@@ -50,7 +50,7 @@ public class CellGrid extends Options {
                                         11, 11, mouseX, mouseY
                                 ) ?
                                         0x00ffffff :
-                                        Style.getColor(50).getRGB()
+                                        Style.getColorTheme(5).getRGB()
                 );
             }
         }

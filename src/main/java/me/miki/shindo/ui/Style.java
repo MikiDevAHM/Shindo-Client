@@ -25,46 +25,95 @@ public class Style {
                 new Color(255, 255, 255, transparency);
     }
 
-    public static Color getColorPallet(int index) {
-
+    public static Color getColorTheme(int color) {
+        int index = 0; // init index = Shindo.getInstance().getVisualManager().getVisual("Theme Color").getModeIndex();
         switch (index) {
             case 0:
-                return new Color(10, 10, 20);
+            switch (color) {
+                case 0:
+                    return new Color(15, 10, 10);
+                case 1:
+                    return new Color(20, 15, 15);
+                case 2:
+                    return new Color(25, 20, 20);
+                case 3:
+                    return new Color(30, 25, 25);
+                case 4:
+                    return new Color(35, 30, 30);
+                case 5:
+                    return new Color(40, 35, 35);
+                case 6:
+                    return new Color(45, 40, 40);
+                case 7:
+                    return new Color(50, 45, 45);
+                case 8:
+                    return new Color(55, 50, 50);
+                case 9:
+                    return new Color(60, 55, 55);
+                case 10:
+                    return new Color(65, 60, 60);
+                case 11:
+                    return new Color(70, 65, 65);
+                case 12:
+                    return new Color(255, 10, 10);
+                case 13:
+                    return new Color(10, 255, 10);
+                case 14:
+                    return new Color(10, 10, 255);
+                case 15:
+                    return new Color(255, 255, 10);
+                case 16:
+                    return new Color(10, 255, 255);
+                case 17:
+                    return new Color(255, 10, 255);
+                case 18:
+                    return new Color(0, 0, 0);
+                case 19:
+                    return new Color(255, 255, 255);
+            }
             case 1:
-                return new Color(20, 20, 40);
-            case 2:
-                return new Color(30, 30, 60);
-            case 3:
-                return new Color(40, 40, 80);
-            case 4:
-                return new Color(50, 50, 100);
-            case 5:
-                return new Color(60, 60, 120);
-            case 6:
-                return new Color(70, 70, 140);
-            case 7:
-                return new Color(80, 80, 160);
-            case 8:
-                return new Color(90, 90, 180);
-            case 9:
-                return new Color(100, 100, 200);
-            case 10:
-                return new Color(255, 10, 10);
-            case 11:
-                return new Color(10, 255, 10);
-            case 12:
-                return new Color(10, 10, 255);
-            case 13:
-                return new Color(255, 255, 10);
-            case 14:
-                return new Color(10, 255, 255);
-            case 15:
-                return new Color(255, 10, 255);
-            case 16:
-                return new Color(0, 0, 0);
-            case 17:
-                return new Color(255, 255, 255);
-
+                switch (color) {
+                    case 0:
+                        return new Color(25, 10, 10);
+                    case 1:
+                        return new Color(30, 15, 15);
+                    case 2:
+                        return new Color(35, 20, 20);
+                    case 3:
+                        return new Color(40, 25, 25);
+                    case 4:
+                        return new Color(45, 30, 30);
+                    case 5:
+                        return new Color(50, 35, 35);
+                    case 6:
+                        return new Color(55, 40, 40);
+                    case 7:
+                        return new Color(60, 45, 45);
+                    case 8:
+                        return new Color(65, 50, 50);
+                    case 9:
+                        return new Color(70, 55, 55);
+                    case 10:
+                        return new Color(75, 60, 60);
+                    case 11:
+                        return new Color(80, 65, 65);
+                    case 12:
+                        return new Color(255, 10, 10);
+                    case 13:
+                        return new Color(10, 255, 10);
+                    case 14:
+                        return new Color(10, 10, 255);
+                    case 15:
+                        return new Color(255, 255, 10);
+                    case 16:
+                        return new Color(10, 255, 255);
+                    case 17:
+                        return new Color(255, 10, 255);
+                    case 18:
+                        return new Color(0, 0, 0);
+                    case 19:
+                        return new Color(255, 255, 255);
+                }
         }
         return new Color(10, 10, 20);
     }

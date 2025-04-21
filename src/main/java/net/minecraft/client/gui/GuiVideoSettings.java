@@ -15,7 +15,7 @@ public class GuiVideoSettings extends GuiScreenOF
     protected String screenTitle = "Video Settings";
     private GameSettings guiGameSettings;
 
-    /** An array of all of GameSettings.Options's video options. */
+    /** An array of all of GameSettings.Chats's video options. */
     private static GameSettings.Options[] videoOptions = new GameSettings.Options[] {GameSettings.Options.GRAPHICS, GameSettings.Options.RENDER_DISTANCE, GameSettings.Options.AMBIENT_OCCLUSION, GameSettings.Options.FRAMERATE_LIMIT, GameSettings.Options.AO_LEVEL, GameSettings.Options.VIEW_BOBBING, GameSettings.Options.GUI_SCALE, GameSettings.Options.USE_VBO, GameSettings.Options.GAMMA, GameSettings.Options.BLOCK_ALTERNATIVES, GameSettings.Options.DYNAMIC_LIGHTS, GameSettings.Options.DYNAMIC_FOV};
     private TooltipManager tooltipManager = new TooltipManager(this, new TooltipProviderOptions());
 

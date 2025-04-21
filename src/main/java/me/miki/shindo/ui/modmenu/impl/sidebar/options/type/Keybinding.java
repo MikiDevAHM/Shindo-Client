@@ -39,7 +39,7 @@ public class Keybinding extends Options {
 
         Shindo.getInstance().getFontHelper().size30.drawString(
                 option.getName(),
-                panel.getX() + 20,
+                panel.getX() + 80,
                 panel.getY() + panel.getH() + 6 + getY(),
                 color
         );
@@ -48,7 +48,7 @@ public class Keybinding extends Options {
                 panel.getX() + panel.getW() - 90,
                 panel.getY() + panel.getH() + 2 + getY(),
                 70, 20, 2,
-                Style.getColor(option.isCheckToggled() ? 80 : 50).getRGB(),
+                Style.getColorTheme(option.isCheckToggled() ? 8 : 5).getRGB(),
                 roundedCorners ? 0 : -1
         );
         Shindo.getInstance().getFontHelper().size20.drawString(
@@ -70,9 +70,10 @@ public class Keybinding extends Options {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (MathHelper.withinBox(panel.getX() + panel.getW() - 140,
+        if (MathHelper.withinBox(
+                panel.getX() + panel.getW() - 90,
                 panel.getY() + panel.getH() + 2 + getY(),
-                120, 21, mouseX, mouseY)
+                70, 20, mouseX, mouseY)
         ) {
             active = !active;
             if(active) {

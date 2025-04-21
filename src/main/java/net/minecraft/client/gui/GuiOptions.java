@@ -25,7 +25,7 @@ public class GuiOptions extends GuiScreen implements GuiYesNoCallback
     private final GameSettings game_settings_1;
     private GuiButton field_175357_i;
     private GuiLockIconButton field_175356_r;
-    protected String field_146442_a = "Options";
+    protected String field_146442_a = "Chats";
 
     public GuiOptions(GuiScreen p_i1046_1_, GameSettings p_i1046_2_)
     {

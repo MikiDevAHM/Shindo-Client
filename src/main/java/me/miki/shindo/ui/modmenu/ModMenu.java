@@ -6,11 +6,8 @@
 package me.miki.shindo.ui.modmenu;
 
 import me.miki.shindo.Shindo;
-import me.miki.shindo.helpers.MathHelper;
 import me.miki.shindo.helpers.ResolutionHelper;
 import me.miki.shindo.helpers.TimeHelper;
-import me.miki.shindo.helpers.animation.Animate;
-import me.miki.shindo.helpers.animation.Easing;
 import me.miki.shindo.helpers.render.Helper2D;
 import me.miki.shindo.ui.Style;
 import me.miki.shindo.ui.modmenu.impl.Panel;
@@ -18,20 +15,11 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
+import java.util.Date;
 
 public class ModMenu extends GuiScreen {
 
     private final Panel panel = new Panel();
-
-    private final Animate animateModMenu = new Animate();
-    private final Animate animateClock = new Animate();
-    private final Animate animateSnapping = new Animate();
-
-    public ModMenu() {
-        animateModMenu.setEase(Easing.CUBIC_OUT).setMin(0).setSpeed(1000).setReversed(false);
-        animateClock.setEase(Easing.CUBIC_OUT).setMin(0).setMax(50).setSpeed(100).setReversed(false);
-        animateSnapping.setEase(Easing.CUBIC_IN).setMin(0).setMax(50).setSpeed(100).setReversed(false);
-    }
 
     /**
      * Draws the panel of the modmenu used to toggle mods and change settings
@@ -47,35 +35,31 @@ public class ModMenu extends GuiScreen {
         boolean roundedCorners = Shindo.getInstance().getOptionManager().getOptionByName("Rounded Corners").isCheckToggled();
         int color = Shindo.getInstance().getOptionManager().getOptionByName("Color").getColor().getRGB();
 
-        float max = ResolutionHelper.getHeight() / 2f + 150;
-        animateModMenu.setMax(max).update();
-        if(!animateModMenu.hasFinished()) {
-            panel.setY(height - animateModMenu.getValueI());
-        }
+        panel.setY(ResolutionHelper.getHeight() / 2 - 150);
         panel.renderPanel(mouseX, mouseY);
-        //panel.updatePosition(mouseX, mouseY);
 
         /*
         Draws the time at the top right
          */
 
-        animateClock.update();
+        Helper2D.drawRoundedRectangle(ResolutionHelper.getWidth() / 4 + 60, ResolutionHelper.getHeight() / 4 - 27, 130, 20, 2, Style.getColorTheme(4).getRGB(), 0);
+        Helper2D.drawPicture(ResolutionHelper.getWidth() / 4 + 10, ResolutionHelper.getHeight() / 4 - 30, 30, 30, color,  "logo.png");
 
-        Helper2D.drawRoundedRectangle(width - 130, animateClock.getValueI() - 60, 140, 60, 10, Style.getColor(50).getRGB(), roundedCorners ? 0 : -1);
-        Helper2D.drawPicture(width - 50, 5 - 50 + animateClock.getValueI(), 40, 40, color, "icon/clock.png");
+        Shindo.getInstance().getFontHelper().size20.drawString(TimeHelper.getFormattedDate(), ResolutionHelper.getWidth() / 4f + 90f , ResolutionHelper.getHeight() / 4f - 20f, -1);
+        Shindo.getInstance().getFontHelper().size20.drawString(TimeHelper.getFormattedTimeMinute(), ResolutionHelper.getWidth() / 4f + 150f , ResolutionHelper.getHeight() / 4f - 20f, -1);
 
-        Shindo.getInstance().getFontHelper().size40.drawString(TimeHelper.getFormattedTimeMinute(), width - 120, 10 - 50 + animateClock.getValueI(), color);
-        Shindo.getInstance().getFontHelper().size20.drawString(TimeHelper.getFormattedDate(), width - 120, 30 - 50 + animateClock.getValueI(), color);
-
+        Date date = new Date();
+        boolean isDay = date.getHours() < 19 && date.getHours() > 6 ;
+        Helper2D.drawPicture(ResolutionHelper.getWidth() / 4 + 65, ResolutionHelper.getHeight() / 4 - 25, 15, 15, color,  isDay ? "icon/light.png" : "icon/dark.png" );
         /*
         Draws the dark and light mode button on the bottom left
          */
 
-        animateSnapping.update();
-        Helper2D.drawRoundedRectangle(10, height - 50, 40, 40, 2, Style.getColor(40).getRGB(), roundedCorners ? 0 : -1);
-        Helper2D.drawPicture(15, height - 45, 30, 30, color, Style.isDarkMode() ? "icon/dark.png" : "icon/light.png");
-        Helper2D.drawRoundedRectangle(60, height - 50 + animateSnapping.getValueI(), 40, 40, 2, Style.getColor(40).getRGB(), roundedCorners ? 0 : -1);
-        Helper2D.drawPicture(65, height - 45 + animateSnapping.getValueI(), 30, 30, color, Style.isSnapping() ? "icon/grid.png" : "icon/nogrid.png");
+
+        // Helper2D.drawRoundedRectangle(10, height - 50, 40, 40, 2, Style.getColor(40).getRGB(), roundedCorners ? 0 : -1);
+        // Helper2D.drawPicture(15, height - 45, 30, 30, color, Style.isDarkMode() ? "icon/dark.png" : "icon/light.png");
+        // Helper2D.drawRoundedRectangle(60, height - 50 + animateSnapping.getValueI(), 40, 40, 2, Style.getColor(40).getRGB(), roundedCorners ? 0 : -1);
+        // Helper2D.drawPicture(65, height - 45 + animateSnapping.getValueI(), 30, 30, color, Style.isSnapping() ? "icon/grid.png" : "icon/nogrid.png");
     }
 
     /**
@@ -90,21 +74,21 @@ public class ModMenu extends GuiScreen {
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         panel.mouseClicked(mouseX, mouseY, mouseButton);
-        if(mouseButton == 0) {
-            if (MathHelper.withinBox(
-                    panel.getX(), panel.getY(),
-                    panel.getW(), panel.getH(),
-                    mouseX, mouseY
-            )) {
-                panel.setDragging(true);
-                panel.setOffsetX(mouseX - panel.getX());
-                panel.setOffsetY(mouseY - panel.getY());
-            }
+        // if(mouseButton == 0) {
+            // if (MathHelper.withinBox(
+            //        panel.getX(), panel.getY(),
+            //        panel.getW(), panel.getH(),
+            //        mouseX, mouseY
+            // )) {
+            //    panel.setDragging(true);
+            //    panel.setOffsetX(mouseX - panel.getX());
+            //    panel.setOffsetY(mouseY - panel.getY());
+            // }
 
-            if (MathHelper.withinBox(10, height - 50, 40, 40, mouseX, mouseY)) {
-                Style.setDarkMode(!Style.isDarkMode());
-            }
-        }
+            // if (MathHelper.withinBox(10, height - 50, 40, 40, mouseX, mouseY)) {
+            //    Style.setDarkMode(!Style.isDarkMode());
+            // }
+        // }
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 

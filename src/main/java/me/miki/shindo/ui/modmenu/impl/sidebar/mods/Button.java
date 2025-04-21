@@ -41,8 +41,8 @@ public class Button {
         this.panel = panel;
         this.x = x;
         this.y = y;
-        this.w = 120;
-        this.h = 80;
+        this.w = panel.getW() - 80;
+        this.h = 50;
 
         if (Shindo.getInstance().getSettingManager().getSettingsByMod(mod) != null) {
             int addY = 70;
@@ -116,35 +116,51 @@ public class Button {
          */
 
         if (!getPanel().isAnyButtonOpen()) {
-            Helper2D.drawRoundedRectangle(panel.getX() + 5 + x, panel.getY() + panel.getH() + 35 + y, w, h, 2, Style.getColorPallet(4).getRGB(), roundedCorners ? 0 : -1);
-            Helper2D.drawRoundedRectangle(panel.getX() + 5 + x, panel.getY() + panel.getH() + y + 90, w, 25, 2, Style.getColorPallet(5).getRGB(), roundedCorners ? 2 : -1);
+            Helper2D.drawRoundedRectangle(panel.getX() + 5 + x, panel.getY() + panel.getH() + 35 + y, w, h, 2, Style.getColorTheme(4).getRGB(), roundedCorners ? 0 : -1);
+            Helper2D.drawRoundedRectangle(panel.getX() + 5 + x, panel.getY() + panel.getH() + 35 + y  , 50, h, 2, Style.getColorTheme(5).getRGB(), roundedCorners ? 0 : -1);
 
-            Shindo.getInstance().getFontHelper().size20.drawString(mod.getName(), panel.getX() + 10 + x, panel.getY() + panel.getH() + y + 97, color);
-
-            Helper2D.drawRoundedRectangle(panel.getX() + 13 + x + 77, panel.getY() + panel.getH() + y + h + 14, 30, 15, 2, Style.getColorPallet(6).getRGB(), roundedCorners ? 0 : -1);
+            Helper2D.drawRoundedRectangle(panel.getX() + w - 50 + x, panel.getY() + panel.getH() + 52 + y, 30, 15, 2, Style.getColorTheme(6).getRGB(), roundedCorners ? 0 : -1);
             Helper2D.drawRoundedRectangle(
                     animButton.hasFinished() ?
                             mod.isToggled() ?
-                                    panel.getX() + 13 + 15 + x + 77 :
-                                    panel.getX() + 13 + x + 77 :
-                            panel.getX() + 13 + animButton.getValueI() + x + 77,
-                    panel.getY() + panel.getH() + y + h + 14, 15, 15, 2, Style.getColorPallet(8).getRGB(), roundedCorners ? 0 : -1);
+                                    panel.getX() + w - 50 + x + 15:
+                                    panel.getX() + w - 50 + x:
+                            panel.getX() + w - 50 + x + animButton.getValueI(),
+                    panel.getY() + panel.getH() + 52 + y, 15, 15, 2,
+                    Style.getColorTheme(18).getRGB(), roundedCorners ? 0 : -1
+            );
 
-            Helper2D.drawPicture(panel.getX() + getX() + getW() / 2 - 12, panel.getY() + panel.getH() + getY() + 45, 35, 35, color, "icon/button/button/" + mod.getName().toLowerCase() + ".png");
+            Helper2D.drawRoundedRectangle(
+                    animButton.hasFinished() ?
+                            mod.isToggled() ?
+                                    panel.getX() + w - 50 + x + 15 + 1:
+                                    panel.getX() + w - 50 + x + 1:
+                            panel.getX() + w - 50 + x + animButton.getValueI() + 1,
+                    panel.getY() + panel.getH() + 52 + y + 1, 13, 13, 2,
+                    Style.getColorTheme(19).getRGB(), roundedCorners ? 0 : -1
+            );
+            boolean hoveredSetting = MathHelper.withinBox(panel.getX() + w - 50 + x - 25, panel.getY() + panel.getH() + 52 + y, 15, 15, mouseX, mouseY);
+            Helper2D.drawRoundedRectangle(panel.getX() + w - 50 + x - 25, panel.getY() + panel.getH() + 52 + y, 15, 15, 2, Style.getColorTheme(hoveredSetting ? 9 : 7 ).getRGB(), roundedCorners ? 0 : -1);
+            Helper2D.drawPicture(panel.getX() + w - 50 + x - 25 + 1, panel.getY() + panel.getH() + 52 + y + 1, 13, 13, color, "icon/wheel.png");
+
+            Helper2D.drawPicture(panel.getX() + 5 + x + 10, panel.getY() + panel.getH() +  45 + y, 30, 30, color, "icon/button/button/" + mod.getName().toLowerCase() + ".png");
+
+            Shindo.getInstance().getFontHelper().size20.drawString(mod.getName(), panel.getX() + 65 + x, panel.getY() + panel.getH() + 45 + y , 0xFFFFFF);
+            Shindo.getInstance().getFontHelper().size20.drawString(mod.getDescription(), panel.getX() + 65 + x, panel.getY() + panel.getH() + 61 + y , 0xBBBBBB);
         }
 
         if (open) {
             animPanel.update();
 
-            Helper2D.drawRoundedRectangle(panel.getX() + 5, panel.getY() + panel.getH() + 5 + 300 - animPanel.getValueI(), panel.getW() - 10, panel.getH(), 2, Style.getColorPallet(4).getRGB(), roundedCorners ? 1 : -1);
-            Helper2D.drawRectangle(panel.getX() + 5, panel.getY() + panel.getH() + 35 + 300 - animPanel.getValueI(), panel.getW() - 10, 235, Style.getColorPallet(3).getRGB());
+            Helper2D.drawRoundedRectangle(panel.getX() + 75, panel.getY() + panel.getH() + 5 + 300 - animPanel.getValueI(), w, panel.getH(), 2, Style.getColorTheme(4).getRGB(), roundedCorners ? 1 : -1);
+            Helper2D.drawRectangle(panel.getX() + 75, panel.getY() + panel.getH() + 35 + 300 - animPanel.getValueI(), w, 235, Style.getColorTheme(3).getRGB());
 
             boolean hovered = MathHelper.withinBox(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10 + 300 - animPanel.getValueI(), 20, 20, mouseX, mouseY);
-            Helper2D.drawRoundedRectangle(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10 + 300 - animPanel.getValueI(), 20, 20, 2, Style.getColorPallet(hovered ? 7 : 5).getRGB(), roundedCorners ? 0 : -1);
+            Helper2D.drawRoundedRectangle(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10 + 300 - animPanel.getValueI(), 20, 20, 2, Style.getColorTheme(hovered ? 7 : 5).getRGB(), roundedCorners ? 0 : -1);
             Helper2D.drawPicture(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10 + 300 - animPanel.getValueI(), 20, 20, color, "icon/cross.png");
 
-            Shindo.getInstance().getFontHelper().size30.drawString(mod.getName(), panel.getX() + 5 + 7, panel.getY() + panel.getH() + 5 + 8 + 300 - animPanel.getValueI(), color);
-            Shindo.getInstance().getFontHelper().size20.drawString(mod.getDescription(), panel.getX() + 20 + Shindo.getInstance().getFontHelper().size30.getStringWidth(mod.getName()), panel.getY() + panel.getH() + 316 - animPanel.getValueI(), color);
+            Shindo.getInstance().getFontHelper().size30.drawString(mod.getName(), panel.getX() + 5 + 77, panel.getY() + panel.getH() + 5 + 8 + 300 - animPanel.getValueI(), color);
+            //Shindo.getInstance().getFontHelper().size20.drawString(mod.getDescription(), panel.getX() + 20 + Shindo.getInstance().getFontHelper().size30.getStringWidth(mod.getName()), panel.getY() + panel.getH() + 316 - animPanel.getValueI(), color);
 
             /*
             Renders the settings
@@ -152,9 +168,9 @@ public class Button {
 
 
             GLHelper.startScissor(
-                    panel.getX() + 5,
+                    panel.getX() + 5 + 70,
                     panel.getY() + panel.getH() + 65,
-                    panel.getW() - 10,
+                    w,
                     235
             );
             for (Settings settings : settingsList) {
@@ -168,9 +184,9 @@ public class Button {
 
             if (!settingsList.isEmpty()) {
                 if (MathHelper.withinBox(
-                        panel.getX() + 5,
+                        panel.getX() + 5 + 70,
                         panel.getY() + panel.getH() + 35,
-                        panel.getW() - 10,
+                        w,
                         260,
                         mouseX, mouseY)
                 ) {
@@ -208,16 +224,14 @@ public class Button {
             if (MathHelper.withinBox(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 40, 20, 20, mouseX, mouseY)) {
                 panel.setAnyButtonOpen(false);
                 open = false;
-            } else if (MathHelper.withinBox(panel.getX() + 5 + x, panel.getY() + panel.getH() + 35 + y, w, h, mouseX, mouseY)) {
+            } else if (MathHelper.withinBox(panel.getX() + w - 50 + x, panel.getY() + panel.getH() + 52 + y, 30, 15, mouseX, mouseY)) {
                 if (!panel.isAnyButtonOpen() && !open) {
-                    if (mouseButton == 0) {
-                        mod.toggle();
-                    } else if (mouseButton == 1) {
-                        animPanel.reset();
-                        getPanel().setAnyButtonOpen(true);
-                        open = true;
-                    }
+                    mod.toggle();
                 }
+            } else if (MathHelper.withinBox(panel.getX() + w - 50 + x - 25, panel.getY() + panel.getH() + 52 + y, 15, 15, mouseX, mouseY)) {
+                animPanel.reset();
+                getPanel().setAnyButtonOpen(true);
+                open = true;
             }
         }
 

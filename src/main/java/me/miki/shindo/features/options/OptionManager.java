@@ -23,13 +23,10 @@ public class OptionManager {
         addOption(new Option("Font Changer", "Arial", 0,
                 GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
         addOption(new Option("Color", new Color(255, 255, 255), new Color(255, 0, 0), 0, new float[]{0, 0}));
-        //String[] mode = {"Portuguese", "English"};
-        //addOption(new Option("Language", "Portuguese", 0, mode));
 
         addOption(new Option("Misc"));
         addOption(new Option("Minimal View Bobbing", true));
         addOption(new Option("Fire Height", 50, 0));
-        addOption(new Option("Disable Custom Title Screen", false));
 
         addOption(new Option("Performance"));
         addOption(new Option("Rounded Corners", true));

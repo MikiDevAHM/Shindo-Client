@@ -12,6 +12,7 @@ public class FontHelper {
 
     private String font;
 
+    public GlyphPageFontRenderer size10;
     public GlyphPageFontRenderer size15;
     public GlyphPageFontRenderer size20;
     public GlyphPageFontRenderer size30;

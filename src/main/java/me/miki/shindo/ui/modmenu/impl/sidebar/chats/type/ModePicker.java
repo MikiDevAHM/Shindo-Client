@@ -3,10 +3,10 @@
  * GNU Lesser General Public License v3.0
  */
 
-package me.miki.shindo.ui.modmenu.impl.sidebar.options.type;
+package me.miki.shindo.ui.modmenu.impl.sidebar.chats.type;
 
 import me.miki.shindo.Shindo;
-import me.miki.shindo.features.options.Option;
+import me.miki.shindo.features.chat.Chat;
 import me.miki.shindo.helpers.MathHelper;
 import me.miki.shindo.helpers.animation.Animate;
 import me.miki.shindo.helpers.animation.Easing;
@@ -14,19 +14,19 @@ import me.miki.shindo.helpers.render.GLHelper;
 import me.miki.shindo.helpers.render.Helper2D;
 import me.miki.shindo.ui.Style;
 import me.miki.shindo.ui.modmenu.impl.Panel;
-import me.miki.shindo.ui.modmenu.impl.sidebar.options.Options;
+import me.miki.shindo.ui.modmenu.impl.sidebar.chats.Chats;
 
-public class ModePicker extends Options {
+public class ModePicker extends Chats {
 
     private final Animate animateSelect = new Animate();
     private int longestString;
     private boolean fontChanger = false;
 
-    public ModePicker(Option option, Panel panel, int y) {
-        super(option, panel, y);
-        setOptionHeight(option.getOptions().length * 15 + 5);
-        animateSelect.setEase(Easing.CUBIC_OUT).setMin(0).setMax(option.getOptions().length * 15 + 2).setReversed(false);
-        if(option.getName().equalsIgnoreCase("font changer")){
+    public ModePicker(Chat chat, Panel panel, int y) {
+        super(chat, panel, y);
+        setOptionHeight(chat.getOptions().length * 15 + 5);
+        animateSelect.setEase(Easing.CUBIC_OUT).setMin(0).setMax(chat.getOptions().length * 15 + 2).setReversed(false);
+        if(chat.getName().equalsIgnoreCase("font changer")){
             fontChanger = true;
         }
     }
@@ -39,20 +39,20 @@ public class ModePicker extends Options {
      */
 
     @Override
-    public void renderOption(int mouseX, int mouseY) {
+    public void renderChats(int mouseX, int mouseY) {
         boolean roundedCorners = Shindo.getInstance().getOptionManager().getOptionByName("Rounded Corners").isCheckToggled();
         int color = Shindo.getInstance().getOptionManager().getOptionByName("Color").getColor().getRGB();
 
         animateSelect.setSpeed(getOptionHeight() * 2).update();
 
-        for (int i = 0; i < option.getOptions().length; i++) {
-            if (longestString < Shindo.getInstance().getFontHelper().size20.getStringWidth(option.getOptions()[i])) {
-                longestString = Shindo.getInstance().getFontHelper().size20.getStringWidth(option.getOptions()[i]);
+        for (int i = 0; i < chat.getOptions().length; i++) {
+            if (longestString < Shindo.getInstance().getFontHelper().size20.getStringWidth(chat.getOptions()[i])) {
+                longestString = Shindo.getInstance().getFontHelper().size20.getStringWidth(chat.getOptions()[i]);
             }
         }
 
         Shindo.getInstance().getFontHelper().size30.drawString(
-                option.getName(),
+                chat.getName(),
                 panel.getX() + 80,
                 panel.getY() + panel.getH() + getY() + 6,
                 color
@@ -68,7 +68,7 @@ public class ModePicker extends Options {
         );
 
         Shindo.getInstance().getFontHelper().size20.drawString(
-                option.getCurrentMode(),
+                chat.getCurrentMode(),
                 panel.getX() + panel.getW() - 20 - longestString - 4,
                 panel.getY() + panel.getH() + getY() + 9,
                 color
@@ -80,19 +80,19 @@ public class ModePicker extends Options {
                         panel.getX(),
                         panel.getY() + panel.getH() + getY() + 23,
                         panel.getW(),
-                        option.getOptions().length * 15 + 2
+                        chat.getOptions().length * 15 + 2
                 );
             }
             Helper2D.drawRoundedRectangle(
                     panel.getX() + panel.getW() - 30 - longestString,
-                    panel.getY() + panel.getH() + getY() - option.getOptions().length * 15 + animateSelect.getValueI() + 20,
-                    longestString + 10, option.getOptions().length * 15 + 2,
+                    panel.getY() + panel.getH() + getY() - chat.getOptions().length * 15 + animateSelect.getValueI() + 20,
+                    longestString + 10, chat.getOptions().length * 15 + 2,
                     2, Style.getColorTheme(5).getRGB(),
                     2
             );
 
             int offset = 0;
-            for (int i = 0; i < option.getOptions().length; i++) {
+            for (int i = 0; i < chat.getOptions().length; i++) {
                 boolean hovered = MathHelper.withinBox(
                         panel.getX() + panel.getW() - 30 - longestString,
                         panel.getY() + panel.getH() + getY() + offset * 15 + 25,
@@ -102,16 +102,16 @@ public class ModePicker extends Options {
                 if (hovered) {
                     Helper2D.drawRoundedRectangle(
                             panel.getX() + panel.getW() - 30 - longestString,
-                            panel.getY() + panel.getH() + getY() + offset * 15 - option.getOptions().length * 15 + animateSelect.getValueI() + 20,
+                            panel.getY() + panel.getH() + getY() + offset * 15 - chat.getOptions().length * 15 + animateSelect.getValueI() + 20,
                             longestString + 10, 17, 2, Style.getColorTheme(7).getRGB(),
                             roundedCorners ? 0 : -1
                     );
                 }
 
                 Shindo.getInstance().getFontHelper().size20.drawString(
-                        option.getOptions()[i],
+                        chat.getOptions()[i],
                         panel.getX() + panel.getW() - 24 - longestString,
-                        panel.getY() + panel.getH() + getY() + offset * 15 - option.getOptions().length * 15 + animateSelect.getValueI() + 25,
+                        panel.getY() + panel.getH() + getY() + offset * 15 - chat.getOptions().length * 15 + animateSelect.getValueI() + 25,
                         color
                 );
 
@@ -153,7 +153,7 @@ public class ModePicker extends Options {
         }
         if (isOpen()) {
             int offset = 0;
-            for (int i = 0; i < option.getOptions().length; i++) {
+            for (int i = 0; i < chat.getOptions().length; i++) {
                 boolean hovered = MathHelper.withinBox(
                         panel.getX() + panel.getW() - 30 - longestString,
                         panel.getY() + panel.getH() + getY() + offset * 15 + 25,
@@ -161,9 +161,9 @@ public class ModePicker extends Options {
                 );
 
                 if (hovered) {
-                    option.setCurrentMode(option.getOptions()[i]);
+                    chat.setCurrentMode(chat.getOptions()[i]);
                     if(fontChanger){
-                        Shindo.getInstance().getFontHelper().setFont(option.getCurrentMode());
+                        Shindo.getInstance().getFontHelper().setFont(chat.getCurrentMode());
                         Shindo.getInstance().getFontHelper().init();
                     }
                 }

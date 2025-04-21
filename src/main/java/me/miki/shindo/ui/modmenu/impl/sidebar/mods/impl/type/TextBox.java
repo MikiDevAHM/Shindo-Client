@@ -35,7 +35,7 @@ public class TextBox extends Settings {
 
         Shindo.getInstance().getFontHelper().size30.drawString(
                 setting.getName(),
-                button.getPanel().getX() + 20,
+                button.getPanel().getX() + 80,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 6,
                 color
         );
@@ -43,15 +43,16 @@ public class TextBox extends Settings {
         int offset = getH() / 2 - 10;
 
         GLHelper.startScissor(x, y, w, h);
-        Helper2D.drawRoundedRectangle(x, y, w, h, 2, Style.getColor(isFocused() ? 50 : 30).getRGB(), roundedCorners ? 0 : -1);
+        Helper2D.drawRoundedRectangle(x, y, w, h, 2, Style.getColorTheme(isFocused() ? 5 : 3).getRGB(), roundedCorners ? 0 : -1);
         if (setting.getText().isEmpty()) {
             Shindo.getInstance().getFontHelper().size20.drawString(setting.getPlaceholderText(), x + offset + 5, y + offset + 4, 0x50ffffff);
         } else {
-            Shindo.getInstance().getFontHelper().size20.drawString(setting.getText(), x + offset + 5, y + offset + 4, -1);
-            Helper2D.drawRectangle(x + offset + 5 + Shindo.getInstance().getFontHelper().size20.getStringWidth(setting.getText().substring(0, setting.getCursorPosition())), y + offset + 3, 1, 10, 0x80ffffff);
+
+            Helper2D.drawRectangle(x + offset + 5 + Shindo.getInstance().getFontHelper().size20.getStringWidth(setting.getText().substring(0, setting.getCursorPosition())), y + offset + 3, 1, 10, Style.getColorTheme(10).getRGB());
             if (allSelected) {
-                Helper2D.drawRectangle(x + offset + 2, y + offset + 1, Shindo.getInstance().getFontHelper().size20.getStringWidth(setting.getText()) + 4, 14, 0x503030ff);
+                Helper2D.drawRectangle(x + offset + 2, y + offset + 1, Shindo.getInstance().getFontHelper().size20.getStringWidth(setting.getText()) + 4, 14, Style.getColorTheme(8).getRGB());
             }
+            Shindo.getInstance().getFontHelper().size20.drawString(setting.getText(), x + offset + 5, y + offset + 4, -1);
         }
         GLHelper.endScissor();
     }

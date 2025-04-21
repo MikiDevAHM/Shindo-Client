@@ -3,12 +3,15 @@ package me.miki.shindo;
 import me.miki.shindo.config.ConfigLoader;
 import me.miki.shindo.config.ConfigSaver;
 import me.miki.shindo.events.EventManager;
+import me.miki.shindo.features.chat.ChatManager;
 import me.miki.shindo.features.command.CommandManager;
 import me.miki.shindo.features.download.DownloadManager;
 import me.miki.shindo.features.mods.ModManager;
 import me.miki.shindo.features.options.OptionManager;
+import me.miki.shindo.features.patcher.PatcherManager;
 import me.miki.shindo.features.security.SecurityManager;
 import me.miki.shindo.features.settings.SettingManager;
+import me.miki.shindo.features.tweaker.TweakerManager;
 import me.miki.shindo.helpers.CpsHelper;
 import me.miki.shindo.helpers.MessageHelper;
 import me.miki.shindo.helpers.file.FileManager;
@@ -49,6 +52,9 @@ public class Shindo {
     private CpsHelper cpsHelper;
     private MessageHelper messageHelper;
     private CommandManager commandManager;
+    private ChatManager chatManager;
+    private TweakerManager tweakerManager;
+    private PatcherManager patcherManager;
 
     // MAIN METHODS
     public void startup() {
@@ -66,6 +72,9 @@ public class Shindo {
                 messageHelper = new MessageHelper(),
                 securityManager = new SecurityManager(),
                 commandManager = new CommandManager(),
+                chatManager = new ChatManager(),
+                tweakerManager = new TweakerManager(),
+                patcherManager = new PatcherManager(),
                 shindoHandler = new ShindoHandler(),
                 shindoAPI = new ShindoAPI()
 
@@ -127,6 +136,12 @@ public class Shindo {
     public SecurityManager getSecurityManager() { return securityManager; }
 
     public CommandManager getCommandManager() { return commandManager; }
+
+    public ChatManager getChatManager() { return chatManager; }
+
+    public TweakerManager getTweakerManager() { return tweakerManager; }
+
+    public PatcherManager getPatcherManager() { return patcherManager; }
 
     public ShindoHandler getShindoHandler() { return shindoHandler; }
 

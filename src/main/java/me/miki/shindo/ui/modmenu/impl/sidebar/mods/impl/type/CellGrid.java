@@ -33,7 +33,7 @@ public class CellGrid extends Settings {
 
         Shindo.getInstance().getFontHelper().size30.drawString(
                 setting.getName(),
-                button.getPanel().getX() + 20,
+                button.getPanel().getX() + 80,
                 button.getPanel().getY() + button.getPanel().getH() + 6 + getY(),
                 Shindo.getInstance().getOptionManager().getOptionByName("Color").getColor().getRGB()
         );
@@ -41,7 +41,7 @@ public class CellGrid extends Settings {
         Helper2D.drawRoundedRectangle(
                 button.getPanel().getX() + button.getPanel().getW() - 140,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 5,
-                121, 121, 2, Style.getColor(50).getRGB(), 0
+                121, 121, 2, Style.getColorTheme(5).getRGB(), 0
         );
 
         for (int row = 0; row < 11; row++) {
@@ -50,8 +50,8 @@ public class CellGrid extends Settings {
                 int y = button.getPanel().getY() + button.getPanel().getH() + getY() + 5 + row * 11;
                 Helper2D.drawRectangle(x, y, 11, 11,
                         setting.getCells()[row][col] ?
-                                MathHelper.withinBox(x, y, 11, 11, mouseX, mouseY) ? 0x70ffffff : 0x50ffffff :
-                                MathHelper.withinBox(x, y, 11, 11, mouseX, mouseY) ? 0x20ffffff : 0x00ffffff
+                                MathHelper.withinBox(x, y, 11, 11, mouseX, mouseY) ? Style.getColorTheme(10).getRGB() : Style.getColorTheme(7).getRGB() :
+                                MathHelper.withinBox(x, y, 11, 11, mouseX, mouseY) ? Style.getColorTheme(8).getRGB() : Style.getColorTheme(5).getRGB()
 
                 );
             }
@@ -63,7 +63,7 @@ public class CellGrid extends Settings {
             int x = button.getPanel().getX() + button.getPanel().getW() - 185 - counter * 42;
             int y = button.getPanel().getY() + button.getPanel().getH() + getY() + 5 + index * 42;
             Helper2D.drawRoundedRectangle(x, y, 37, 37, 2,
-                    Style.getColor(MathHelper.withinBox(x, y, 37, 37, mouseX, mouseY) ? 60 : 40).getRGB(), 0);
+                    Style.getColorTheme(MathHelper.withinBox(x, y, 37, 37, mouseX, mouseY) ? 6 : 4).getRGB(), 0);
 
             for (int row = 0; row < 11; row++) {
                 for (int col = 0; col < 11; col++) {
@@ -87,10 +87,11 @@ public class CellGrid extends Settings {
         int x = button.getPanel().getX() + button.getPanel().getW() - 20 - width;
         int y = button.getPanel().getY() + button.getPanel().getH() + getY() + 135;
 
-        Shindo.getInstance().getFontHelper().size20.drawString(text, x - 3, y + 6, -1);
-        Helper2D.drawRoundedRectangle(x - 9, y, width + 10, 20, 2, Style.getColor(
-                MathHelper.withinBox(x - 9, y, width + 10, 20, mouseX, mouseY) ? 50 : 30
+
+        Helper2D.drawRoundedRectangle(x - 9, y, width + 10, 20, 2, Style.getColorTheme(
+                MathHelper.withinBox(x - 9, y, width + 10, 20, mouseX, mouseY) ? 6 : 4
         ).getRGB(), 0);
+        Shindo.getInstance().getFontHelper().size20.drawString(text, x - 3, y + 6, -1);
     }
 
     /**

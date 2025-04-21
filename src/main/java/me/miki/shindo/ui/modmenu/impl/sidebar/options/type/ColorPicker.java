@@ -44,7 +44,7 @@ public class ColorPicker extends Options {
         boolean rounded = Shindo.getInstance().getOptionManager().getOptionByName("Rounded Corners").isCheckToggled();
         int color = Shindo.getInstance().getOptionManager().getOptionByName("Color").getColor().getRGB();
 
-        Shindo.getInstance().getFontHelper().size30.drawString(option.getName(), panel.getX() + 20, getYH + 6, color);
+        Shindo.getInstance().getFontHelper().size30.drawString(option.getName(), panel.getX() + 80, getYH + 6, color);
         animate.update();
 
         if (open) {
@@ -54,8 +54,8 @@ public class ColorPicker extends Options {
 
             int offset = animate.getValueI() - 70;
 
-            Helper2D.drawRoundedRectangle(getXW - 40, getYH + 25 + offset, 20, 70, 2, Style.getColor(50).getRGB(), rounded ? 0 : -1);
-            Helper2D.drawRoundedRectangle(getXW - 193, getYH + 25 + offset, 150, 70, 2, Style.getColor(50).getRGB(), rounded ? 0 : -1);
+            Helper2D.drawRoundedRectangle(getXW - 40, getYH + 25 + offset, 20, 70, 2, Style.getColorTheme(5).getRGB(), rounded ? 0 : -1);
+            Helper2D.drawRoundedRectangle(getXW - 193, getYH + 25 + offset, 150, 70, 2, Style.getColorTheme(5).getRGB(), rounded ? 0 : -1);
 
             Helper2D.drawPicture(getXW - 38, getYH + 27 + offset, 16, 66, 0, "icon/hue.png");
 
@@ -134,7 +134,7 @@ public class ColorPicker extends Options {
 
         String rgbText = "R" + option.getColor().getRed() + " G" + option.getColor().getGreen() + " B" + option.getColor().getBlue();
         Shindo.getInstance().getFontHelper().size20.drawString(rgbText, getXW - 45 - Shindo.getInstance().getFontHelper().size20.getStringWidth(rgbText), getYH + 9, -1);
-        Helper2D.drawRoundedRectangle(getXW - 40, getYH + 2, 20, 20, 2, Style.getColor(50).getRGB(), rounded ? 0 : -1);
+        Helper2D.drawRoundedRectangle(getXW - 40, getYH + 2, 20, 20, 2, Style.getColorTheme(6).getRGB(), rounded ? 0 : -1);
         Helper2D.drawRectangle(getXW - 38, getYH + 4, 16, 16, option.getColor().getRGB());
 
         setH(open ? 100 : 25);
@@ -145,7 +145,7 @@ public class ColorPicker extends Options {
         int getXW = panel.getX() + panel.getW();
         int getYH = panel.getY() + panel.getH() + getY();
 
-        if (MathHelper.withinBox(panel.getX(), getYH, panel.getW(), 25, mouseX, mouseY)) {
+        if (MathHelper.withinBox(getXW - 38, getYH + 4, 16, 16, mouseX, mouseY)) {
             open = !open;
             animate.reset();
         } else if (MathHelper.withinBox(getXW - 40, getYH + 25, 20, 70, mouseX, mouseY)) {

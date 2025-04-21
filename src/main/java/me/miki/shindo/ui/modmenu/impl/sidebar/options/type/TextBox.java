@@ -35,7 +35,7 @@ public class TextBox extends Options {
 
         Shindo.getInstance().getFontHelper().size30.drawString(
                 option.getName(),
-                panel.getX() + 20,
+                panel.getX() + 80,
                 panel.getY() + panel.getH() + getY() + 6,
                 color
         );
@@ -43,15 +43,17 @@ public class TextBox extends Options {
         int offset = getH() / 2 - 10;
 
         GLHelper.startScissor(x, y, w, h);
-        Helper2D.drawRoundedRectangle(x, y, w, h, 2, Style.getColor(isFocused() ? 50 : 30).getRGB(), roundedCorners ? 0 : -1);
+        Helper2D.drawRoundedRectangle(x, y, w, h, 2, Style.getColorTheme(isFocused() ? 5 : 3).getRGB(), roundedCorners ? 0 : -1);
         if (option.getText().isEmpty()) {
             Shindo.getInstance().getFontHelper().size20.drawString(option.getPlaceholderText(), x + offset + 5, y + offset + 4, 0x50ffffff);
         } else {
-            Shindo.getInstance().getFontHelper().size20.drawString(option.getText(), x + offset + 5, y + offset + 4, -1);
-            Helper2D.drawRectangle(x + offset + 5 + Shindo.getInstance().getFontHelper().size20.getStringWidth(option.getText().substring(0, option.getCursorPosition())), y + offset + 3, 1, 10, 0x80ffffff);
+
+            Helper2D.drawRectangle(x + offset + 5 + Shindo.getInstance().getFontHelper().size20.getStringWidth(option.getText().substring(0, option.getCursorPosition())), y + offset + 3, 1, 10, Style.getColorTheme(10).getRGB());
             if (allSelected) {
-                Helper2D.drawRectangle(x + offset + 2, y + offset + 1, Shindo.getInstance().getFontHelper().size20.getStringWidth(option.getText()) + 4, 14, 0x503030ff);
+                Helper2D.drawRectangle(x + offset + 2, y + offset + 1, Shindo.getInstance().getFontHelper().size20.getStringWidth(option.getText()) + 4, 14, Style.getColorTheme(8).getRGB());
             }
+
+            Shindo.getInstance().getFontHelper().size20.drawString(option.getText(), x + offset + 5, y + offset + 4, -1);
         }
         GLHelper.endScissor();
     }

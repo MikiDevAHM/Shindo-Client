@@ -7,6 +7,7 @@ package me.miki.shindo.ui.titlescreen;
 
 import me.miki.shindo.Shindo;
 import me.miki.shindo.helpers.font.GlyphPageFontRenderer;
+import me.miki.shindo.helpers.render.Helper2D;
 import me.miki.shindo.ui.titlescreen.buttons.IconButton;
 import me.miki.shindo.ui.titlescreen.buttons.TextButton;
 import net.minecraft.client.gui.GuiMultiplayer;
@@ -22,9 +23,9 @@ public class TitleScreen extends Panorama {
     private final ArrayList<IconButton> iconButtons = new ArrayList<>();
 
     public TitleScreen() {
-        textButtons.add(new TextButton("Singleplayer", width / 2 - 75, height / 2));
-        textButtons.add(new TextButton("Multiplayer", width / 2 - 75, height / 2 + 25));
-        textButtons.add(new TextButton("Settings", width / 2 - 75, height / 2 + 50));
+        textButtons.add(new TextButton("Singleplayer", width / 8 - 75, height / 2));
+        textButtons.add(new TextButton("Multiplayer", width / 8 - 75, height / 2 + 25));
+        textButtons.add(new TextButton("Settings", width / 8 - 75, height / 2 + 50));
         iconButtons.add(new IconButton("cross.png", width - 25, 5));
     }
 
@@ -40,9 +41,10 @@ public class TitleScreen extends Panorama {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
 
+        Helper2D.drawRectangle(0, 0, width / 4, height, 0x70000000);
         int y = 0;
         for (TextButton textButton : textButtons) {
-            textButton.renderButton(width / 2 - 75, height / 2 + y * 25, mouseX, mouseY);
+            textButton.renderButton(width / 8 - 75, height / 2 + y * 25, mouseX, mouseY);
             y++;
         }
 
@@ -99,7 +101,7 @@ public class TitleScreen extends Panorama {
 
     private void drawLogo() {
         GlyphPageFontRenderer fontRenderer = Shindo.getInstance().getFontHelper().size40;
-        fontRenderer.drawString(Shindo.NAME, width / 2f - fontRenderer.getStringWidth(Shindo.NAME) / 2f, height / 2f - 27.5f, -1);
+        fontRenderer.drawString(Shindo.NAME, width / 8f - fontRenderer.getStringWidth(Shindo.NAME) / 2f, height / 2f - 27.5f, -1);
         //Helper2D.drawPicture(width / 2 - 30, height / 2 - 78, 60, 60, 0x40ffffff, "logo.png");
     }
 

@@ -35,7 +35,7 @@ public class GuiShaderOptions extends GuiScreenOF
         this.screenName = null;
         this.screenText = null;
         this.changed = false;
-        this.title = "Shader Options";
+        this.title = "Shader Chats";
         this.prevScreen = guiscreen;
         this.settings = gamesettings;
     }

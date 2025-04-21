@@ -41,15 +41,30 @@ public class ModePicker extends Settings {
 
         animateSelect.setSpeed(getSettingHeight() * 2).update();
 
+        for (int i = 0; i < setting.getOptions().length; i++) {
+            if (longestString < Shindo.getInstance().getFontHelper().size20.getStringWidth(setting.getOptions()[i])) {
+                longestString = Shindo.getInstance().getFontHelper().size20.getStringWidth(setting.getOptions()[i]);
+            }
+        }
+
         Shindo.getInstance().getFontHelper().size30.drawString(
                 setting.getName(),
-                button.getPanel().getX() + 20,
+                button.getPanel().getX() + 80,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 6,
                 color
         );
+        Helper2D.drawRoundedRectangle(
+                button.getPanel().getX() + button.getPanel().getW() - 30 - longestString,
+                button.getPanel().getY() + button.getPanel().getH() + getY() + 4,
+                longestString + 10,
+                18,
+                2, Style.getColorTheme(5).getRGB(),
+                1
+        );
+
         Shindo.getInstance().getFontHelper().size20.drawString(
                 setting.getCurrentMode(),
-                button.getPanel().getX() + button.getPanel().getW() - 20 - Shindo.getInstance().getFontHelper().size20.getStringWidth(setting.getCurrentMode()),
+                button.getPanel().getX() + button.getPanel().getW() - 20 - longestString - 4,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 9,
                 color
         );
@@ -67,8 +82,8 @@ public class ModePicker extends Settings {
                     button.getPanel().getX() + button.getPanel().getW() - 30 - longestString,
                     button.getPanel().getY() + button.getPanel().getH() + getY() - setting.getOptions().length * 15 + animateSelect.getValueI() + 20,
                     longestString + 10, setting.getOptions().length * 15 + 2,
-                    2, Style.getColor(50).getRGB(),
-                    roundedCorners ? 0 : -1
+                    2, Style.getColorTheme(5).getRGB(),
+                    2
             );
 
             int offset = 0;
@@ -78,6 +93,14 @@ public class ModePicker extends Settings {
                         button.getPanel().getY() + button.getPanel().getH() + getY() + offset * 15 + 25,
                         longestString + 10, 15, mouseX, mouseY
                 );
+                if (hovered) {
+                    Helper2D.drawRoundedRectangle(
+                            button.getPanel().getX() + button.getPanel().getW() - 30 - longestString,
+                            button.getPanel().getY() + button.getPanel().getH() + getY() + offset * 15 - setting.getOptions().length * 15 + animateSelect.getValueI() + 20,
+                            longestString + 10, 17, 2, Style.getColorTheme(7).getRGB(),
+                            roundedCorners ? 0 : -1
+                    );
+                }
 
                 Shindo.getInstance().getFontHelper().size20.drawString(
                         setting.getOptions()[i],
@@ -86,17 +109,6 @@ public class ModePicker extends Settings {
                         color
                 );
 
-                if (hovered) {
-                    Helper2D.drawRoundedRectangle(
-                            button.getPanel().getX() + button.getPanel().getW() - 30 - longestString,
-                            button.getPanel().getY() + button.getPanel().getH() + getY() + offset * 15 - setting.getOptions().length * 15 + animateSelect.getValueI() + 20,
-                            longestString + 10, 17, 2, Style.getColor(50).getRGB(),
-                            roundedCorners ? 0 : -1
-                    );
-                }
-                if (longestString < Shindo.getInstance().getFontHelper().size20.getStringWidth(setting.getOptions()[i])) {
-                    longestString = Shindo.getInstance().getFontHelper().size20.getStringWidth(setting.getOptions()[i]);
-                }
                 offset++;
             }
             if (!animateSelect.hasFinished()) {
@@ -117,9 +129,9 @@ public class ModePicker extends Settings {
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         if (MathHelper.withinBox(
-                button.getPanel().getX() + 15,
-                button.getPanel().getY() + button.getPanel().getH() + getY() - 2,
-                button.getPanel().getW() - 30, 20, mouseX, mouseY)
+                button.getPanel().getX()  + button.getPanel().getW() - 30 - longestString,
+                button.getPanel().getY() + button.getPanel().getH() + getY() + 4,
+                longestString + 10, 20, mouseX, mouseY)
         ) {
             if (mouseButton == 0) {
                 if (isOpen()) {

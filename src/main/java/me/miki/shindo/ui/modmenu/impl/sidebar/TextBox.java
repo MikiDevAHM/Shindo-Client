@@ -36,16 +36,17 @@ public class TextBox {
         int offset = h / 2 - 10;
 
         GLHelper.startScissor(x, y, w, h);
-        Helper2D.drawRoundedRectangle(x, y, w, h, 2, Style.getColor(30).getRGB(), 0);
+        Helper2D.drawRoundedRectangle(x, y, w, h, 2, Style.getColorTheme(5).getRGB(), 0);
         Helper2D.drawPicture(x + offset + 2, y + offset + 3, 15, 15, 0x50ffffff, "icon/search.png");
         if(text.isEmpty()) {
             Shindo.getInstance().getFontHelper().size20.drawString(placeHolderText, x + offset + 20, y + offset + 6, 0x50ffffff);
         } else {
-            Shindo.getInstance().getFontHelper().size20.drawString(text, x + offset + 20, y + offset + 6, -1);
-            Helper2D.drawRectangle(x + offset + Shindo.getInstance().getFontHelper().size20.getStringWidth(text.substring(0, cursorPosition)) + 20, y + offset + 5, 1, 10, 0x80ffffff);
+
+            Helper2D.drawRectangle(x + offset + Shindo.getInstance().getFontHelper().size20.getStringWidth(text.substring(0, cursorPosition)) + 20, y + offset + 5, 1, 10, Style.getColorTheme(10).getRGB());
             if (allSelected) {
-                Helper2D.drawRectangle(x + offset + 17, y + offset + 3, Shindo.getInstance().getFontHelper().size20.getStringWidth(text) + 4, 14, 0x503030ff);
+                Helper2D.drawRectangle(x + offset + 17, y + offset + 3, Shindo.getInstance().getFontHelper().size20.getStringWidth(text) + 4, 14, Style.getColorTheme(8).getRGB());
             }
+            Shindo.getInstance().getFontHelper().size20.drawString(text, x + offset + 20, y + offset + 6, -1);
         }
         GLHelper.endScissor();
     }

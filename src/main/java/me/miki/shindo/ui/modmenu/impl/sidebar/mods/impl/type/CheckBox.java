@@ -41,7 +41,7 @@ public class CheckBox extends Settings {
 
         Shindo.getInstance().getFontHelper().size30.drawString(
                 setting.getName(),
-                button.getPanel().getX() + 20,
+                button.getPanel().getX() + 80,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 6,
                 color
         );
@@ -50,7 +50,7 @@ public class CheckBox extends Settings {
                 button.getPanel().getX() + button.getPanel().getW() - 40,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 2,
                 20, 20, 2,
-                Style.getColor(setting.isCheckToggled() ? 80 : 50).getRGB(),
+                Style.getColorTheme(setting.isCheckToggled() ? 8 : 5).getRGB(),
                 roundedCorners ? 0 : -1
         );
 

@@ -10,8 +10,7 @@ import me.miki.shindo.helpers.MathHelper;
 import me.miki.shindo.helpers.animation.Animate;
 import me.miki.shindo.helpers.animation.Easing;
 import me.miki.shindo.helpers.render.Helper2D;
-
-import java.awt.*;
+import me.miki.shindo.ui.Style;
 
 public class IconButton {
 
@@ -44,7 +43,7 @@ public class IconButton {
         animate.update().setReversed(!isHovered(mouseX, mouseY));
 
         Helper2D.drawRoundedRectangle(x, y, w, h, 2,
-                new Color(255, 255, 255, animate.getValueI() + 30).getRGB(),
+                Style.getColorTheme(isHovered(mouseX, mouseY) ? 8 : 5).getRGB(),
                 Shindo.getInstance().getOptionManager().getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
 

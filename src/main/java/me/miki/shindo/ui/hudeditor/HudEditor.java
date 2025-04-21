@@ -80,9 +80,10 @@ public class HudEditor extends GuiScreen {
         int color = Shindo.getInstance().getOptionManager().getOptionByName("Color").getColor().getRGB();
 
         Helper2D.drawRectangle(0, 0, width, height, 0x70000000);
-
         animateLogo.update();
+
         GLHelper.startScissor(0, height / 2 - 78, width, 73);
+
         Shindo.getInstance().getFontHelper().size40.drawString(
                 Shindo.NAME,
                 width / 2f - Shindo.getInstance().getFontHelper().size40.getStringWidth(Shindo.NAME) / 2f,
@@ -101,18 +102,53 @@ public class HudEditor extends GuiScreen {
         boolean hovered = MathHelper.withinBox(width / 2 - 50, height / 2 - 6, 100, 20, mouseX, mouseY);
 
         Helper2D.drawRoundedRectangle(
-                width / 2 - 50,
-                height / 2 - 6,
+                ResolutionHelper.getWidth() / 2 - 50,
+                ResolutionHelper.getHeight() / 2 - 6,
                 100, 20, 2,
-                Style.getColorPallet(hovered ? 6 : 3).getRGB(),
+                Style.getColorTheme(hovered ? 5 : 2).getRGB(),
                 roundedCorners ? 0 : -1
         );
         Shindo.getInstance().getFontHelper().size20.drawString(
-                "Open Mods",
-                width / 2f - Shindo.getInstance().getFontHelper().size20.getStringWidth("Open Mods") / 2f,
+                "Shindo Options",
+                width / 2f - Shindo.getInstance().getFontHelper().size20.getStringWidth("Shindo Options") / 2f,
                 height / 2f,
                 color
         );
+        boolean hovered1 = MathHelper.withinBox(width / 2 - 50, height / 2  + 20, 20, 20, mouseX, mouseY);
+        Helper2D.drawRoundedRectangle(
+                ResolutionHelper.getWidth() / 2 - 50,
+                ResolutionHelper.getHeight() / 2 + 20,
+                20, 20, 2,
+                Style.getColorTheme(hovered1 ? 5 : 2).getRGB(),
+                roundedCorners ? 0 : -1
+        );
+
+        boolean hovered2 = MathHelper.withinBox(width / 2 - 25, height / 2  + 20, 20, 20, mouseX, mouseY);
+        Helper2D.drawRoundedRectangle(
+                ResolutionHelper.getWidth() / 2 - 25,
+                ResolutionHelper.getHeight() / 2 + 20,
+                20, 20, 2,
+                Style.getColorTheme(hovered2 ? 5 : 2).getRGB(),
+                roundedCorners ? 0 : -1
+        );
+
+        boolean hovered3 = MathHelper.withinBox(width / 2 + 5, height / 2  + 20, 20, 20, mouseX, mouseY);
+        Helper2D.drawRoundedRectangle(
+                ResolutionHelper.getWidth() / 2 + 5,
+                ResolutionHelper.getHeight() / 2 + 20,
+                20, 20, 2,
+                Style.getColorTheme(hovered3 ? 5 : 2).getRGB(),
+                roundedCorners ? 0 : -1
+        );
+        boolean hovered4 = MathHelper.withinBox(width / 2 + 30, height / 2  + 20, 20, 20, mouseX, mouseY);
+        Helper2D.drawRoundedRectangle(
+                ResolutionHelper.getWidth() / 2 + 30,
+                ResolutionHelper.getHeight() / 2 + 20,
+                20, 20, 2,
+                Style.getColorTheme(hovered4 ? 5 : 2).getRGB(),
+                roundedCorners ? 0 : -1
+        );
+
 
         for (HudMod hudMod : hudModList) {
             hudMod.renderMod(mouseX, mouseY);
@@ -162,10 +198,10 @@ public class HudEditor extends GuiScreen {
         }
 
         animateSnapping.update();
-        Helper2D.drawRoundedRectangle(10, height - 50, 40, 40, 2, Style.getColor(40).getRGB(), roundedCorners ? 0 : -1);
-        Helper2D.drawPicture(15, height - 45, 30, 30, color, Style.isDarkMode() ? "icon/dark.png" : "icon/light.png");
-        Helper2D.drawRoundedRectangle(60, height - animateSnapping.getValueI(), 40, 40, 2, Style.getColor(40).getRGB(), roundedCorners ? 0 : -1);
-        Helper2D.drawPicture(65, height + 5 - animateSnapping.getValueI(), 30, 30, color, Style.isSnapping() ? "icon/grid.png" : "icon/nogrid.png");
+        // Helper2D.drawRoundedRectangle(10, height - 50, 40, 40, 2, Style.getColor(40).getRGB(), roundedCorners ? 0 : -1);
+        // Helper2D.drawPicture(15, height - 45, 30, 30, color, Style.isDarkMode() ? "icon/dark.png" : "icon/light.png");
+        Helper2D.drawRoundedRectangle(10, height - animateSnapping.getValueI(), 40, 40, 2, Style.getColorTheme(6).getRGB(), roundedCorners ? 0 : -1);
+        Helper2D.drawPicture(15, height + 5 - animateSnapping.getValueI(), 30, 30, color, Style.isSnapping() ? "icon/grid.png" : "icon/nogrid.png");
     }
 
     @NotNull
@@ -218,10 +254,26 @@ public class HudEditor extends GuiScreen {
                 mc.displayGuiScreen(new ModMenu());
             }
 
+            // if (MathHelper.withinBox(10, height - 50, 40, 40, mouseX, mouseY)) {
+            //     Style.setDarkMode(!Style.isDarkMode());
+            // }
             if (MathHelper.withinBox(10, height - 50, 40, 40, mouseX, mouseY)) {
-                Style.setDarkMode(!Style.isDarkMode());
-            } else if (MathHelper.withinBox(60, height - 50, 40, 40, mouseX, mouseY)) {
                 Style.setSnapping(!Style.isSnapping());
+            }
+
+            if (MathHelper.withinBox(width / 2 - 50, height / 2  + 20, 20, 20, mouseX, mouseY)) {
+                //mc.displayGuiScreen(new CosmeticsMenu());
+            }
+
+            if (MathHelper.withinBox(width / 2 - 25, height / 2  + 20, 20, 20, mouseX, mouseY)) {
+                //mc.displayGuiScreen(new FriendsMenu());
+            }
+            if (MathHelper.withinBox(width / 2 + 5, height / 2  + 20, 20, 20, mouseX, mouseY)) {
+                //mc.displayGuiScreen(new AutoTextMenu());
+            }
+
+            if (MathHelper.withinBox(width / 2 + 30, height / 2  + 20, 20, 20, mouseX, mouseY)) {
+                //mc.displayGuiScreen(new MusicPlayerMenu());
             }
         }
         super.mouseClicked(mouseX, mouseY, mouseButton);
