@@ -4,7 +4,7 @@ import com.ibm.icu.text.ArabicShaping;
 import com.ibm.icu.text.ArabicShapingException;
 import com.ibm.icu.text.Bidi;
 import me.miki.shindo.features.mods.impl.NickHiderMod;
-import me.miki.shindo.features.patcher.impl.bugfix.PatcherBugFixer;
+import me.miki.shindo.features.patcher.impl.PatcherBugFixer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;

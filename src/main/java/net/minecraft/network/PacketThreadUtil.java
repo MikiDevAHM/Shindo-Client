@@ -1,6 +1,6 @@
 package net.minecraft.network;
 
-import me.miki.shindo.features.patcher.impl.bugfix.PatcherBugFixer;
+import me.miki.shindo.features.patcher.impl.PatcherBugFixer;
 import net.minecraft.network.play.server.S01PacketJoinGame;
 import net.minecraft.network.play.server.S07PacketRespawn;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;

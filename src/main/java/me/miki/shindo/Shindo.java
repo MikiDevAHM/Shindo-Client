@@ -4,21 +4,17 @@ import me.miki.shindo.config.ConfigLoader;
 import me.miki.shindo.config.ConfigSaver;
 import me.miki.shindo.events.EventManager;
 import me.miki.shindo.features.chat.ChatManager;
-import me.miki.shindo.features.command.CommandManager;
-import me.miki.shindo.features.download.DownloadManager;
 import me.miki.shindo.features.mods.ModManager;
 import me.miki.shindo.features.options.OptionManager;
 import me.miki.shindo.features.patcher.PatcherManager;
 import me.miki.shindo.features.security.SecurityManager;
 import me.miki.shindo.features.settings.SettingManager;
-import me.miki.shindo.features.tweaker.TweakerManager;
 import me.miki.shindo.helpers.CpsHelper;
 import me.miki.shindo.helpers.MessageHelper;
 import me.miki.shindo.helpers.file.FileManager;
 import me.miki.shindo.helpers.font.FontHelper;
 import me.miki.shindo.helpers.logger.ShindoLogger;
 import me.miki.shindo.ui.hudeditor.HudEditor;
-import me.miki.shindoapi.ShindoAPI;
 import net.minecraft.client.Minecraft;
 
 /**
@@ -42,7 +38,6 @@ public class Shindo {
     private ShindoAPI shindoAPI;
     private EventManager eventManager;
     private FileManager fileManager;
-    private DownloadManager downloadManager;
     private SettingManager settingManager;
     private ModManager modManager;
     private OptionManager optionManager;
@@ -51,9 +46,7 @@ public class Shindo {
     private FontHelper fontHelper;
     private CpsHelper cpsHelper;
     private MessageHelper messageHelper;
-    private CommandManager commandManager;
     private ChatManager chatManager;
-    private TweakerManager tweakerManager;
     private PatcherManager patcherManager;
 
     // MAIN METHODS
@@ -62,7 +55,6 @@ public class Shindo {
 
         registerEvents(
                 fileManager = new FileManager(),
-                downloadManager = new DownloadManager(),
                 cpsHelper = new CpsHelper(),
                 settingManager = new SettingManager(),
                 modManager = new ModManager(),
@@ -71,9 +63,7 @@ public class Shindo {
                 fontHelper = new FontHelper(),
                 messageHelper = new MessageHelper(),
                 securityManager = new SecurityManager(),
-                commandManager = new CommandManager(),
                 chatManager = new ChatManager(),
-                tweakerManager = new TweakerManager(),
                 patcherManager = new PatcherManager(),
                 shindoHandler = new ShindoHandler(),
                 shindoAPI = new ShindoAPI()
@@ -92,6 +82,8 @@ public class Shindo {
         fontHelper.init();
         shindoHandler.init();
         shindoAPI.init();
+
+        modManager.getMod("GlobalSettings").setToggled(true);
 
         EventManager.register(this);
 
@@ -117,8 +109,6 @@ public class Shindo {
 
     public FileManager getFileManager() { return fileManager; }
 
-    public DownloadManager getDownloadManager() { return downloadManager; }
-
     public SettingManager getSettingManager() { return settingManager; }
 
     public ModManager getModManager() { return modManager; }
@@ -135,11 +125,7 @@ public class Shindo {
 
     public SecurityManager getSecurityManager() { return securityManager; }
 
-    public CommandManager getCommandManager() { return commandManager; }
-
     public ChatManager getChatManager() { return chatManager; }
-
-    public TweakerManager getTweakerManager() { return tweakerManager; }
 
     public PatcherManager getPatcherManager() { return patcherManager; }
 

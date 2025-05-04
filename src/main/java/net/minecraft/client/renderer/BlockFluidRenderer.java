@@ -1,6 +1,6 @@
 package net.minecraft.client.renderer;
 
-import me.miki.shindo.features.patcher.impl.bugfix.PatcherBugFixer;
+import me.miki.shindo.features.patcher.impl.PatcherBugFixer;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;

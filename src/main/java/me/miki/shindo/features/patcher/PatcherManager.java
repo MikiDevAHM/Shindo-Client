@@ -1,18 +1,30 @@
 package me.miki.shindo.features.patcher;
 
 
-import me.miki.shindo.features.patcher.impl.bugfix.PatcherBugFixer;
-
 import java.util.ArrayList;
 
 public class PatcherManager {
-    private ArrayList<Patcher> features = new ArrayList<Patcher>();
 
-    public PatcherManager() {
-        features.add(new PatcherBugFixer());
+    private ArrayList<Patcher> patcherList = new ArrayList<>();
+
+    public PatcherManager() { init(); }
+
+    public void init() {
+
+
+
     }
 
-    public ArrayList<Patcher> getFeatures() {
-        return features;
+    public ArrayList<Patcher> getPatcher() { return patcherList; }
+
+    public void addPatcher(Patcher patcher) { patcherList.add(patcher); }
+
+    public Patcher getPatcherByName(String name) {
+        for (Patcher patcher : patcherList) {
+            if (patcher.getName().equalsIgnoreCase(name)) {
+                return patcher;
+            }
+        }
+        return null;
     }
 }

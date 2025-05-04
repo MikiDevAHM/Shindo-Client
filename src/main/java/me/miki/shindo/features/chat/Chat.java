@@ -42,6 +42,9 @@ public class Chat {
     @Expose
     private float[] mainSlider;
 
+    @Expose
+    private boolean expanded = true;
+
     /**
      * An option which can be toggled on and off
      */
@@ -207,5 +210,13 @@ public class Chat {
 
     public void setMainSlider(float[] mainSlider) {
         this.mainSlider = mainSlider;
+    }
+
+    public boolean isExpanded() {
+        return expanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
     }
 }

@@ -3,7 +3,7 @@ package net.minecraft.command;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import me.miki.shindo.features.patcher.impl.bugfix.PatcherBugFixer;
+import me.miki.shindo.features.patcher.impl.PatcherBugFixer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;

@@ -1,7 +1,7 @@
 package net.minecraft.client.gui.inventory;
 
 import com.google.common.collect.Sets;
-import me.miki.shindo.features.patcher.impl.bugfix.PatcherBugFixer;
+import me.miki.shindo.features.patcher.impl.PatcherBugFixer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;

@@ -5,7 +5,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import me.miki.shindo.Shindo;
 import me.miki.shindo.events.impl.RenderEvent;
-import me.miki.shindo.features.patcher.impl.bugfix.PatcherBugFixer;
+import me.miki.shindo.features.patcher.impl.PatcherBugFixer;
 import me.miki.shindo.ui.hudeditor.HudEditor;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;

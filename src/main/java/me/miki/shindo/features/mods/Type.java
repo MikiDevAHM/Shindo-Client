@@ -6,7 +6,8 @@ public enum Type {
     Hud("display.png"),
     Mechanic("wheel.png"),
     Visual("camera.png"),
-    Tweaks("crop.png");
+    Tweaks("crop.png"),
+    Hidden("hidden.png");
 
     private final String icon;
 

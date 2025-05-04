@@ -23,26 +23,28 @@ public class ModManager {
      */
 
     public void init() {
-        addMod(new ToggleSprintMod());
-        addMod(new FpsMod());
-        addMod(new KeystrokesMod());
-        addMod(new ArmorMod());
-        addMod(new FullbrightMod());
-        addMod(new SnaplookMod());
-        addMod(new CoordinatesMod());
-        addMod(new PingMod());
-        addMod(new CpsMod());
-        addMod(new PotionMod());
-        addMod(new TimeMod());
         addMod(new AnimationMod());
-        addMod(new CrosshairMod());
+        addMod(new ArmorMod());
         addMod(new BlockOverlayMod());
-        addMod(new ZoomMod());
-        addMod(new NoHurtCamMod());
-        addMod(new NickHiderMod());
-        addMod(new ScoreboardMod());
         addMod(new BossbarMod());
+        addMod(new CoordinatesMod());
+        addMod(new CpsMod());
+        addMod(new CrosshairMod());
+        addMod(new FpsMod());
+        addMod(new FullbrightMod());
+        addMod(new GlobalSettingsMod());
+        addMod(new KeystrokesMod());
         addMod(new NameTagMod());
+        addMod(new NickHiderMod());
+        addMod(new NoHurtCamMod());
+        addMod(new PingMod());
+        addMod(new PotionMod());
+        addMod(new ScoreboardMod());
+        addMod(new SnaplookMod());
+        addMod(new TimeMod());
+        addMod(new ToggleSprintMod());
+        addMod(new ZoomMod());
+
     }
 
     /**

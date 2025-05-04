@@ -9,7 +9,6 @@ import me.miki.shindo.Shindo;
 import me.miki.shindo.helpers.ResolutionHelper;
 import me.miki.shindo.helpers.TimeHelper;
 import me.miki.shindo.helpers.render.Helper2D;
-import me.miki.shindo.ui.Style;
 import me.miki.shindo.ui.modmenu.impl.Panel;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
@@ -42,15 +41,8 @@ public class ModMenu extends GuiScreen {
         Draws the time at the top right
          */
 
-        Helper2D.drawRoundedRectangle(ResolutionHelper.getWidth() / 4 + 60, ResolutionHelper.getHeight() / 4 - 27, 130, 20, 2, Style.getColorTheme(4).getRGB(), 0);
-        Helper2D.drawPicture(ResolutionHelper.getWidth() / 4 + 10, ResolutionHelper.getHeight() / 4 - 30, 30, 30, color,  "logo.png");
 
-        Shindo.getInstance().getFontHelper().size20.drawString(TimeHelper.getFormattedDate(), ResolutionHelper.getWidth() / 4f + 90f , ResolutionHelper.getHeight() / 4f - 20f, -1);
-        Shindo.getInstance().getFontHelper().size20.drawString(TimeHelper.getFormattedTimeMinute(), ResolutionHelper.getWidth() / 4f + 150f , ResolutionHelper.getHeight() / 4f - 20f, -1);
 
-        Date date = new Date();
-        boolean isDay = date.getHours() < 19 && date.getHours() > 6 ;
-        Helper2D.drawPicture(ResolutionHelper.getWidth() / 4 + 65, ResolutionHelper.getHeight() / 4 - 25, 15, 15, color,  isDay ? "icon/light.png" : "icon/dark.png" );
         /*
         Draws the dark and light mode button on the bottom left
          */

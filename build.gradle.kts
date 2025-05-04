@@ -1,6 +1,5 @@
 plugins {
     java
-    kotlin("jvm") version "1.9.23"
 }
 
 val group by properties
@@ -46,10 +45,6 @@ dependencies {
 
     // SHINDO LIBS
     implementation(fileTree("/libs"))
-}
-
-kotlin {
-    jvmToolchain(8)
 }
 
 tasks.register<JavaExec>("runClient") {

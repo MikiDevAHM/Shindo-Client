@@ -1,6 +1,5 @@
-package me.miki.shindo.features.patcher.impl.bugfix;
+package me.miki.shindo.features.patcher.impl;
 
-import me.miki.shindo.features.patcher.Patcher;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
@@ -20,7 +19,7 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.Locale;
 
-public class PatcherBugFixer extends Patcher {
+public class PatcherBugFixer  {
 
     /*
      * @Mixin(BlockFluidRenderer.class)

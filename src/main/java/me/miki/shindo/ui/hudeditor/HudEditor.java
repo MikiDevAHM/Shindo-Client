@@ -19,7 +19,6 @@ import me.miki.shindo.ui.hudeditor.impl.impl.keystrokes.KeystrokesHud;
 import me.miki.shindo.ui.modmenu.ModMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
@@ -179,7 +178,6 @@ public class HudEditor extends GuiScreen {
                         Shindo.getInstance().getModManager().getMod(sHudMod.getName()).isToggled() &&
                                 hudMod.isDragging() &&
                                 !sHudMod.equals(hudMod) &&
-                                !sHudMod.equals(hudMod) &&
                                 Style.isSnapping()
                 ) {
                     SnapPosition snap = getSnapPosition(hudMod, sHudMod);
@@ -204,7 +202,6 @@ public class HudEditor extends GuiScreen {
         Helper2D.drawPicture(15, height + 5 - animateSnapping.getValueI(), 30, 30, color, Style.isSnapping() ? "icon/grid.png" : "icon/nogrid.png");
     }
 
-    @NotNull
     private static SnapPosition getSnapPosition(HudMod hudMod, HudMod sHudMod) {
         SnapPosition snap = new SnapPosition();
         snap.setSnapping(true);
