@@ -5,21 +5,28 @@
 
 package me.miki.shindo.helpers.render;
 
+import me.miki.mp3agic.Mp3File;
+import me.miki.mp3agic.interfaces.ID3v2;
 import me.miki.shindo.helpers.ColorHelper;
+import me.miki.shindo.helpers.logger.ShindoLogger;
+import me.miki.shindo.ui.Style;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
-import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -139,66 +146,6 @@ public class Helper2D {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         Gui.drawModalRectWithCustomSizedTexture(x, y, 0.0F, 0.0F, w, h, w, h);
         GlStateManager.disableBlend();
-    }
-
-    /*
-     * || USAGE ||
-     * File file = new File("assets/texturas/exemplo.png");
-     * int textureID = Helper2D.loadTexture(file);
-     * Helper2D.drawTexture(textureID, 100, 100, 64, 64);
-     */
-    public static int loadTexture(File file) {
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(file);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        int[] pixelsRaw = new int[width * height];
-        image.getRGB(0, 0, width, height, pixelsRaw, 0, width);
-
-        ByteBuffer pixels = ByteBuffer.allocateDirect(width * height * 4);
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int pixel = pixelsRaw[y * width + x];
-
-                pixels.put((byte) ((pixel >> 16) & 0xFF)); // Red
-                pixels.put((byte) ((pixel >> 8) & 0xFF));  // Green
-                pixels.put((byte) (pixel & 0xFF));         // Blue
-                pixels.put((byte) ((pixel >> 24) & 0xFF)); // Alpha
-            }
-        }
-
-        pixels.flip();
-
-        int textureID = GL11.glGenTextures();
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
-
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0,
-                GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixels);
-
-        return textureID;
-    }
-
-    public static void drawTexture(int textureID, float x, float y, float width, float height) {
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
-
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glBegin(GL11.GL_QUADS);
-
-        GL11.glTexCoord2f(0, 0); GL11.glVertex2f(x, y);
-        GL11.glTexCoord2f(1, 0); GL11.glVertex2f(x + width, y);
-        GL11.glTexCoord2f(1, 1); GL11.glVertex2f(x + width, y + height);
-        GL11.glTexCoord2f(0, 1); GL11.glVertex2f(x, y + height);
-
-        GL11.glEnd();
     }
 
     /**
@@ -343,5 +290,86 @@ public class Helper2D {
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_CULL_FACE);
         glDisable(GL_BLEND);
+    }
+
+    public static void drawImage(int x, int y, int width, int height) {
+        drawImage(x, y, width, height, 0F, 0F, 1F, 1F);
+    }
+
+    public static void drawImage(int x, int y, int width, int height, float u, float v, float uWidth, float vHeight) {
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer renderer = tessellator.getWorldRenderer();
+
+        GlStateManager.enableBlend();
+        GlStateManager.disableAlpha();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager.color(1F, 1F, 1F, 1F);
+
+        renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        renderer.pos(x, y + height, 0).tex(u, v + vHeight).endVertex();
+        renderer.pos(x + width, y + height, 0).tex(u + uWidth, v + vHeight).endVertex();
+        renderer.pos(x + width, y, 0).tex(u + uWidth, v).endVertex();
+        renderer.pos(x, y, 0).tex(u, v).endVertex();
+        tessellator.draw();
+
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
+    }
+
+    private static final ResourceLocation DEFAULT_COVER = new ResourceLocation("shindo/icon/music.png");
+    private static final Map<File, ResourceLocation> cache = new HashMap<>();
+
+    public static void renderCover(File mp3File, int x, int y, int size) {
+        ResourceLocation texture = getOrLoadTexture(mp3File);
+        if (texture == null) return;
+
+        // Desenha fundo com cantos arredondados (máscara visual)
+        Helper2D.drawRoundedRectangle(x, y, size, size, 6, Style.getColorTheme(3).getRGB(), 0); // cor de fundo ou máscara
+
+        // Renderiza textura da capa por cima
+        mc.getTextureManager().bindTexture(texture);
+        GlStateManager.enableBlend();
+        GlStateManager.disableAlpha();
+        GlStateManager.color(1F, 1F, 1F, 1F);
+
+        Helper2D.drawImage(x + 1, y + 1, size - 2, size - 2); // levemente menor que o fundo
+
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
+    }
+
+    public static ResourceLocation getOrLoadTexture(File file) {
+        if (cache.containsKey(file)) return cache.get(file);
+
+        try {
+            Mp3File mp3 = new Mp3File(file);
+            if (mp3.hasId3v2Tag()) {
+                ID3v2 tag = mp3.getId3v2Tag();
+                byte[] imageData = tag.getAlbumImage();
+                if (imageData != null) {
+                    BufferedImage cover = ImageIO.read(new ByteArrayInputStream(imageData));
+                    if (cover != null) {
+                        ResourceLocation texture = registerTexture(cover);
+                        cache.put(file, texture);
+                        return texture;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            ShindoLogger.error("Failed to load texture: " + file, e);
+        }
+
+        cache.put(file, DEFAULT_COVER);
+        return DEFAULT_COVER;
+    }
+
+    private static ResourceLocation registerTexture(BufferedImage image) {
+        try {
+            DynamicTexture dynamicTexture = new DynamicTexture(image);
+            return mc.getTextureManager().getDynamicTextureLocation("cover_" + UUID.randomUUID(), dynamicTexture);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

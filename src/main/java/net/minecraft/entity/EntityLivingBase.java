@@ -7,6 +7,7 @@ import me.miki.shindo.Shindo;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.ai.attributes.*;
@@ -648,6 +649,7 @@ public abstract class EntityLivingBase extends Entity
                 double d0 = (double)(i >> 16 & 255) / 255.0D;
                 double d1 = (double)(i >> 8 & 255) / 255.0D;
                 double d2 = (double)(i >> 0 & 255) / 255.0D;
+                if (Shindo.getInstance().getPatcherManager().getPatcherByName("Clean View").isCheckToggled() && (Object) this == Minecraft.getMinecraft().thePlayer) return;
                 this.worldObj.spawnParticle(flag1 ? EnumParticleTypes.SPELL_MOB_AMBIENT : EnumParticleTypes.SPELL_MOB, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, d0, d1, d2, new int[0]);
             }
         }
@@ -2147,7 +2149,7 @@ public abstract class EntityLivingBase extends Entity
      */
     public Vec3 getLook(float partialTicks)
     {
-        if ( this instanceof EntityPlayerSP && Shindo.getInstance().getOptionManager().getOptionByName("Mouse Delay Fix").isCheckToggled()) {
+        if ( this instanceof EntityPlayerSP && Shindo.getInstance().getPatcherManager().getPatcherByName("Mouse Delay Fix").isCheckToggled()) {
             return super.getLook(partialTicks);
         }
         if (partialTicks == 1.0F)

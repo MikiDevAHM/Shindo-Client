@@ -3,7 +3,7 @@
  * GNU Lesser General Public License v3.0
  */
 
-package me.miki.shindo.ui.titlescreen.buttons;
+package me.miki.shindo.ui.comp.buttons;
 
 import me.miki.shindo.Shindo;
 import me.miki.shindo.helpers.MathHelper;

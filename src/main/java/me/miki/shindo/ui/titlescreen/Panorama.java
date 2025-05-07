@@ -96,7 +96,7 @@ public class Panorama extends GuiScreen {
                 }
 
                 mc.getTextureManager().bindTexture(titlePanoramaPaths[k]);
-                worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+                worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
                 int l = 255 / (j + 1);
                 worldrenderer.pos(-1.0, -1.0, 1.0).tex(0.0, 0.0).color(255, 255, 255, l).endVertex();
                 worldrenderer.pos(1.0, -1.0, 1.0).tex(1.0, 0.0).color(255, 255, 255, l).endVertex();
@@ -135,7 +135,7 @@ public class Panorama extends GuiScreen {
         GlStateManager.colorMask(true, true, true, false);
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
         GlStateManager.disableAlpha();
         int i = 3;
 
@@ -178,7 +178,7 @@ public class Panorama extends GuiScreen {
         int j = height;
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
         worldrenderer.pos(0.0, j, zLevel).tex((0.5F - f1), (0.5F + f2)).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
         worldrenderer.pos(i, j, zLevel).tex((0.5F - f1), (0.5F - f2)).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
         worldrenderer.pos(i, 0.0, zLevel).tex((0.5F + f1), (0.5F - f2)).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();

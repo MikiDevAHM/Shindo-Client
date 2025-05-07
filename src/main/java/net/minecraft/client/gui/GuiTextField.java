@@ -2,6 +2,9 @@ package net.minecraft.client.gui;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import me.miki.shindo.Shindo;
+import me.miki.shindo.helpers.render.Helper2D;
+import me.miki.shindo.ui.Style;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -528,8 +531,18 @@ public class GuiTextField extends Gui
         {
             if (this.getEnableBackgroundDrawing())
             {
-                drawRect(this.xPosition - 1, this.yPosition - 1, this.xPosition + this.width + 1, this.yPosition + this.height + 1, -6250336);
-                drawRect(this.xPosition, this.yPosition, this.xPosition + this.width, this.yPosition + this.height, -16777216);
+
+                Helper2D.drawRoundedRectangle(this.xPosition - 1, this.yPosition - 1, this.width + 2, this.height + 2, 3,
+                        Style.getColorTheme(10).getRGB(),
+                        Shindo.getInstance().getOptionManager().getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
+                );
+
+                Helper2D.drawRoundedRectangle(this.xPosition, this.yPosition, this.width, this.height, 3,
+                        Style.getColorTheme(4).getRGB(),
+                        Shindo.getInstance().getOptionManager().getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
+                );
+                //drawRect(this.xPosition - 1, this.yPosition - 1, this.xPosition + this.width + 1, this.yPosition + this.height + 1, -6250336);
+                //drawRect(this.xPosition, this.yPosition, this.xPosition + this.width, this.yPosition + this.height, -16777216);
             }
 
             int i = this.isEnabled ? this.enabledColor : this.disabledColor;

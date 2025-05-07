@@ -22,7 +22,7 @@ public class ChatCategory extends Category {
         super(panel);
         setName("Chat Options");
         setScrollHelper(scrollHelperChats);
-        setValue(2);
+        setValue(3);
     }
 
     @Override

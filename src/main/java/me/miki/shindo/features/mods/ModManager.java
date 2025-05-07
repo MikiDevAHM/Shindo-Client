@@ -30,6 +30,7 @@ public class ModManager {
         addMod(new CoordinatesMod());
         addMod(new CpsMod());
         addMod(new CrosshairMod());
+        addMod(new DiscordRPCMod());
         addMod(new FpsMod());
         addMod(new FullbrightMod());
         addMod(new GlobalSettingsMod());

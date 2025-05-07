@@ -338,7 +338,12 @@ public class GameSettings
      */
     public static boolean isKeyDown(KeyBinding key)
     {
-        return key.getKeyCode() == 0 ? false : (key.getKeyCode() < 0 ? Mouse.isButtonDown(key.getKeyCode() + 100) : Keyboard.isKeyDown(key.getKeyCode()));
+        int keyCode = key.getKeyCode();
+        if (keyCode != 0 && keyCode < 256) {
+            return keyCode < 0 ? Mouse.isButtonDown(keyCode + 100) : Keyboard.isKeyDown(keyCode);
+        } else {
+            return false;
+        }
     }
 
     /**

@@ -3,6 +3,8 @@ package net.minecraft.client.gui;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 import com.mojang.authlib.GameProfile;
+import me.miki.shindo.Shindo;
+import me.miki.shindo.features.patcher.impl.PatcherInstances;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
@@ -89,7 +91,7 @@ public class GuiPlayerTabOverlay extends Gui
             }
         }
 
-        list = list.subList(0, Math.min(list.size(), 80));
+        list = list.subList(0, Math.min(list.size(), (int) Shindo.getInstance().getPatcherManager().getPatcherByName("Tab Player Count").getCurrentNumber()));
         int l3 = list.size();
         int i4 = l3;
         int j4;
@@ -147,7 +149,7 @@ public class GuiPlayerTabOverlay extends Gui
 
         if (list1 != null)
         {
-            drawRect(width / 2 - l1 / 2 - 1, k1 - 1, width / 2 + l1 / 2 + 1, k1 + list1.size() * this.mc.fontRendererObj.FONT_HEIGHT, Integer.MIN_VALUE);
+            drawRect(width / 2 - l1 / 2 - 1, k1 - 1, width / 2 + l1 / 2 + 1, k1 + list1.size() * this.mc.fontRendererObj.FONT_HEIGHT, PatcherInstances.patcher$modifyColor(-2147483648));
 
             for (String s3 : list1)
             {
@@ -159,7 +161,7 @@ public class GuiPlayerTabOverlay extends Gui
             ++k1;
         }
 
-        drawRect(width / 2 - l1 / 2 - 1, k1 - 1, width / 2 + l1 / 2 + 1, k1 + i4 * 9, Integer.MIN_VALUE);
+        drawRect(width / 2 - l1 / 2 - 1, k1 - 1, width / 2 + l1 / 2 + 1, k1 + i4 * 9, PatcherInstances.patcher$modifyColor(-2147483648));
 
         for (int k4 = 0; k4 < l3; ++k4)
         {
@@ -167,7 +169,7 @@ public class GuiPlayerTabOverlay extends Gui
             int i5 = k4 % i4;
             int j2 = j1 + l4 * i1 + l4 * 5;
             int k2 = k1 + i5 * 9;
-            drawRect(j2, k2, j2 + i1, k2 + 8, 553648127);
+            drawRect(j2, k2, j2 + i1, k2 + 8, PatcherInstances.patcher$modifyColor( 553648127));
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             GlStateManager.enableAlpha();
             GlStateManager.enableBlend();
@@ -226,7 +228,7 @@ public class GuiPlayerTabOverlay extends Gui
         if (list2 != null)
         {
             k1 = k1 + i4 * 9 + 1;
-            drawRect(width / 2 - l1 / 2 - 1, k1 - 1, width / 2 + l1 / 2 + 1, k1 + list2.size() * this.mc.fontRendererObj.FONT_HEIGHT, Integer.MIN_VALUE);
+            drawRect(width / 2 - l1 / 2 - 1, k1 - 1, width / 2 + l1 / 2 + 1, k1 + list2.size() * this.mc.fontRendererObj.FONT_HEIGHT, PatcherInstances.patcher$modifyColor(-2147483648));
 
             for (String s4 : list2)
             {
@@ -239,6 +241,37 @@ public class GuiPlayerTabOverlay extends Gui
 
     protected void drawPing(int p_175245_1_, int p_175245_2_, int p_175245_3_, NetworkPlayerInfo networkPlayerInfoIn)
     {
+        if (Shindo.getInstance().getPatcherManager().getPatcherByName("Tab Ping As Number").isCheckToggled()) {
+            int ping = networkPlayerInfoIn.getResponseTime();
+            int x = (p_175245_2_ + p_175245_1_) - (mc.fontRendererObj.getStringWidth(String.valueOf(ping)) >> 1) - 2;
+            int y = p_175245_3_ + 2;
+
+            int color;
+
+            if (ping > 500) {
+                color = 11141120;
+            } else if (ping > 300) {
+                color = 11184640;
+            } else if (ping > 200) {
+                color = 11193344;
+            } else if (ping > 135) {
+                color = 2128640;
+            } else if (ping > 70) {
+                color = 39168;
+            } else if (ping >= 0) {
+                color = 47872;
+            } else {
+                color = 11141120;
+            }
+
+            GlStateManager.pushMatrix();
+            GlStateManager.scale(0.5f, 0.5f, 0.5f);
+            mc.fontRendererObj.drawStringWithShadow("   " + (ping == 0 ? "?" : ping), (2 * x) - 10, 2 * y, color);
+            GlStateManager.scale(2.0f, 2.0f, 2.0f);
+            GlStateManager.popMatrix();
+            return;
+        }
+
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(icons);
         int i = 0;

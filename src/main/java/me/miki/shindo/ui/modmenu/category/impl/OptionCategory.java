@@ -23,7 +23,7 @@ public class OptionCategory extends Category {
         super(panel);
         setName("Settings");
         setScrollHelper(scrollHelperOptions);
-        setValue(1);
+        setValue(2);
     }
 
     @Override

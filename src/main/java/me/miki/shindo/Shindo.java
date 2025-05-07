@@ -5,6 +5,7 @@ import me.miki.shindo.config.ConfigSaver;
 import me.miki.shindo.events.EventManager;
 import me.miki.shindo.features.chat.ChatManager;
 import me.miki.shindo.features.mods.ModManager;
+import me.miki.shindo.features.music.MusicManager;
 import me.miki.shindo.features.options.OptionManager;
 import me.miki.shindo.features.patcher.PatcherManager;
 import me.miki.shindo.features.security.SecurityManager;
@@ -48,6 +49,7 @@ public class Shindo {
     private MessageHelper messageHelper;
     private ChatManager chatManager;
     private PatcherManager patcherManager;
+    private MusicManager musicManager;
 
     // MAIN METHODS
     public void startup() {
@@ -65,6 +67,7 @@ public class Shindo {
                 securityManager = new SecurityManager(),
                 chatManager = new ChatManager(),
                 patcherManager = new PatcherManager(),
+                musicManager = new MusicManager(),
                 shindoHandler = new ShindoHandler(),
                 shindoAPI = new ShindoAPI()
 
@@ -105,15 +108,7 @@ public class Shindo {
 
     public ShindoAPI getShindoAPI() { return shindoAPI; }
 
-    public EventManager getEventManager() { return eventManager; }
-
-    public FileManager getFileManager() { return fileManager; }
-
-    public SettingManager getSettingManager() { return settingManager; }
-
-    public ModManager getModManager() { return modManager; }
-
-    public OptionManager getOptionManager() { return optionManager; }
+    public ShindoHandler getShindoHandler() { return shindoHandler; }
 
     public HudEditor getHudEditor() { return hudEditor; }
 
@@ -123,13 +118,21 @@ public class Shindo {
 
     public MessageHelper getMessageHelper() { return messageHelper; }
 
-    public SecurityManager getSecurityManager() { return securityManager; }
+    public ModManager getModManager() { return modManager; }
+
+    public SettingManager getSettingManager() { return settingManager; }
+
+    public OptionManager getOptionManager() { return optionManager; }
 
     public ChatManager getChatManager() { return chatManager; }
 
     public PatcherManager getPatcherManager() { return patcherManager; }
 
-    public ShindoHandler getShindoHandler() { return shindoHandler; }
+    public MusicManager getMusicManager() { return musicManager; }
+
+    public SecurityManager getSecurityManager() { return securityManager; }
+
+    public FileManager getFileManager() { return fileManager; }
 
     private void registerEvents(Object... events) {
         for (Object event : events) {

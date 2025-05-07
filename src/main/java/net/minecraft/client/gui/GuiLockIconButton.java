@@ -1,5 +1,8 @@
 package net.minecraft.client.gui;
 
+import me.miki.shindo.Shindo;
+import me.miki.shindo.helpers.render.Helper2D;
+import me.miki.shindo.ui.Style;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 
@@ -29,40 +32,72 @@ public class GuiLockIconButton extends GuiButton
     {
         if (this.visible)
         {
-            mc.getTextureManager().bindTexture(GuiButton.buttonTextures);
+            //mc.getTextureManager().bindTexture(GuiButton.buttonTextures);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             boolean flag = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-            GuiLockIconButton.Icon guilockiconbutton$icon;
+
+            Helper2D.drawRoundedRectangle(xPosition + 1, yPosition + 1, width -2, height - 2, 3,
+                    Style.getColorTheme(8).getRGB(),
+                    Shindo.getInstance().getOptionManager().getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
+            );
+
+
+            String icon = "";
 
             if (this.field_175231_o)
             {
                 if (!this.enabled)
                 {
-                    guilockiconbutton$icon = GuiLockIconButton.Icon.LOCKED_DISABLED;
+                    Helper2D.drawRoundedRectangle(xPosition + 2, yPosition + 2, width - 4, height - 4, 3,
+                            Style.getColorTheme(3).getRGB(),
+                            Shindo.getInstance().getOptionManager().getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
+                    );
+                    icon = "icon/lock.png";
                 }
                 else if (flag)
                 {
-                    guilockiconbutton$icon = GuiLockIconButton.Icon.LOCKED_HOVER;
+                    Helper2D.drawRoundedRectangle(xPosition + 2, yPosition + 2, width - 4, height - 4, 3,
+                            Style.getColorTheme(7).getRGB(),
+                            Shindo.getInstance().getOptionManager().getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
+                    );
+                    icon = "icon/lock.png";
                 }
                 else
                 {
-                    guilockiconbutton$icon = GuiLockIconButton.Icon.LOCKED;
+                    Helper2D.drawRoundedRectangle(xPosition + 2, yPosition + 2, width - 4, height - 4, 3,
+                            Style.getColorTheme(5).getRGB(),
+                            Shindo.getInstance().getOptionManager().getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
+                    );
+                    icon = "icon/lock.png";
                 }
             }
             else if (!this.enabled)
             {
-                guilockiconbutton$icon = GuiLockIconButton.Icon.UNLOCKED_DISABLED;
+                Helper2D.drawRoundedRectangle(xPosition + 2, yPosition + 2, width - 4, height - 4, 3,
+                        Style.getColorTheme(3).getRGB(),
+                        Shindo.getInstance().getOptionManager().getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
+                );
+                icon = "icon/unlock.png";
             }
             else if (flag)
             {
-                guilockiconbutton$icon = GuiLockIconButton.Icon.UNLOCKED_HOVER;
+                Helper2D.drawRoundedRectangle(xPosition + 2, yPosition + 2, width - 4, height - 4, 3,
+                        Style.getColorTheme(7).getRGB(),
+                        Shindo.getInstance().getOptionManager().getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
+                );
+                icon = "icon/unlock.png";
             }
             else
             {
-                guilockiconbutton$icon = GuiLockIconButton.Icon.UNLOCKED;
+                Helper2D.drawRoundedRectangle(xPosition + 2, yPosition + 2, width - 4, height - 4, 3,
+                        Style.getColorTheme(5).getRGB(),
+                        Shindo.getInstance().getOptionManager().getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
+                );
+                icon = "icon/unlock.png";
             }
 
-            this.drawTexturedModalRect(this.xPosition, this.yPosition, guilockiconbutton$icon.func_178910_a(), guilockiconbutton$icon.func_178912_b(), this.width, this.height);
+            Helper2D.drawPicture(xPosition + 4, yPosition + 4, width - 8, height - 8, 0, icon);
+            //this.drawTexturedModalRect(this.xPosition, this.yPosition, guilockiconbutton$icon.func_178910_a(), guilockiconbutton$icon.func_178912_b(), this.width, this.height);
         }
     }
 

@@ -162,6 +162,34 @@ public class GlyphPageFontRenderer {
         return i;
     }
 
+    public int drawStringLimited(String text, int x, int y, int maxWidth, int color) {
+        int textWidth = this.getStringWidth(text);
+
+        int i1;
+        if (textWidth > maxWidth) {
+            String trimmed = "";
+
+            for (int i = 0; i < text.length(); i++) {
+                String temp = trimmed + text.charAt(i);
+                if (getStringWidth(temp + "...") > maxWidth) {
+                    break;
+                }
+                trimmed = temp;
+            }
+
+            i1 = renderString(trimmed + "...", x, y, color, false);
+        } else {
+            // desenha texto original + "..." preenchendo o espaço restante
+            String full = text;
+            while (getStringWidth(full + "...") < maxWidth) {
+                full += "...";
+            }
+
+            i1 = renderString(full, x, y, color, false);
+        }
+        return i1;
+    }
+
     public int drawStringWidthShadow(String text, float x, float y, int color) {
         GlStateManager.enableAlpha();
         this.resetStyles();

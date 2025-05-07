@@ -9,7 +9,7 @@ public class BossbarMod extends Mod {
         super(
                 "Bossbar",
                 "Adds tweaks to the Bossbar",
-                Type.Tweaks
+                Type.Hud
         );
     }
 }

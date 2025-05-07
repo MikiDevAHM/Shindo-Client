@@ -1,5 +1,7 @@
 package net.minecraft.client.renderer;
 
+import com.google.common.collect.Sets;
+import me.miki.shindo.Shindo;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -11,11 +13,14 @@ import net.minecraft.client.resources.model.WeightedBakedModel;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ReportedException;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.WorldType;
+
+import java.util.Set;
 
 public class BlockRendererDispatcher implements IResourceManagerReloadListener
 {
@@ -24,6 +29,16 @@ public class BlockRendererDispatcher implements IResourceManagerReloadListener
     private final BlockModelRenderer blockModelRenderer = new BlockModelRenderer();
     private final ChestRenderer chestRenderer = new ChestRenderer();
     private final BlockFluidRenderer fluidRenderer = new BlockFluidRenderer();
+
+    //
+    private static final Set<Block> patcher$foliageBlocks = Sets.newHashSet(
+            Blocks.tallgrass,
+            Blocks.double_plant,
+            Blocks.red_flower,
+            Blocks.yellow_flower
+    );
+    //
+
 
     public BlockRendererDispatcher(BlockModelShapes blockModelShapesIn, GameSettings gameSettingsIn)
     {
@@ -54,6 +69,8 @@ public class BlockRendererDispatcher implements IResourceManagerReloadListener
     {
         try
         {
+            if (Shindo.getInstance().getPatcherManager().getPatcherByName("Remove Ground Foliage").isCheckToggled() && patcher$foliageBlocks.contains(state.getBlock())) return false;
+
             int i = state.getBlock().getRenderType();
 
             if (i == -1)

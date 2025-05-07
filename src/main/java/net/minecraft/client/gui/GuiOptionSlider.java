@@ -1,5 +1,8 @@
 package net.minecraft.client.gui;
 
+import me.miki.shindo.Shindo;
+import me.miki.shindo.helpers.render.Helper2D;
+import me.miki.shindo.ui.Style;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.settings.GameSettings;
@@ -56,10 +59,21 @@ public class GuiOptionSlider extends GuiButton
                 this.displayString = mc.gameSettings.getKeyBinding(this.options);
             }
 
-            mc.getTextureManager().bindTexture(buttonTextures);
+            //mc.getTextureManager().bindTexture(buttonTextures);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-            this.drawTexturedModalRect(this.xPosition + (int)(this.sliderValue * (float)(this.width - 8)), this.yPosition, 0, 66, 4, 20);
-            this.drawTexturedModalRect(this.xPosition + (int)(this.sliderValue * (float)(this.width - 8)) + 4, this.yPosition, 196, 66, 4, 20);
+
+            Helper2D.drawRoundedRectangle(xPosition  +(int)(this.sliderValue * (float)(this.width - 8)), yPosition , 8, 20, 2,
+                    Style.getColorTheme(8).getRGB(),
+                    Shindo.getInstance().getOptionManager().getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
+                    );
+
+            Helper2D.drawRoundedRectangle(xPosition + 1 +(int)(this.sliderValue * (float)(this.width - 8)) , yPosition + 1, 6, 18, 2,
+                    Style.getColorTheme(5).getRGB(),
+                    Shindo.getInstance().getOptionManager().getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
+            );
+
+            //this.drawTexturedModalRect(this.xPosition + (int)(this.sliderValue * (float)(this.width - 8)), this.yPosition, 0, 66, 4, 20);
+            //this.drawTexturedModalRect(this.xPosition + (int)(this.sliderValue * (float)(this.width - 8)) + 4, this.yPosition, 196, 66, 4, 20);
         }
     }
 

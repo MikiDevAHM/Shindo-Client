@@ -7,6 +7,7 @@ val version by properties
 
 repositories {
     mavenCentral()
+    maven { url = uri("https://jitpack.io") }
     maven("https://repo.marcloud.net/")
     maven("https://libraries.minecraft.net/")
     maven("https://nifty-gui.sourceforge.net/nifty-maven-repo/")
@@ -44,6 +45,7 @@ dependencies {
     implementation("tv.twitch:twitch:6.5")
 
     // SHINDO LIBS
+    implementation("com.github.umjammer:jlayer:1.0.2")
     implementation(fileTree("/libs"))
 }
 

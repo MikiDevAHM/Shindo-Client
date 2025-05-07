@@ -25,15 +25,21 @@ import java.util.stream.Collectors;
 
 public class ScoreboardHud extends HudMod {
 
+
     public ScoreboardHud() {
         super("Scoreboard", 10, 10);
     }
+
 
     @Override
     public void renderMod(int mouseX, int mouseY) {
         GLHelper.startScale(getX(), getY(), getSize());
         if (Shindo.getInstance().getModManager().getMod(getName()).isToggled()) {
-            drawScoreboardPlaceHolder(isBackground(), isRemoveNumbers());
+
+            ScoreObjective scoreobjective = mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+            if (scoreobjective != null) {
+                drawScoreboard(scoreobjective, isBackground(), isRemoveNumbers());
+            }
             super.renderMod(mouseX, mouseY);
         }
         GLHelper.endScale();
@@ -43,7 +49,9 @@ public class ScoreboardHud extends HudMod {
     public void onRender2D(RenderEvent e) {
         GLHelper.startScale(getX(), getY(), getSize());
         if (Shindo.getInstance().getModManager().getMod(getName()).isToggled()) {
+
             ScoreObjective scoreobjective = mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+
             if (scoreobjective != null) {
                 drawScoreboard(scoreobjective, isBackground(), isRemoveNumbers());
             }
@@ -105,52 +113,6 @@ public class ScoreboardHud extends HudMod {
 
         setW(displayText + 4);
         setH((collection.size() + 1) * textHeight);
-    }
-
-    private void drawScoreboardPlaceHolder(boolean background, boolean numbers) {
-        String objective = "Scoreboard";
-        int displayText = mc.fontRendererObj.getStringWidth(objective) + 2;
-
-        String[] names = {"Steve", "Alex", "Zuri", "Sunny", "Noor", "Makena", "Kai", "Efe", "Ari"};
-        int collectionSize = names.length;
-
-        for (int i = 0; i < collectionSize; i++) {
-            String text = names[i] + ": " + EnumChatFormatting.RED + i;
-            displayText = Math.max(displayText, mc.fontRendererObj.getStringWidth(text));
-        }
-
-        int y = getY();
-        int x = getX();
-
-        int textHeight = mc.fontRendererObj.FONT_HEIGHT;
-
-        int index = collectionSize - 1;
-        for (int i = 0; i < collectionSize; i++) {
-            String mainText = names[i];
-            String redNumbers = EnumChatFormatting.RED + "" + i;
-            int calculatedY = y + index * textHeight;
-
-            if (index == 0) {
-                if (background) {
-                    Helper2D.drawRectangle(x, calculatedY, displayText + 4, textHeight, 1610612736);
-                    Helper2D.drawRectangle(x, calculatedY + textHeight, displayText + 4, 1, 1342177280);
-                }
-                mc.fontRendererObj.drawString(objective, x + 2 + displayText / 2 - mc.fontRendererObj.getStringWidth(objective) / 2, calculatedY + 1, -1);
-            }
-
-            if (background) {
-                Helper2D.drawRectangle(x, calculatedY + textHeight + 1, displayText + 4, textHeight, 1342177280);
-            }
-            mc.fontRendererObj.drawString(mainText, x + 2, calculatedY + textHeight + 1, -1);
-            if (!numbers) {
-                mc.fontRendererObj.drawString(redNumbers, x + 4 + displayText - mc.fontRendererObj.getStringWidth(redNumbers), calculatedY + textHeight + 1, -1);
-            }
-
-            index--;
-        }
-
-        setW(displayText + 4);
-        setH((collectionSize + 1) * textHeight);
     }
 
     private boolean isBackground() {

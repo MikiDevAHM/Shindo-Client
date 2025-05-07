@@ -135,6 +135,7 @@ public class GlyphPage {
 
     public float drawChar(char ch, float x, float y) {
         Glyph glyph = glyphCharacterMap.get(ch);
+        glyphCharacterMap.put('♫', glyph);
 
         if (glyph == null) throw new IllegalArgumentException("'" + ch + "' wasn't found");
 

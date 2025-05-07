@@ -43,7 +43,7 @@ public class Option {
     private boolean checkToggled;
 
     @Expose
-    private float maxNumber, currentNumber;
+    private float maxNumber, minNumber, currentNumber;
 
     @Expose
     private boolean[][] cells;
@@ -77,10 +77,11 @@ public class Option {
      * An option with a slider which can go from 0 to a given number
      */
 
-    public Option(String name, float maxNumber, float currentNumber) {
+    public Option(String name, float maxNumber, float currentNumber, float minNumber) {
         this.mode = "Slider";
         this.name = name;
 
+        this.minNumber = minNumber;
         this.maxNumber = maxNumber;
         this.currentNumber = currentNumber;
     }

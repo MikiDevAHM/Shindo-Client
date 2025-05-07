@@ -3,18 +3,15 @@
  * GNU Lesser General Public License v3.0
  */
 
-package me.miki.shindo.ui.titlescreen.buttons;
+package me.miki.shindo.ui.comp.buttons;
 
 import me.miki.shindo.Shindo;
 import me.miki.shindo.helpers.MathHelper;
-import me.miki.shindo.helpers.animation.Animate;
-import me.miki.shindo.helpers.animation.Easing;
 import me.miki.shindo.helpers.render.Helper2D;
 import me.miki.shindo.ui.Style;
 
 public class TextButton {
 
-    private final Animate animate = new Animate();
 
     private final String text;
     private int x, y;
@@ -24,9 +21,8 @@ public class TextButton {
         this.text = text;
         this.x = x;
         this.y = y;
-        this.w = 150;
+        this.w = 120;
         this.h = 20;
-        animate.setEase(Easing.LINEAR).setMin(0).setMax(25).setSpeed(200);
     }
 
     /**
@@ -40,12 +36,18 @@ public class TextButton {
         this.x = x;
         this.y = y;
 
-        animate.update().setReversed(!isHovered(mouseX, mouseY));
-
-        Helper2D.drawRoundedRectangle(x, y, w, h, 2,
-                Style.getColorTheme(isHovered(mouseX, mouseY) ? 8 : 5).getRGB(),
+        Helper2D.drawRoundedRectangle(x, y, w, h, 3,
+                Style.getColorTheme(8).getRGB(),
                 Shindo.getInstance().getOptionManager().getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
+        Helper2D.drawRoundedRectangle(x + 1, y + 1, w - 2, h - 2, 3,
+                Style.getColorTheme(isHovered(mouseX, mouseY) ? 7 : 5).getRGB(),
+                Shindo.getInstance().getOptionManager().getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
+        );
+
+        Helper2D.drawCircle(x + 10, y + 10, 3, 0, 360, Style.getColorTheme(10).getRGB());
+        Helper2D.drawCircle(x + 10, y + 10, 2, 0, 360, Style.getColorTheme(9).getRGB());
+
 
         Shindo.getInstance().getFontHelper().size20.drawString(
                 text,

@@ -12,6 +12,7 @@ import me.miki.shindo.helpers.render.GLHelper;
 import me.miki.shindo.helpers.render.Helper2D;
 import me.miki.shindo.ui.hudeditor.impl.HudMod;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.boss.BossStatus;
 
 public class BossbarHud extends HudMod {
@@ -49,15 +50,19 @@ public class BossbarHud extends HudMod {
         int health = (int) (BossStatus.healthScale * (float) (width + 1));
 
         mc.getTextureManager().bindTexture(Gui.icons);
-        Helper2D.drawTexturedModalRect(x, y + 10, 0, 74, width, 5);
-        Helper2D.drawTexturedModalRect(x, y + 10, 0, 74, width, 5);
+        BossStatus.statusBarTime--;
+        mc.getTextureManager().bindTexture(Gui.icons);
+        Helper2D.drawTexturedModalRect(x, y + 14, 0, 74, width, 5);
+        Helper2D.drawTexturedModalRect(x, y + 14, 0, 74, width, 5);
 
         if (health > 0) {
-            Helper2D.drawTexturedModalRect(x, y + 10, 0, 79, health, 5);
+            Helper2D.drawTexturedModalRect(x, y + 14, 0, 79, health, 5);
         }
 
         String s = BossStatus.bossName;
         mc.fontRendererObj.drawStringWithShadow(s, x + width / 2f - mc.fontRendererObj.getStringWidth(s) / 2f, y, 16777215);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        mc.getTextureManager().bindTexture(Gui.icons);
 
         setW(width);
         setH(15);

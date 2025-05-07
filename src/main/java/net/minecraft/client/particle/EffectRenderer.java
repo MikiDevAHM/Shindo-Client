@@ -2,6 +2,7 @@ package net.minecraft.client.particle;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import me.miki.shindo.Shindo;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -145,7 +146,7 @@ public class EffectRenderer
                 int i = effect.getFXLayer();
                 int j = effect.getAlpha() != 1.0F ? 0 : 1;
 
-                if (this.fxLayers[i][j].size() >= 4000)
+                if (this.fxLayers[i][j].size() >= Shindo.getInstance().getPatcherManager().getPatcherByName("Max Particle Limit").getCurrentNumber())
                 {
                     this.fxLayers[i][j].remove(0);
                 }
@@ -388,6 +389,8 @@ public class EffectRenderer
 
     public void addBlockDestroyEffects(BlockPos pos, IBlockState state)
     {
+        if (Shindo.getInstance().getPatcherManager().getPatcherByName("Disable Break Particles").isCheckToggled()) return;
+
         boolean flag;
 
         if (Reflector.ForgeBlock_addDestroyEffects.exists() && Reflector.ForgeBlock_isAir.exists())
@@ -429,6 +432,8 @@ public class EffectRenderer
      */
     public void addBlockHitEffects(BlockPos pos, EnumFacing side)
     {
+        if (Shindo.getInstance().getPatcherManager().getPatcherByName("Disable Break Particles").isCheckToggled()) return;
+
         IBlockState iblockstate = this.worldObj.getBlockState(pos);
         Block block = iblockstate.getBlock();
 
@@ -515,6 +520,8 @@ public class EffectRenderer
 
     public void addBlockHitEffects(BlockPos p_addBlockHitEffects_1_, MovingObjectPosition p_addBlockHitEffects_2_)
     {
+        if (Shindo.getInstance().getPatcherManager().getPatcherByName("Disable Break Particles").isCheckToggled()) return;
+
         IBlockState iblockstate = this.worldObj.getBlockState(p_addBlockHitEffects_1_);
 
         if (iblockstate != null)

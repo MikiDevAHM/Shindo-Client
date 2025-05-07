@@ -27,7 +27,7 @@ public class ModCategory extends Category {
         super(panel);
         setName("Mods");
         setScrollHelper(scrollHelperMods);
-        setValue(0);
+        setValue(1);
     }
 
     @Override
@@ -76,15 +76,15 @@ public class ModCategory extends Category {
                 String text = type.name();
                 int length = Shindo.getInstance().getFontHelper().size20.getStringWidth(text);
                 Helper2D.drawRoundedRectangle(
-                        getPanel().getX() + offset + 5 + 75,
+                        getPanel().getX() + offset + 5 + 115,
                         getPanel().getY() + getPanel().getH() + 5,
                         length + 25,
                         20, 2,
                         Style.getColorTheme(selectedType.equals(type) ? 5 : 4).getRGB(),
                         roundedCorners ? 0 : -1
                 );
-                Helper2D.drawPicture(getPanel().getX() + offset + 8 + 75, getPanel().getY() + getPanel().getH() + 8, 15, 15, -1, "icon/" + type.getIcon());
-                Shindo.getInstance().getFontHelper().size20.drawString(text, getPanel().getX() + offset + 26 + 75, getPanel().getY() + getPanel().getH() + 11, -1);
+                Helper2D.drawPicture(getPanel().getX() + offset + 8 + 115, getPanel().getY() + getPanel().getH() + 8, 15, 15, -1, "icon/" + type.getIcon());
+                Shindo.getInstance().getFontHelper().size20.drawString(text, getPanel().getX() + offset + 26 + 115, getPanel().getY() + getPanel().getH() + 11, -1);
                 offset += length + 30;
             }
         }
@@ -123,7 +123,7 @@ public class ModCategory extends Category {
             if (!type.equals(Type.Hidden)) {
                 String text = type.name();
                 int length = Shindo.getInstance().getFontHelper().size20.getStringWidth(text);
-                if (MathHelper.withinBox(getPanel().getX() + offset + 5 + 75, getPanel().getY() + getPanel().getH() + 5, length + 25, 20, mouseX, mouseY)) {
+                if (MathHelper.withinBox(getPanel().getX() + offset + 5 + 115, getPanel().getY() + getPanel().getH() + 5, length + 25, 20, mouseX, mouseY)) {
                     selectedType = type;
                     scrollHelperMods.setScrollStep(0);
                     initGui();

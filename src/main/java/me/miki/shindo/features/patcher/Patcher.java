@@ -25,7 +25,7 @@ public class Patcher {
     private boolean checkToggled;
 
     @Expose
-    private float maxNumber, currentNumber;
+    private float maxNumber, minNumber, currentNumber;
 
     @Expose
     private int key;
@@ -59,13 +59,15 @@ public class Patcher {
      * An option with a slider which can go from 0 to a given number
      */
 
-    public Patcher(String name, float maxNumber, float currentNumber) {
+    public Patcher(String name, float MaxNumber, float CurrentNumber, float MinNumber) {
         this.mode = "Slider";
         this.name = name;
 
-        this.maxNumber = maxNumber;
-        this.currentNumber = currentNumber;
+        this.minNumber = MinNumber;
+        this.maxNumber = MaxNumber;
+        this.currentNumber = CurrentNumber;
     }
+
 
     /**
      * An option which allows you to select a String from an Array of Strings also called Modes
@@ -136,6 +138,14 @@ public class Patcher {
 
     public void setMaxNumber(float maxNumber) {
         this.maxNumber = maxNumber;
+    }
+
+    public float getMinNumber() {
+        return minNumber;
+    }
+
+    public void setMinNumber(float minNumber) {
+        this.minNumber = minNumber;
     }
 
     public float getCurrentNumber() {

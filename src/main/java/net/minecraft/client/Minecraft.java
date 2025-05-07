@@ -1456,7 +1456,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     private void clickMouse()
     {
         // HIT DELAY FIX
-        if ( Shindo.getInstance().getOptionManager().getOptionByName("Hit Delay Fix").isCheckToggled() ) leftClickCounter = 0;
+        if ( Shindo.getInstance().getPatcherManager().getPatcherByName("Hit Delay Fix").isCheckToggled() ) leftClickCounter = 0;
 
         if (this.leftClickCounter <= 0)
         {

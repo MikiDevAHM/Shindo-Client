@@ -15,7 +15,7 @@ public class DiscordRPC {
 	
 	public void start() {
 		
-		client = new IPCClient(1059341815205068901L);
+		client = new IPCClient(978250675576258610L);
 		client.setListener(new IPCListener() {
 			@Override
 			public void onReady(IPCClient client) {

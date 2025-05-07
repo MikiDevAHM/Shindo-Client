@@ -14,10 +14,7 @@ import me.miki.shindo.helpers.animation.Easing;
 import me.miki.shindo.helpers.render.Helper2D;
 import me.miki.shindo.ui.Style;
 import me.miki.shindo.ui.modmenu.category.Category;
-import me.miki.shindo.ui.modmenu.category.impl.ChatCategory;
-import me.miki.shindo.ui.modmenu.category.impl.ModCategory;
-import me.miki.shindo.ui.modmenu.category.impl.OptionCategory;
-import me.miki.shindo.ui.modmenu.category.impl.PatcherCategory;
+import me.miki.shindo.ui.modmenu.category.impl.*;
 import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
@@ -27,7 +24,7 @@ public class Panel {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
 
-    private final String[] sideButtons = {"Mods", "Settings", "Chat", "Patcher", "Performance", "Graphics", "Profiles"};
+    private final String[] sideButtons = {"Home", "Mods", "Settings", "Chat", "Patcher", "Music", "Profiles"};
     private final Animate animateSideBar = new Animate();
     private final Animate animateTransition = new Animate();
 
@@ -45,12 +42,14 @@ public class Panel {
 
 
     public Panel() {
+        categories.add(new HomeCategory(this));
         categories.add(new ModCategory(this));
         categories.add(new OptionCategory(this));
         categories.add(new ChatCategory(this));
         categories.add(new PatcherCategory(this));
+        categories.add(new MusicCategory(this));
 
-        currentCategory = getCategoryByClass(ModCategory.class);
+        currentCategory = getCategoryByClass(HomeCategory.class);
     }
 
     public void initGui() {
@@ -109,10 +108,8 @@ public class Panel {
         Helper2D.drawPicture(x + w - 30, y - 6, 25, 25, color, "icon/cross.png");
 
         // CATEGORY TITLE
-        if (currentCategory != getCategoryByClass(ModCategory.class)) {
-            Helper2D.drawRoundedRectangle(x + 78, y + 38, 6 + Shindo.getInstance().getFontHelper().size20.getStringWidth(currentCategory.getName()), 4 + Shindo.getInstance().getFontHelper().size20.getFontHeight(), 2, Style.getColorTheme(7).getRGB(), 0);
-            Shindo.getInstance().getFontHelper().size20.drawStringWidthShadow(currentCategory.getName(), x + 80, y + 40, color);
-        }
+        Helper2D.drawRoundedRectangle(x + 78, y + 38, 6 + Shindo.getInstance().getFontHelper().size20.getStringWidth(currentCategory.getName()), 4 + Shindo.getInstance().getFontHelper().size20.getFontHeight(), 2, Style.getColorTheme(7).getRGB(), 0);
+        Shindo.getInstance().getFontHelper().size20.drawStringWidthShadow(currentCategory.getName(), x + 80, y + 40, color);
 
         currentCategory.getScrollHelper().update();
         animateTransition.update();
@@ -176,7 +173,7 @@ public class Panel {
      * @param mouseButton The current mouse button which is pressed
      */
 
-    public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+    public void mouseClicked(int mouseX, int mouseY, int mouseButton)  {
         if (mouseButton == 0) {
             int index = 0;
             int space = 0;

@@ -361,6 +361,8 @@ public abstract class GuiContainer extends GuiScreen
      */
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
+
+        PatcherBugFixer.patcher$checkCloseClick(mouseX, mouseY, mouseButton);
         super.mouseClicked(mouseX, mouseY, mouseButton);
         boolean flag = mouseButton == this.mc.gameSettings.keyBindPickBlock.getKeyCode() + 100;
         Slot slot = this.getSlotAtPosition(mouseX, mouseY);
@@ -457,6 +459,7 @@ public abstract class GuiContainer extends GuiScreen
             }
         }
 
+        checkHotbarKeys(mouseButton - 100);
         this.lastClickSlot = slot;
         this.lastClickTime = i;
         this.lastClickButton = mouseButton;

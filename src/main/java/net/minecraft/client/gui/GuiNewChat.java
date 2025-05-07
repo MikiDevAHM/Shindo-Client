@@ -1,7 +1,10 @@
 package net.minecraft.client.gui;
 
 import com.google.common.collect.Lists;
+import com.mojang.realmsclient.gui.ChatFormatting;
+import me.miki.shindo.Shindo;
 import me.miki.shindo.features.patcher.impl.PatcherBugFixer;
+import me.miki.shindo.helpers.StringHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,13 +27,71 @@ public class GuiNewChat extends Gui
     private int scrollPos;
     private boolean isScrolled;
 
+    //
+    private float percentComplete;
+    private int newLines;
+    private long prevMillis = System.currentTimeMillis();
+    private float animationPercent;
+    private int lineBeingDrawn;
+
+    private String lastMessage = "";
+    private int sameMessageAmount, line;
+
+    private ChatLine drawingChatLine = null;
+    //
+
     public GuiNewChat(Minecraft mcIn)
     {
         this.mc = mcIn;
     }
 
+    private void updatePercentage(long diff) {
+        if (percentComplete < 1) {
+            percentComplete += (Shindo.getInstance().getChatManager().getChatByName("Smooth Speed").getCurrentNumber() / 1000) * (float) diff;
+        }
+        percentComplete = me.miki.shindo.helpers.MathHelper.clamp(percentComplete, 0, 1);
+    }
+    private int redirectText(FontRenderer instance, String text, float x, float y, int color) {
+
+        boolean toggle = Shindo.getInstance().getChatManager().getChatByName("Smooth Chat").isCheckToggled();
+        int lastOpacity = 0;
+
+        if (toggle && lineBeingDrawn <= newLines) {
+            int opacity = (color >> 24) & 0xFF;
+            opacity *= animationPercent;
+            lastOpacity = (color & ~(0xFF << 24)) | (opacity << 24);
+        } else {
+            lastOpacity = color;
+        }
+
+        if(Shindo.getInstance().getChatManager().getChatByName("Chat Heads").isCheckToggled()) {
+            return StringHelper.drawStringWithHead(drawingChatLine, text, x, y, lastOpacity);
+        }
+
+        return instance.drawStringWithShadow(text, x, y, lastOpacity);
+    }
+
+    public int getSize(List<?> instance) {
+
+
+        if(Shindo.getInstance().getChatManager().getChatByName("Infinite Chat").isCheckToggled()) {
+            return 0;
+        }
+
+        return instance.size();
+    }
+
+
+
     public void drawChat(int updateCounter)
     {
+        long current = System.currentTimeMillis();
+        long diff = current - prevMillis;
+        prevMillis = current;
+        updatePercentage(diff);
+        float t = percentComplete;
+        animationPercent = me.miki.shindo.helpers.MathHelper.clamp(1 - (--t) * t * t * t, 0, 1);
+
         if (this.mc.gameSettings.chatVisibility != EntityPlayer.EnumChatVisibility.HIDDEN)
         {
             int i = this.getLineCount();
@@ -49,12 +110,21 @@ public class GuiNewChat extends Gui
                 float f1 = this.getChatScale();
                 int l = MathHelper.ceiling_float_int((float)this.getChatWidth() / f1);
                 GlStateManager.pushMatrix();
+                float y = 0;
+
+                if (Shindo.getInstance().getChatManager().getChatByName("Smooth Chat").isCheckToggled() && !this.isScrolled) {
+                    y += (9 - 9 * animationPercent) * this.getChatScale();
+                }
+
+                GlStateManager.translate(0, y, 0);
+
                 GlStateManager.translate(2.0F, 20.0F, 0.0F);
                 GlStateManager.scale(f1, f1, 1.0F);
 
                 for (int i1 = 0; i1 + this.scrollPos < this.drawnChatLines.size() && i1 < i; ++i1)
                 {
                     ChatLine chatline = (ChatLine)this.drawnChatLines.get(i1 + this.scrollPos);
+                    lineBeingDrawn = i1;
 
                     if (chatline != null)
                     {
@@ -81,10 +151,13 @@ public class GuiNewChat extends Gui
                             {
                                 int i2 = 0;
                                 int j2 = -i1 * 9;
-                                drawRect(i2, j2 - 9, i2 + l + 4, j2, l1 / 2 << 24);
+                                if (Shindo.getInstance().getChatManager().getChatByName("Draw Background").isCheckToggled()) {
+                                    drawRect(i2, j2 - 9, i2 + l + 4, j2, l1 / 2 << 24);
+                                }
                                 String s = chatline.getChatComponent().getFormattedText();
+                                drawingChatLine = chatline;
                                 GlStateManager.enableBlend();
-                                this.mc.fontRendererObj.drawStringWithShadow(s, (float)i2, (float)(j2 - 8), 16777215 + (l1 << 24));
+                                redirectText(mc.fontRendererObj, s, (float)i2, (float)(j2 - 8), 16777215 + (l1 << 24));
                                 GlStateManager.disableAlpha();
                                 GlStateManager.disableBlend();
                             }
@@ -127,7 +200,31 @@ public class GuiNewChat extends Gui
 
     public void printChatMessage(IChatComponent chatComponent)
     {
-        this.printChatMessageWithOptionalDeletion(chatComponent, 0);
+
+        if(Shindo.getInstance().getChatManager().getChatByName("Compact Chat").isCheckToggled()) {
+
+            if (chatComponent.getUnformattedText().equals(lastMessage)) {
+                mc.ingameGUI.getChatGUI().deleteChatLine(line);
+                sameMessageAmount++;
+                lastMessage = chatComponent.getUnformattedText();
+                chatComponent.appendText(ChatFormatting.WHITE + " [x" + sameMessageAmount + "]");
+            } else {
+                sameMessageAmount = 1;
+                lastMessage = chatComponent.getUnformattedText();
+            }
+
+            line++;
+
+            if (line > 256) {
+                line = 0;
+            }
+
+            printChatMessageWithOptionalDeletion(chatComponent, line);
+
+            return;
+        }
+
+        printChatMessageWithOptionalDeletion(chatComponent, 0);
     }
 
     /**
@@ -135,6 +232,7 @@ public class GuiNewChat extends Gui
      */
     public void printChatMessageWithOptionalDeletion(IChatComponent chatComponent, int chatLineId)
     {
+        percentComplete = 0;
         this.setChatLine(chatComponent, chatLineId, this.mc.ingameGUI.getUpdateCounter(), false);
         logger.info("[CHAT] " + chatComponent.getUnformattedText());
     }
@@ -148,7 +246,10 @@ public class GuiNewChat extends Gui
 
         int i = MathHelper.floor_float((float)this.getChatWidth() / this.getChatScale());
         List<IChatComponent> list = GuiUtilRenderComponents.splitText(chatComponent, i, this.mc.fontRendererObj, false, false);
+        newLines = list.size() - 1;
+
         boolean flag = this.getChatOpen();
+
 
         for (IChatComponent ichatcomponent : list)
         {
@@ -161,9 +262,9 @@ public class GuiNewChat extends Gui
             this.drawnChatLines.add(0, new ChatLine(updateCounter, ichatcomponent, chatLineId));
         }
 
-        while (this.drawnChatLines.size() > 100)
+        while (getSize(drawnChatLines) > 100)
         {
-            this.drawnChatLines.remove(this.drawnChatLines.size() - 1);
+            this.drawnChatLines.remove(getSize(drawnChatLines) - 1);
         }
 
         if (!displayOnly)
@@ -172,7 +273,7 @@ public class GuiNewChat extends Gui
 
             while (this.chatLines.size() > 100)
             {
-                this.chatLines.remove(this.chatLines.size() - 1);
+                this.chatLines.remove(getSize(chatLines) - 1);
             }
         }
     }
@@ -261,6 +362,9 @@ public class GuiNewChat extends Gui
                 {
                     PatcherBugFixer.stopEventsOutsideWindow(mouseX, mouseY, scaledresolution, i, f, j, k, l, this);
                     int i1 = k / this.mc.fontRendererObj.FONT_HEIGHT + this.scrollPos;
+                    if(i1 >= getLineCount()) {
+                        return null;
+                    }
 
                     if (i1 >= 0 && i1 < this.drawnChatLines.size())
                     {

@@ -264,4 +264,18 @@ public class PatcherBugFixer  {
             packet.processPacket(handler);
         }
     }
+
+    /*
+     * @Mixin(GuiContainer.class)
+     *
+     *  @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
+     *
+     */
+    public static void patcher$checkCloseClick(int mouseX, int mouseY, int mouseButton) {
+        Minecraft mc = Minecraft.getMinecraft();
+        if (mouseButton - 100 == mc.gameSettings.keyBindInventory.getKeyCode()) {
+            mc.thePlayer.closeScreen();
+            return;
+        }
+    }
 }
