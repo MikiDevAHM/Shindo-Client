@@ -5,8 +5,10 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import me.miki.shindo.Shindo;
 import me.miki.shindo.events.impl.RenderEvent;
+import me.miki.shindo.events.impl.RenderNotificationEvent;
 import me.miki.shindo.features.patcher.impl.PatcherBugFixer;
 import me.miki.shindo.ui.hudeditor.HudEditor;
+import me.miki.shindo.ui.modmenu.ModMenu;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -343,6 +345,13 @@ public class GuiIngame extends Gui
             this.overlayPlayerList.updatePlayerList(false);
         }
 
+        if(!(mc.currentScreen instanceof ModMenu)) {
+            new RenderNotificationEvent().call();
+        }
+
+        if (!(mc.currentScreen instanceof HudEditor)) {
+            new RenderEvent(partialTicks).call();
+        }
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
         GlStateManager.enableAlpha();
@@ -373,9 +382,7 @@ public class GuiIngame extends Gui
                 this.renderHotbarItem(j, k, l, partialTicks, entityplayer);
             }
 
-            if (!(mc.currentScreen instanceof HudEditor)) {
-                new RenderEvent(partialTicks).call();
-            }
+
 
             RenderHelper.disableStandardItemLighting();
             GlStateManager.disableRescaleNormal();

@@ -62,6 +62,8 @@ public class Slider extends Settings {
 
         posHelper.pre(sliderPos);
 
+        double diff = Math.min(sliderWidth, Math.max(0, mouseX - (button.getPanel().getX() + button.getPanel().getW() - sliderWidth - 20)));
+
         if (drag) {
             sliderPos = mouseX - (button.getPanel().getX() + button.getPanel().getW() - sliderWidth - 20);
             if (sliderPos < 0) {
@@ -69,7 +71,11 @@ public class Slider extends Settings {
             } else if (sliderPos > sliderWidth) {
                 sliderPos = sliderWidth;
             }
-            setting.setCurrentNumber(sliderPos * (setting.getMaxNumber() / sliderWidth));
+            if (diff == 0) {
+                setting.setCurrentNumber(setting.getMinNumber());
+            } else {
+                setting.setCurrentNumber(sliderPos * (setting.getMaxNumber() / sliderWidth));
+            }
         }
 
         posHelper.post(sliderPos);

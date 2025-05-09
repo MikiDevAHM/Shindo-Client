@@ -32,7 +32,7 @@ public class MusicManager {
     private volatile boolean stopped = false;
     private final Object lock = new Object();
 
-    private float volume = 0.5f; // De 0.0f a 1.0f
+    private float volume; // De 0.0f a 1.0f
 
     private Music currentMusic;
 
@@ -66,9 +66,11 @@ public class MusicManager {
 
                 JsonArray jsonArray = JsonHelper.getArrayProperty(jsonObject, "Favorite Musics");
 
+
                 if(jsonArray != null) {
 
                     Iterator<JsonElement> iterator = jsonArray.iterator();
+
 
                     while(iterator.hasNext()) {
 
@@ -76,7 +78,16 @@ public class MusicManager {
                         JsonObject rJsonObject = gson.fromJson(jsonElement, JsonObject.class);
 
                         favorites.add(JsonHelper.getStringProperty(rJsonObject, "Favorite", "null"));
+
                     }
+
+
+                }
+
+                JsonObject settingsObj = JsonHelper.getObjectProperty(jsonObject, "Settings");
+
+                if (settingsObj != null) {
+                    setVolume(JsonHelper.getFloatProperty(settingsObj, "Volume", 1));
                 }
             }
         } catch (Exception e) {
@@ -120,7 +131,16 @@ public class MusicManager {
                 }
             }
 
+            JsonObject innerJsonObject = new JsonObject();
+
+            JsonArray innerJsonArray = new JsonArray();
+
+            innerJsonObject.addProperty("Volume", volume);
+
+            innerJsonArray.add(innerJsonObject);
+
             jsonObject.add("Favorite Musics", jsonArray);
+            jsonObject.add("Settings", innerJsonObject);
 
             gson.toJson(jsonObject, writer);
 
@@ -178,7 +198,11 @@ public class MusicManager {
     }
 
     public void setVolume(float volume) {
-        this.volume = Math.max(0f, Math.min(1f, volume));
+        this.volume = volume;
+    }
+
+    public float getVolume() {
+        return volume ;
     }
 
     public void next() {
@@ -273,7 +297,7 @@ public class MusicManager {
             if (stopped) return;
 
             for (int i = offs; i < offs + len; i++) {
-                samples[i] = (short) (samples[i] * volume);
+                samples[i] = (short) (samples[i] * (volume / 100F));
             }
 
             super.writeImpl(samples, offs, len);

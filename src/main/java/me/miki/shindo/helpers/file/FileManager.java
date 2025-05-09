@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class FileManager {
 
-    private File shindoDir, cacheDir, externalDir, screenshotDir, musicDir;
+    private File shindoDir, cacheDir, externalDir, screenshotDir, musicDir, profileDir;
 
     public FileManager() {
         shindoDir = new File(Minecraft.getMinecraft().mcDataDir, "shindo");
@@ -17,12 +17,14 @@ public class FileManager {
         externalDir = new File(shindoDir, "external");
         screenshotDir = new File(shindoDir, "screenshot");
         musicDir = new File(shindoDir, "music");
+        profileDir = new File(shindoDir, "profile");
 
         createDir(shindoDir);
         createDir(cacheDir);
         createDir(externalDir);
         createDir(screenshotDir);
         createDir(musicDir);
+        createDir(profileDir);
 
         createVersionFile();
     }
@@ -63,6 +65,8 @@ public class FileManager {
     }
 
     public File getMusicDir() { return musicDir; }
+
+    public File getProfileDir() { return profileDir; }
 
 
 }

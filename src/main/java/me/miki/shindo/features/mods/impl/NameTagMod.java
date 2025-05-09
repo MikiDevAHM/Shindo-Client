@@ -17,9 +17,9 @@ public class NameTagMod extends Mod {
         );
 
         Shindo.getInstance().getSettingManager().addSetting(new Setting("NameTag in 3rd Person", this, true));
-        Shindo.getInstance().getSettingManager().addSetting(new Setting("Opacity", this, 255, 64));
-        Shindo.getInstance().getSettingManager().addSetting(new Setting("Size", this, 3, 1));
-        Shindo.getInstance().getSettingManager().addSetting(new Setting("Y Position", this, 5, 2.5f));
+        Shindo.getInstance().getSettingManager().addSetting(new Setting("Opacity", this, 255, 64, 1));
+        Shindo.getInstance().getSettingManager().addSetting(new Setting("Size", this, 3, 1, 1));
+        Shindo.getInstance().getSettingManager().addSetting(new Setting("Y Position", this, 5, 2.5f, 0));
         Shindo.getInstance().getSettingManager().addSetting(new Setting("Disable Player NameTags", this, false));
         Shindo.getInstance().getSettingManager().addSetting(new Setting("Font Color", this, new Color(255, 255, 255), new Color(255, 0, 0), 0, new float[]{0, 0}));
     }

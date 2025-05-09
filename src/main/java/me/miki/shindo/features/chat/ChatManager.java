@@ -17,7 +17,7 @@ public class ChatManager {
         addChat(new Chat("Infinite Chat", false));
 
         addChat(new Chat("Smooth Chat", false));
-        addChat(new Chat("Smooth Speed", 10, 4));
+        addChat(new Chat("Smooth Speed", 10, 4, 1));
     }
 
     public ArrayList<Chat> getChat() { return chatList; }

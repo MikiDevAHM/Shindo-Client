@@ -31,7 +31,7 @@ public class ZoomMod extends Mod {
         );
 
         Shindo.getInstance().getSettingManager().addSetting(new Setting("Keybinding", this, Keyboard.KEY_C));
-        Shindo.getInstance().getSettingManager().addSetting(new Setting("Zoom Amount", this, 100, 30));
+        Shindo.getInstance().getSettingManager().addSetting(new Setting("Zoom Amount", this, 100, 30, 1));
         Shindo.getInstance().getSettingManager().addSetting(new Setting("Smooth Zoom", this, true));
 
         animate.setEase(Easing.LINEAR).setSpeed(700);

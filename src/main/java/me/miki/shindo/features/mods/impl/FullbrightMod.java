@@ -23,7 +23,7 @@ public class FullbrightMod extends Mod {
                 Type.Visual
         );
 
-        Shindo.getInstance().getSettingManager().addSetting(new Setting("Brightness", this, 100, 10));
+        Shindo.getInstance().getSettingManager().addSetting(new Setting("Brightness", this, 100, 10, 1));
     }
 
     @Override

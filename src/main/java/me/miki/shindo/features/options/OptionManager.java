@@ -27,7 +27,7 @@ public class OptionManager {
 
         addOption(new Option("Misc"));
         addOption(new Option("Minimal View Bobbing", true));
-        addOption(new Option("Fire Height", 50, 0, 0));
+        addOption(new Option("Fire Height", 30, 1, 0));
 
 
         addOption(new Option("Controls"));

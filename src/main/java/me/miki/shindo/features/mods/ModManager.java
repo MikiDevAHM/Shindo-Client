@@ -80,4 +80,11 @@ public class ModManager {
     public void addMod(Mod mod) {
         mods.add(mod);
     }
+
+    public void disableAll() {
+        for(Mod m : mods) {
+            m.setToggled(false);
+        }
+        getMod("GlobalSettings").setToggled(true);
+    }
 }

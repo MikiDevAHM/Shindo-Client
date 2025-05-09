@@ -8,8 +8,10 @@ package me.miki.shindo.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import me.miki.shindo.Shindo;
+import me.miki.shindo.features.chat.Chat;
 import me.miki.shindo.features.mods.Mod;
 import me.miki.shindo.features.options.Option;
+import me.miki.shindo.features.patcher.Patcher;
 import me.miki.shindo.features.settings.Setting;
 import me.miki.shindo.ui.Style;
 
@@ -79,6 +81,26 @@ public class ConfigLoader {
             }
         }
 
+        // Carrega opções do chat
+        if (config.getChatConfigList() != null) {
+            for (Chat configChat : config.getChatConfigList()) {
+                Chat clientChat = Shindo.getInstance().getChatManager().getChatByName(configChat.getName());
+                if (clientChat != null) {
+                    syncChats(configChat, clientChat);
+                }
+            }
+        }
+
+        // Carrega opções dos patches
+        if (config.getPatcherConfigList() != null) {
+            for (Patcher configPatcher : config.getPatcherConfigList()) {
+                Patcher clientPatcher = Shindo.getInstance().getPatcherManager().getPatcherByName(configPatcher.getName());
+                if (clientPatcher != null) {
+                    syncPatchers(configPatcher, clientPatcher);
+                }
+            }
+        }
+
         // Atualizar estilo
         Style.setDarkMode(config.isDarkMode());
         Style.setSnapping(config.isSnapping());
@@ -135,11 +157,56 @@ public class ConfigLoader {
                 clientOption.setSideSlider(configOption.getSideSlider());
                 clientOption.setMainSlider(configOption.getMainSlider());
                 break;
-            case "CellGrid":
-                clientOption.setCells(configOption.getCells());
-                break;
             case "Keybinding":
                 clientOption.setKey(configOption.getKey());
+                break;
+        }
+    }
+
+    private static void syncChats(Chat configChat, Chat clientChat) {
+        switch (configChat.getMode()) {
+            case "CheckBox":
+                clientChat.setCheckToggled(configChat.isCheckToggled());
+                break;
+            case "Slider":
+                clientChat.setCurrentNumber(configChat.getCurrentNumber());
+                break;
+            case "ModePicker":
+                clientChat.setCurrentMode(configChat.getCurrentMode());
+                clientChat.setModeIndex(configChat.getModeIndex());
+                break;
+            case "ColorPicker":
+                clientChat.setColor(configChat.getColor());
+                clientChat.setSideColor(configChat.getSideColor());
+                clientChat.setSideSlider(configChat.getSideSlider());
+                clientChat.setMainSlider(configChat.getMainSlider());
+                break;
+            case "Keybinding":
+                clientChat.setKey(configChat.getKey());
+                break;
+        }
+    }
+
+    private static void syncPatchers(Patcher configPatcher, Patcher clientPatcher) {
+        switch (configPatcher.getMode()) {
+            case "CheckBox":
+                clientPatcher.setCheckToggled(configPatcher.isCheckToggled());
+                break;
+            case "Slider":
+                clientPatcher.setCurrentNumber(configPatcher.getCurrentNumber());
+                break;
+            case "ModePicker":
+                clientPatcher.setCurrentMode(configPatcher.getCurrentMode());
+                clientPatcher.setModeIndex(configPatcher.getModeIndex());
+                break;
+            case "ColorPicker":
+                clientPatcher.setColor(configPatcher.getColor());
+                clientPatcher.setSideColor(configPatcher.getSideColor());
+                clientPatcher.setSideSlider(configPatcher.getSideSlider());
+                clientPatcher.setMainSlider(configPatcher.getMainSlider());
+                break;
+            case "Keybinding":
+                clientPatcher.setKey(configPatcher.getKey());
                 break;
         }
     }

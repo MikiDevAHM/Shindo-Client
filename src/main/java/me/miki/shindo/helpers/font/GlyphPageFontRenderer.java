@@ -181,8 +181,8 @@ public class GlyphPageFontRenderer {
         } else {
             // desenha texto original + "..." preenchendo o espaço restante
             String full = text;
-            while (getStringWidth(full + "...") < maxWidth) {
-                full += "...";
+            while (getStringWidth(full + "   ") < maxWidth) {
+                full += "   ";
             }
 
             i1 = renderString(full, x, y, color, false);

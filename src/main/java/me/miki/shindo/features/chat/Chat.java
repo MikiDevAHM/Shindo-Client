@@ -25,7 +25,7 @@ public class Chat {
     private boolean checkToggled;
 
     @Expose
-    private float maxNumber, currentNumber;
+    private float maxNumber, minNumber, currentNumber;
 
     @Expose
     private int key;
@@ -60,10 +60,11 @@ public class Chat {
      * An option with a slider which can go from 0 to a given number
      */
 
-    public Chat(String name, float maxNumber, float currentNumber) {
+    public Chat(String name, float maxNumber, float currentNumber, float minNumber) {
         this.mode = "Slider";
         this.name = name;
 
+        this.minNumber = minNumber;
         this.maxNumber = maxNumber;
         this.currentNumber = currentNumber;
     }
@@ -145,6 +146,14 @@ public class Chat {
 
     public void setCurrentNumber(float currentNumber) {
         this.currentNumber = currentNumber;
+    }
+
+    public float getMinNumber() {
+        return minNumber;
+    }
+
+    public void setMinNumber(float minNumber) {
+        this.minNumber = minNumber;
     }
 
     public String getCurrentMode() {

@@ -62,6 +62,8 @@ public class Slider extends Chats {
 
         posHelper.pre(sliderPos);
 
+        double diff = Math.min(sliderWidth, Math.max(0, mouseX - (panel.getX() + panel.getW() - sliderWidth - 20)));
+
         if (drag) {
             sliderPos = mouseX - (panel.getX() + panel.getW() - sliderWidth - 20);
             if (sliderPos < 0) {
@@ -69,7 +71,11 @@ public class Slider extends Chats {
             } else if (sliderPos > sliderWidth) {
                 sliderPos = sliderWidth;
             }
-            chat.setCurrentNumber(sliderPos * (chat.getMaxNumber() / sliderWidth));
+            if (diff == 0) {
+                chat.setCurrentNumber(chat.getMinNumber());
+            } else {
+                chat.setCurrentNumber(sliderPos * (chat.getMaxNumber() / sliderWidth));
+            }
         }
 
         posHelper.post(sliderPos);

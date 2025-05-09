@@ -24,6 +24,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -371,5 +372,57 @@ public class Helper2D {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static ResourceLocation registerImage(File file) {
+        if (cache.containsKey(file)) return cache.get(file);
+
+        try {
+            BufferedImage image = ImageIO.read(file);
+            if (image == null) {
+                ShindoLogger.error("Arquivo não é uma imagem válida: " + file.getAbsolutePath());
+                return DEFAULT_COVER;
+            }
+
+            DynamicTexture dynamicTexture = new DynamicTexture(image);
+            ResourceLocation texture = mc.getTextureManager()
+                    .getDynamicTextureLocation("custom_image_" + UUID.randomUUID(), dynamicTexture);
+
+            cache.put(file, texture);
+            return texture;
+        } catch (IOException e) {
+            ShindoLogger.error("Erro ao carregar imagem: " + file.getAbsolutePath(), e);
+        }
+
+        return DEFAULT_COVER;
+    }
+
+    public static void unregisterImage(File file) {
+        ResourceLocation texture = cache.remove(file);
+        if (texture != null) {
+            mc.getTextureManager().deleteTexture(texture); // libera da GPU
+        }
+    }
+
+    public static void renderImage(File file, int x, int y, int width, int height) {
+        ResourceLocation texture = cache.get(file);
+        if (texture == null) {
+            texture = registerImage(file); // Registra automaticamente se ainda não estiver no cache
+            if (texture == null) return;
+        }
+
+        // Desenha fundo com cantos arredondados
+        Helper2D.drawRoundedRectangle(x, y, width, height, 6, Style.getColorTheme(3).getRGB(), 0);
+
+        // Renderiza a imagem por cima
+        mc.getTextureManager().bindTexture(texture);
+        GlStateManager.enableBlend();
+        GlStateManager.disableAlpha();
+        GlStateManager.color(1F, 1F, 1F, 1F);
+
+        Helper2D.drawImage(x + 1, y + 1, width - 2, height - 2);
+
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
     }
 }

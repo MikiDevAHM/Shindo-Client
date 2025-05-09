@@ -61,6 +61,7 @@ public class Slider extends Options {
         );
 
         posHelper.pre(sliderPos);
+        double diff = Math.min(sliderWidth, Math.max(0, mouseX - (panel.getX() + panel.getW() - sliderWidth - 20)));
 
         if (drag) {
             sliderPos = mouseX - (panel.getX() + panel.getW() - sliderWidth - 20);
@@ -69,7 +70,11 @@ public class Slider extends Options {
             } else if (sliderPos > sliderWidth) {
                 sliderPos = sliderWidth;
             }
-            option.setCurrentNumber(sliderPos * (option.getMaxNumber() / sliderWidth));
+            if (diff == 0) {
+                option.setCurrentNumber(option.getMinNumber());
+            } else {
+                option.setCurrentNumber(sliderPos * (option.getMaxNumber() / sliderWidth));
+            }
         }
 
         posHelper.post(sliderPos);

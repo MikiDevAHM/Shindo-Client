@@ -8,8 +8,10 @@ package me.miki.shindo.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import me.miki.shindo.Shindo;
+import me.miki.shindo.features.chat.Chat;
 import me.miki.shindo.features.mods.Mod;
 import me.miki.shindo.features.options.Option;
+import me.miki.shindo.features.patcher.Patcher;
 import me.miki.shindo.features.settings.Setting;
 import me.miki.shindo.ui.Style;
 
@@ -65,6 +67,14 @@ public class ConfigSaver {
 
         for(Option option : Shindo.getInstance().getOptionManager().getOptions()){
             config.addConfigOption(option);
+        }
+
+        for (Chat chat : Shindo.getInstance().getChatManager().getChat()) {
+            config.addConfigChat(chat);
+        }
+
+        for (Patcher patcher : Shindo.getInstance().getPatcherManager().getPatcher()) {
+            config.addConfigPatcher(patcher);
         }
 
         config.setDarkMode(Style.isDarkMode());

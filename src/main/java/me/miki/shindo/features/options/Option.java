@@ -185,6 +185,14 @@ public class Option {
         this.currentNumber = currentNumber;
     }
 
+    public float getMinNumber() {
+        return minNumber;
+    }
+
+    public void setMinNumber(float minNumber) {
+        this.minNumber = minNumber;
+    }
+
     public String getCurrentMode() {
         return currentMode;
     }

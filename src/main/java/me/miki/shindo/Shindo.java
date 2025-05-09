@@ -1,20 +1,18 @@
 package me.miki.shindo;
 
-import me.miki.shindo.config.ConfigLoader;
-import me.miki.shindo.config.ConfigSaver;
 import me.miki.shindo.events.EventManager;
 import me.miki.shindo.features.chat.ChatManager;
 import me.miki.shindo.features.mods.ModManager;
 import me.miki.shindo.features.music.MusicManager;
 import me.miki.shindo.features.options.OptionManager;
 import me.miki.shindo.features.patcher.PatcherManager;
+import me.miki.shindo.features.profile.ProfileManager;
 import me.miki.shindo.features.security.SecurityManager;
 import me.miki.shindo.features.settings.SettingManager;
 import me.miki.shindo.helpers.CpsHelper;
 import me.miki.shindo.helpers.MessageHelper;
 import me.miki.shindo.helpers.file.FileManager;
 import me.miki.shindo.helpers.font.FontHelper;
-import me.miki.shindo.helpers.logger.ShindoLogger;
 import me.miki.shindo.ui.hudeditor.HudEditor;
 import net.minecraft.client.Minecraft;
 
@@ -50,6 +48,7 @@ public class Shindo {
     private ChatManager chatManager;
     private PatcherManager patcherManager;
     private MusicManager musicManager;
+    private ProfileManager profileManager;
 
     // MAIN METHODS
     public void startup() {
@@ -68,19 +67,20 @@ public class Shindo {
                 chatManager = new ChatManager(),
                 patcherManager = new PatcherManager(),
                 musicManager = new MusicManager(),
+                profileManager = new ProfileManager(),
                 shindoHandler = new ShindoHandler(),
                 shindoAPI = new ShindoAPI()
 
         );
 
-        try {
-            if (!ConfigSaver.configExists()) {
-                ConfigSaver.saveConfig();
-            }
-            ConfigLoader.loadConfig();
-        } catch (Exception e) {
-            ShindoLogger.error("Failed to load config file.", e);
-        }
+        //try {
+        //    if (!ConfigSaver.configExists()) {
+        //        ConfigSaver.saveConfig();
+        //    }
+        //    ConfigLoader.loadConfig();
+        //} catch (Exception e) {
+        //    ShindoLogger.error("Failed to load config file.", e);
+        //}
 
         fontHelper.init();
         shindoHandler.init();
@@ -94,12 +94,13 @@ public class Shindo {
     }
 
     public void shutdown() {
-        try {
-            ConfigSaver.saveConfig();
-        } catch (Exception e) {
-            ShindoLogger.error("Failed to save config file.", e);
-        }
+        // try {
+        //    ConfigSaver.saveConfig();
+        //} catch (Exception e) {
+        //    ShindoLogger.error("Failed to save config file.", e);
+        //}
 
+        profileManager.save();
         EventManager.unregister(this);
     }
 
@@ -129,6 +130,8 @@ public class Shindo {
     public PatcherManager getPatcherManager() { return patcherManager; }
 
     public MusicManager getMusicManager() { return musicManager; }
+
+    public ProfileManager getProfileManager() { return profileManager; }
 
     public SecurityManager getSecurityManager() { return securityManager; }
 

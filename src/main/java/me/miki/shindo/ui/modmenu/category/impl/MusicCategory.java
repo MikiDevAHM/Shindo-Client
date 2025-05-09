@@ -23,14 +23,13 @@ public class MusicCategory extends Category {
 
     private final ScrollHelper scrollHelperMusic = new ScrollHelper(0, 300, 35, 300);
 
-    private TextBox searchBox = new TextBox("Pesquisar música", getPanel().getX() + getPanel().getW() - 205, getPanel().getY() + 35, 200, 18);
+    private TextBox searchBox = new TextBox("Pesquisar Profile", getPanel().getX() + getPanel().getW() - 205, getPanel().getY() + 35, 200, 18);
 
     List<MusicFrame> musicFrames = new ArrayList<>();
 
     private final PositionHelper posHelper = new PositionHelper(125);
 
     private boolean drag;
-    private float volumeF = 1.0f;
 
     private MusicType currentType;
 
@@ -187,7 +186,7 @@ public class MusicCategory extends Category {
         // Volume slider background
         Helper2D.drawRoundedRectangle(getPanel().getX()  + 75 + 45, getPanel().getY() + getPanel().getH()  + 280 + 2, 100, 6, 3, 0xFF444444, 0);
 
-        int knobX = (int) volumeF;
+        int knobX = (int) Shindo.getInstance().getMusicManager().getVolume();
         int sliderWidth = 100;
 
         posHelper.pre(knobX);
@@ -199,15 +198,15 @@ public class MusicCategory extends Category {
             } else if (knobX > sliderWidth) {
                 knobX = sliderWidth;
             }
-            volumeF = knobX;
-            musicManager.setVolume(volumeF);
+            musicManager.setVolume(knobX);
+            musicManager.saveData();
         }
 
         posHelper.post(knobX);
         posHelper.update();
 
         Helper2D.drawRoundedRectangle(getPanel().getX() + 75 + 45, getPanel().getY() + getPanel().getH() + 280 + 2, knobX, 6, 2, 0xFFFFFFFF, 0);
-        Shindo.getInstance().getFontHelper().size20.drawString("Volume: " + MathHelper.round(volumeF, 1),getPanel().getX() + 75 + 150 , getPanel().getY() + getPanel().getH() + 280 + 2, -1);
+        Shindo.getInstance().getFontHelper().size20.drawString("Volume: " + MathHelper.round(knobX, 1),getPanel().getX() + 75 + 150 , getPanel().getY() + getPanel().getH() + 280 + 2, -1);
     }
 
     @Override

@@ -33,10 +33,10 @@ public class BlockOverlayMod extends Mod {
 
         Shindo.getInstance().getSettingManager().addSetting(new Setting("Outline", this, true));
         Shindo.getInstance().getSettingManager().addSetting(new Setting("Filling", this, true));
-        Shindo.getInstance().getSettingManager().addSetting(new Setting("Thickness", this, 20, 3));
+        Shindo.getInstance().getSettingManager().addSetting(new Setting("Thickness", this, 20, 3, 1));
         Shindo.getInstance().getSettingManager().addSetting(new Setting("Outline Color", this, new Color(0, 0, 0), new Color(255, 0, 0), 0, new float[]{0, 65}));
         Shindo.getInstance().getSettingManager().addSetting(new Setting("Filling Color", this, new Color(0, 0, 0), new Color(255, 0, 0), 0, new float[]{0, 65}));
-        Shindo.getInstance().getSettingManager().addSetting(new Setting("Alpha", this, 255, 100));
+        Shindo.getInstance().getSettingManager().addSetting(new Setting("Alpha", this, 255, 100, 1));
     }
 
     public void drawSelectionBox(EntityPlayer player, MovingObjectPosition movingObjectPositionIn, int execute, float partialTicks) {

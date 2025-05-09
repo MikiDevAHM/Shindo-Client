@@ -6,7 +6,9 @@
 package me.miki.shindo.config;
 
 import com.google.gson.annotations.Expose;
+import me.miki.shindo.features.chat.Chat;
 import me.miki.shindo.features.options.Option;
+import me.miki.shindo.features.patcher.Patcher;
 
 import java.util.ArrayList;
 
@@ -17,6 +19,12 @@ public class Config {
 
     @Expose
     private final ArrayList<Option> optionsConfigList = new ArrayList<>();
+
+    @Expose
+    private final ArrayList<Chat> chatConfigList = new ArrayList<>();
+
+    @Expose
+    private final ArrayList<Patcher> patcherConfigList = new ArrayList<>();
 
     @Expose
     private boolean darkMode = false;
@@ -32,8 +40,16 @@ public class Config {
         optionsConfigList.add(option);
     }
 
+    public void addConfigChat(Chat chat){ chatConfigList.add(chat); }
+
+    public void addConfigPatcher(Patcher patcher){ patcherConfigList.add(patcher); }
+
     public void setDarkMode(boolean toggled){
         darkMode = toggled;
+    }
+
+    public void setSnapping(boolean snapping) {
+        this.snapping = snapping;
     }
 
     public boolean isDarkMode(){
@@ -44,10 +60,6 @@ public class Config {
         return snapping;
     }
 
-    public void setSnapping(boolean snapping) {
-        this.snapping = snapping;
-    }
-
     public ArrayList<ModConfig> getConfig() {
         return modConfigList;
     }
@@ -55,4 +67,8 @@ public class Config {
     public ArrayList<Option> getOptionsConfigList() {
         return optionsConfigList;
     }
+
+    public ArrayList<Chat> getChatConfigList() { return chatConfigList; }
+
+    public ArrayList<Patcher> getPatcherConfigList() { return patcherConfigList; }
 }

@@ -47,7 +47,7 @@ public class Setting {
     private boolean checkToggled;
 
     @Expose
-    private float maxNumber, currentNumber;
+    private float maxNumber, minNumber, currentNumber;
 
     @Expose
     private boolean[][] cells;
@@ -77,11 +77,12 @@ public class Setting {
      * A setting with a slider which can go from 0 to a given number
      */
 
-    public Setting(String name, Mod mod, float maxNumber, float currentNumber) {
+    public Setting(String name, Mod mod, float maxNumber, float currentNumber, float minNumber) {
         this.mode = "Slider";
         this.name = name;
         this.mod = mod;
 
+        this.minNumber = minNumber;
         this.maxNumber = maxNumber;
         this.currentNumber = currentNumber;
     }
@@ -191,6 +192,14 @@ public class Setting {
 
     public void setCurrentNumber(float currentNumber) {
         this.currentNumber = currentNumber;
+    }
+
+    public float getMinNumber() {
+        return minNumber;
+    }
+
+    public void setMinNumber(float minNumber) {
+        this.minNumber = minNumber;
     }
 
     public String getCurrentMode() {

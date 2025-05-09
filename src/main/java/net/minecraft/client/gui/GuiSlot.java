@@ -246,10 +246,11 @@ public abstract class GuiSlot
                 //this.drawListHeader(k, l, tessellator);
             }
 
-            Helper2D.drawRectangle(0, 0, width, height, Style.getColorTheme(3).getRGB());
-            Helper2D.drawRectangle(ResolutionHelper.getWidth() / 3, 0, ResolutionHelper.getWidth() / 3, ResolutionHelper.getHeight(), Style.getColorTheme(1).getRGB());
-            Helper2D.drawRectangle(ResolutionHelper.getWidth() / 3, 0, ResolutionHelper.getWidth() / 3, 35, Style.getColorTheme(4).getRGB());
-            Helper2D.drawRectangle(ResolutionHelper.getWidth() / 3, ResolutionHelper.getHeight() - 58, ResolutionHelper.getWidth() / 3, 58, Style.getColorTheme(4).getRGB());
+            Helper2D.drawRectangle(0, 0, ResolutionHelper.getWidth(), ResolutionHelper.getHeight(), Style.getColorTheme(3).getRGB());
+            int i2 = this.left + (ResolutionHelper.getWidth() / 2 - this.getListWidth() / 2);
+            Helper2D.drawRectangle(i2 - 8, 0, getListWidth() + 15, ResolutionHelper.getHeight(), Style.getColorTheme(1).getRGB());
+            Helper2D.drawRectangle(i2 - 8, 0, getListWidth() + 15, 35, Style.getColorTheme(4).getRGB());
+            Helper2D.drawRectangle(i2 - 8, ResolutionHelper.getHeight() - 58, getListWidth() + 15, 58, Style.getColorTheme(4).getRGB());
             this.drawSelectionBox(k, l + 5, mouseXIn, mouseYIn);
             GlStateManager.disableDepth();
             int i1 = 4;

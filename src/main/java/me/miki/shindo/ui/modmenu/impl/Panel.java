@@ -48,6 +48,7 @@ public class Panel {
         categories.add(new ChatCategory(this));
         categories.add(new PatcherCategory(this));
         categories.add(new MusicCategory(this));
+        categories.add(new ProfileCategory(this));
 
         currentCategory = getCategoryByClass(HomeCategory.class);
     }

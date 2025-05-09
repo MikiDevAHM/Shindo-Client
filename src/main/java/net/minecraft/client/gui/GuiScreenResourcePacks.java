@@ -2,6 +2,9 @@ package net.minecraft.client.gui;
 
 import com.google.common.collect.Lists;
 import me.miki.shindo.features.patcher.impl.PatcherBugFixer;
+import me.miki.shindo.helpers.ResolutionHelper;
+import me.miki.shindo.helpers.render.Helper2D;
+import me.miki.shindo.ui.Style;
 import net.minecraft.client.resources.*;
 import net.minecraft.util.Util;
 import org.apache.logging.log4j.LogManager;
@@ -225,8 +228,19 @@ public class GuiScreenResourcePacks extends GuiScreen
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         //this.drawBackground(0);
+
+        int k = 0 + this.width / 2 - 200 / 2 + 2;
+        Helper2D.drawRectangle(0, 0, ResolutionHelper.getWidth(), ResolutionHelper.getHeight(), Style.getColorTheme(2).getRGB());
+
+        Helper2D.drawRectangle(this.width / 2 - 8 - 200, 0, 204, ResolutionHelper.getHeight(), Style.getColorTheme(1).getRGB());
+
+        Helper2D.drawRectangle(this.width / 2 + 4, 0, 208, ResolutionHelper.getHeight(), Style.getColorTheme(1).getRGB());
+
+
         this.availableResourcePacksList.drawScreen(mouseX, mouseY, partialTicks);
         this.selectedResourcePacksList.drawScreen(mouseX, mouseY, partialTicks);
+        Helper2D.drawRectangle(this.width / 2 - 8 - 200, 0, 400 + 20, 30, Style.getColorTheme(4).getRGB());
+        Helper2D.drawRectangle(this.width / 2 - 8 - 200, ResolutionHelper.getHeight() - 58, 400 + 20, 58, Style.getColorTheme(4).getRGB());
         this.drawCenteredString(this.fontRendererObj, I18n.format("resourcePack.title", new Object[0]), this.width / 2, 16, 16777215);
         this.drawCenteredString(this.fontRendererObj, I18n.format("resourcePack.folderInfo", new Object[0]), this.width / 2 - 77, this.height - 26, 8421504);
         super.drawScreen(mouseX, mouseY, partialTicks);

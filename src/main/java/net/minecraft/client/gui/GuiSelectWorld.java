@@ -1,9 +1,17 @@
 package net.minecraft.client.gui;
 
+import me.miki.shindo.helpers.ResolutionHelper;
+import me.miki.shindo.helpers.render.Helper2D;
+import me.miki.shindo.ui.Style;
 import net.minecraft.client.AnvilConverterException;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.storage.ISaveFormat;
 import net.minecraft.world.storage.ISaveHandler;
@@ -324,6 +332,99 @@ public class GuiSelectWorld extends GuiScreen implements GuiYesNoCallback
             GuiSelectWorld.this.drawString(GuiSelectWorld.this.fontRendererObj, s, p_180791_2_ + 2, p_180791_3_ + 1, 16777215);
             GuiSelectWorld.this.drawString(GuiSelectWorld.this.fontRendererObj, s1, p_180791_2_ + 2, p_180791_3_ + 12, 8421504);
             GuiSelectWorld.this.drawString(GuiSelectWorld.this.fontRendererObj, s2, p_180791_2_ + 2, p_180791_3_ + 12 + 10, 8421504);
+        }
+
+        public void drawScreen(int mouseXIn, int mouseYIn, float p_148128_3_)
+        {
+            if (this.field_178041_q)
+            {
+                this.mouseX = mouseXIn;
+                this.mouseY = mouseYIn;
+                //this.drawBackground();
+                int i = this.getScrollBarX();
+                int j = i + 6;
+                this.bindAmountScrolled();
+                GlStateManager.disableLighting();
+                GlStateManager.disableFog();
+                Tessellator tessellator = Tessellator.getInstance();
+                WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+                //this.drawContainerBackground(tessellator);
+                int k = this.left + this.width / 2 - this.getListWidth() / 2 + 2;
+                int l = this.top + 4 - (int)this.amountScrolled;
+
+                if (this.hasListHeader)
+                {
+                    //this.drawListHeader(k, l, tessellator);
+                }
+
+                Helper2D.drawRectangle(0, 0, ResolutionHelper.getWidth(), ResolutionHelper.getHeight(), Style.getColorTheme(3).getRGB());
+                int i2 = this.left + (ResolutionHelper.getWidth() / 2 - this.getListWidth() / 2);
+                Helper2D.drawRectangle(i2 - 48, 0, getListWidth() + 95, ResolutionHelper.getHeight(), Style.getColorTheme(1).getRGB());
+                Helper2D.drawRectangle(i2 - 48, 0, getListWidth() + 95, 35, Style.getColorTheme(4).getRGB());
+                Helper2D.drawRectangle(i2 - 48, ResolutionHelper.getHeight() - 58, getListWidth() + 95, 58, Style.getColorTheme(4).getRGB());
+                this.drawSelectionBox(k, l + 5, mouseXIn, mouseYIn);
+                GlStateManager.disableDepth();
+                int i1 = 4;
+                //this.overlayBackground(0, this.top, 255, 255);
+                //this.overlayBackground(this.bottom, this.height, 255, 255);
+                GlStateManager.enableBlend();
+                GlStateManager.tryBlendFuncSeparate(770, 771, 0, 1);
+                GlStateManager.disableAlpha();
+                GlStateManager.shadeModel(7425);
+                GlStateManager.disableTexture2D();
+
+
+                //worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+                //worldrenderer.pos((double)this.left, (double)(this.top + i1), 0.0D).tex(0.0D, 1.0D).color(0, 0, 0, 0).endVertex();
+                //worldrenderer.pos((double)this.right, (double)(this.top + i1), 0.0D).tex(1.0D, 1.0D).color(0, 0, 0, 0).endVertex();
+                //worldrenderer.pos((double)this.right, (double)this.top, 0.0D).tex(1.0D, 0.0D).color(0, 0, 0, 255).endVertex();
+                //worldrenderer.pos((double)this.left, (double)this.top, 0.0D).tex(0.0D, 0.0D).color(0, 0, 0, 255).endVertex();
+                //tessellator.draw();
+                //worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+                //worldrenderer.pos((double)this.left, (double)this.bottom, 0.0D).tex(0.0D, 1.0D).color(0, 0, 0, 255).endVertex();
+                //worldrenderer.pos((double)this.right, (double)this.bottom, 0.0D).tex(1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
+                //worldrenderer.pos((double)this.right, (double)(this.bottom - i1), 0.0D).tex(1.0D, 0.0D).color(0, 0, 0, 0).endVertex();
+                //worldrenderer.pos((double)this.left, (double)(this.bottom - i1), 0.0D).tex(0.0D, 0.0D).color(0, 0, 0, 0).endVertex();
+                //tessellator.draw();
+                int j1 = this.func_148135_f();
+
+                if (j1 > 0)
+                {
+                    int k1 = (this.bottom - this.top) * (this.bottom - this.top) / this.getContentHeight();
+                    k1 = MathHelper.clamp_int(k1, 32, this.bottom - this.top - 8);
+                    int l1 = (int)this.amountScrolled * (this.bottom - this.top - k1) / j1 + this.top;
+
+                    if (l1 < this.top)
+                    {
+                        l1 = this.top;
+                    }
+
+                    worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+                    worldrenderer.pos((double)i, (double)this.bottom, 0.0D).tex(0.0D, 1.0D).color(0, 0, 0, 255).endVertex();
+                    worldrenderer.pos((double)j, (double)this.bottom, 0.0D).tex(1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
+                    worldrenderer.pos((double)j, (double)this.top, 0.0D).tex(1.0D, 0.0D).color(0, 0, 0, 255).endVertex();
+                    worldrenderer.pos((double)i, (double)this.top, 0.0D).tex(0.0D, 0.0D).color(0, 0, 0, 255).endVertex();
+                    tessellator.draw();
+                    worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+                    worldrenderer.pos((double)i, (double)(l1 + k1), 0.0D).tex(0.0D, 1.0D).color(128, 128, 128, 255).endVertex();
+                    worldrenderer.pos((double)j, (double)(l1 + k1), 0.0D).tex(1.0D, 1.0D).color(128, 128, 128, 255).endVertex();
+                    worldrenderer.pos((double)j, (double)l1, 0.0D).tex(1.0D, 0.0D).color(128, 128, 128, 255).endVertex();
+                    worldrenderer.pos((double)i, (double)l1, 0.0D).tex(0.0D, 0.0D).color(128, 128, 128, 255).endVertex();
+                    tessellator.draw();
+                    worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+                    worldrenderer.pos((double)i, (double)(l1 + k1 - 1), 0.0D).tex(0.0D, 1.0D).color(192, 192, 192, 255).endVertex();
+                    worldrenderer.pos((double)(j - 1), (double)(l1 + k1 - 1), 0.0D).tex(1.0D, 1.0D).color(192, 192, 192, 255).endVertex();
+                    worldrenderer.pos((double)(j - 1), (double)l1, 0.0D).tex(1.0D, 0.0D).color(192, 192, 192, 255).endVertex();
+                    worldrenderer.pos((double)i, (double)l1, 0.0D).tex(0.0D, 0.0D).color(192, 192, 192, 255).endVertex();
+                    tessellator.draw();
+                }
+
+                this.func_148142_b(mouseXIn, mouseYIn);
+                GlStateManager.enableTexture2D();
+                GlStateManager.shadeModel(7424);
+                GlStateManager.enableAlpha();
+                GlStateManager.disableBlend();
+            }
         }
     }
 }

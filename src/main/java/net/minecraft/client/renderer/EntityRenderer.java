@@ -902,7 +902,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
         this.hurtCameraEffect(partialTicks);
 
-        if (this.mc.gameSettings.viewBobbing && !Shindo.getInstance().getOptionManager().getOptionByName("Minimal View Bobbing").isCheckToggled())
+        if (!Shindo.getInstance().getOptionManager().getOptionByName("Minimal View Bobbing").isCheckToggled() && this.mc.gameSettings.viewBobbing )
         {
             this.setupViewBobbing(partialTicks);
         }
