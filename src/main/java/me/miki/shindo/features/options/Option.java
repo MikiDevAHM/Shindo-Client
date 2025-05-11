@@ -61,7 +61,6 @@ public class Option {
     private boolean expanded = true;
 
 
-
     /**
      * An option which can be toggled on and off
      */
@@ -136,7 +135,7 @@ public class Option {
         this.name = name;
     }
 
-    public Option(String name, String placeholderText, String text, int cursorPosition){
+    public Option(String name, String placeholderText, String text, int cursorPosition) {
         this.mode = "TextBox";
         this.name = name;
 

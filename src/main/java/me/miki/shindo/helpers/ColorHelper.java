@@ -16,6 +16,7 @@ import java.nio.FloatBuffer;
 public class ColorHelper {
 
     private static Minecraft mc;
+
     /**
      * Sets the color using an int color value using GlStateManager
      *
@@ -62,7 +63,7 @@ public class ColorHelper {
         int factor = ResolutionHelper.getFactor();
         FloatBuffer floatBuffer = BufferUtils.createFloatBuffer(3);
         GL11.glReadPixels(
-                (int) (x * factor ),
+                (int) (x * factor),
                 (int) (mc.displayHeight - y * factor),
                 1, 1, GL11.GL_RGB, GL11.GL_FLOAT, floatBuffer
         );

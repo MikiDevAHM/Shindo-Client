@@ -345,7 +345,7 @@ public class GuiIngame extends Gui
             this.overlayPlayerList.updatePlayerList(false);
         }
 
-        if(!(mc.currentScreen instanceof ModMenu)) {
+        if((mc.currentScreen instanceof ModMenu)) {
             new RenderNotificationEvent().call();
         }
 

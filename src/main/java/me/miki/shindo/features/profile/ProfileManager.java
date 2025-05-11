@@ -1,6 +1,7 @@
 package me.miki.shindo.features.profile;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import me.miki.shindo.Shindo;
@@ -27,538 +28,534 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ProfileManager {
 
-	private CopyOnWriteArrayList<Profile> profiles = new CopyOnWriteArrayList<Profile>();
-	private BackgroundManager backgroundManager;
-	
-	public ProfileManager() {
-		backgroundManager = new BackgroundManager();
-		this.loadProfiles(true);
-	}
-	
-	public void loadProfiles(boolean loadDefaultProfile) {
-		
-		File profileDir = Shindo.getInstance().getFileManager().getProfileDir();
-		int id = 0;
-		
-		profiles.clear();
-		
-		for(File f : profileDir.listFiles()) {
-			
-			if(FileHelper.getExtension(f).equals("json")) {
-				
-				if(f.getName().equals("Default.json")) {
-					if(loadDefaultProfile) {
-						load(f);
-					}
-				}else {
-					try (FileReader reader = new FileReader(f)) {
-						
-						String serverIp = "";
-						ProfileIcon icon = ProfileIcon.GRASS;
-						ProfileType type = ProfileType.ALL;
-						
-						Gson gson = new Gson();
-			            JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
-			            JsonObject profileData = JsonHelper.getObjectProperty(jsonObject, "Profile Data");
-			            
-			            serverIp = JsonHelper.getStringProperty(profileData, "Server", "");
-			            icon = ProfileIcon.getIconById(JsonHelper.getIntProperty(profileData, "Icon", ProfileIcon.GRASS.getId()));
-			            type = ProfileType.getTypeById(JsonHelper.getIntProperty(profileData, "Type", ProfileType.ALL.getId()));
-			            
-			            Profile p = new Profile(id, serverIp, f, icon);
-			            
-			            p.setType(type);
-			            
-			            profiles.add(p);
-			            
-			            id++;
-					} catch(Exception e) {
-						ShindoLogger.error("Failed to load profile", e);
-					}
-				}
-			}
-		}
-		
-		profiles.add(new Profile(999, "", null, null));
-	}
-	
-	public void save(File file, String serverIp, ProfileType type, ProfileIcon icon) {
-		
-		Shindo instance = Shindo.getInstance();
-		ModManager modManager = instance.getModManager();
-		
-		try(FileWriter writer = new FileWriter(file)) {
-			
-			Gson gson = new Gson();
-			
-			JsonObject jsonObject = new JsonObject();
-			//JsonObject appJsonObject = new JsonObject();
-			JsonObject modJsonObject = new JsonObject();
-			JsonObject profileData = new JsonObject();
-			
-			profileData.addProperty("Icon", icon.getId());
-			profileData.addProperty("Type", type.getId());
-			profileData.addProperty("Server", serverIp);
-			
-			jsonObject.add("Profile Data", profileData);
+    private final CopyOnWriteArrayList<Profile> profiles = new CopyOnWriteArrayList<Profile>();
+    private final BackgroundManager backgroundManager;
 
-			//appJsonObject.addProperty("Background", backgroundManager.getCurrentBackground().getId());
-			
-			//jsonObject.add("Appearance", appJsonObject);
-			
-			for(Mod m : modManager.getMods()) {
-				
-				JsonObject mJsonObject = new JsonObject();
-				
-				mJsonObject.addProperty("Toggle", m.isToggled());
-				
-				if(instance.getHudEditor().getHudMod(m.getName()) != null) {
-					
-					HudMod hMod = instance.getHudEditor().getHudMod(m.getName());
-					
-					//mJsonObject.addProperty("Toggle", hMod.isToggled());
-					mJsonObject.addProperty("X", hMod.getX());
-					mJsonObject.addProperty("Y", hMod.getY());
-					mJsonObject.addProperty("Width", hMod.getW());
-					mJsonObject.addProperty("Height", hMod.getH());
-					mJsonObject.addProperty("Size", hMod.getSize());
-				}
-				
-				modJsonObject.add(m.getName(), mJsonObject);
-				
-				if(instance.getSettingManager().getSettingsByMod(m) != null) {
-					
-					JsonObject sJsonObject = new JsonObject();
-					
-					for(Setting s : instance.getSettingManager().getSettingsByMod(m)) {
-						
-						if(s.getMode().equalsIgnoreCase("ColorPicker")) {
+    public ProfileManager() {
+        backgroundManager = new BackgroundManager();
+        this.loadProfiles();
+    }
 
-							sJsonObject.addProperty(s.getName(), s.getColor().getRGB());
-							sJsonObject.addProperty(s.getName(), s.getSideColor().getRGB());
-							sJsonObject.addProperty(s.getName(), s.getSideSlider());
+    public void loadProfiles() {
 
-							float[] values = s.getMainSlider();
-							JsonArray sliderArray = new JsonArray();
+        File profileDir = Shindo.getInstance().getFileManager().getProfileDir();
+        int id = 0;
 
-							for (float value : values) {
-								sliderArray.add(value);
-							}
+        profiles.clear();
 
-							sJsonObject.add(s.getName(), sliderArray);
-						}
-						
-						if(s.getMode().equalsIgnoreCase("CheckBox")) {
+        for (File f : profileDir.listFiles()) {
 
-							sJsonObject.addProperty(s.getName(), s.isCheckToggled());
-						}
-						
-						if(s.getMode().equalsIgnoreCase("ModePicker")) {
+            if (FileHelper.getExtension(f).equals("json")) {
 
-							sJsonObject.addProperty(s.getName(), s.getCurrentMode());
-							sJsonObject.addProperty(s.getName(), s.getModeIndex());
-						}
-						
-						if(s.getMode().equalsIgnoreCase("Slider")) {
-							
-							sJsonObject.addProperty(s.getName(), s.getCurrentNumber());
-						}
-						
-						if(s.getMode().equalsIgnoreCase("TextBox")) {
-							
-							sJsonObject.addProperty(s.getName(), s.getText());
-						}
-						
-						if(s.getMode().equalsIgnoreCase("Keybinding")) {
-							
-							sJsonObject.addProperty(s.getName(), s.getKey());
-						}
-						
-						if(s.getMode().equalsIgnoreCase("CellGrid")) {
+                try (FileReader reader = new FileReader(f)) {
 
-							JsonArray outerArray = new JsonArray();
+                    String serverIp = "";
+                    ProfileIcon icon = ProfileIcon.GRASS;
+                    ProfileType type = ProfileType.ALL;
 
-							boolean[][] cells = s.getCells();
-							for (boolean[] row : cells) {
-								JsonArray innerArray = new JsonArray();
-								for (boolean cell : row) {
-									innerArray.add(cell);
-								}
-								outerArray.add(innerArray);
-							}
-							sJsonObject.add(s.getName(), outerArray);
-						}
-					}
-					mJsonObject.add("Settings", sJsonObject);
-				}
-			}
-			
-			jsonObject.add("Mods", modJsonObject);
+                    Gson gson = new GsonBuilder()
+                            .create();
 
-			JsonObject oJsonObject = new JsonObject();
+                    JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
+                    JsonObject profileData = JsonHelper.getObjectProperty(jsonObject, "Profile Data");
 
-			for (Option o : instance.getOptionManager().getOptions()) {
+                    serverIp = JsonHelper.getStringProperty(profileData, "Server", "");
+                    icon = ProfileIcon.getIconById(JsonHelper.getIntProperty(profileData, "Icon", ProfileIcon.GRASS.getId()));
+                    type = ProfileType.getTypeById(JsonHelper.getIntProperty(profileData, "Type", ProfileType.ALL.getId()));
 
-				if (o.getMode().equalsIgnoreCase("ColorPicker")) {
-					oJsonObject.addProperty(o.getName(), o.getColor().getRGB());
-					oJsonObject.addProperty(o.getName(), o.getSideColor().getRGB());
-					oJsonObject.addProperty(o.getName(), o.getSideSlider());
-					float[] values = o.getMainSlider();
-					JsonArray sliderArray = new JsonArray();
-					for (float value : values) {
-						sliderArray.add(value);
-					}
-					oJsonObject.add(o.getName(), sliderArray);
-				}
+                    Profile p = new Profile(id, serverIp, f, icon);
 
-				if(o.getMode().equalsIgnoreCase("CheckBox")) {
-					oJsonObject.addProperty(o.getName(), o.isCheckToggled());
-				}
+                    p.setType(type);
 
-				if(o.getMode().equalsIgnoreCase("ModePicker")) {
-					oJsonObject.addProperty(o.getName(), o.getCurrentMode());
-					oJsonObject.addProperty(o.getName(), o.getModeIndex());
-				}
+                    profiles.add(p);
 
-				if(o.getMode().equalsIgnoreCase("Slider")) {
-					oJsonObject.addProperty(o.getName(), o.getCurrentNumber());
-				}
+                    id++;
+                } catch (Exception e) {
+                    ShindoLogger.error("Failed to load profile", e);
+                }
+            }
+        }
 
-				if(o.getMode().equalsIgnoreCase("TextBox")) {
-					oJsonObject.addProperty(o.getName(), o.getText());
-				}
+        profiles.add(new Profile(999, "", null, null));
+    }
 
-				if(o.getMode().equalsIgnoreCase("Keybinding")) {
-					oJsonObject.addProperty(o.getName(), o.getKey());
-				}
-			}
-			jsonObject.add("Options", oJsonObject);
+    public void save(File file, String serverIp, ProfileType type, ProfileIcon icon) {
 
-			JsonObject cJsonObject = new JsonObject();
+        Shindo instance = Shindo.getInstance();
+        ModManager modManager = instance.getModManager();
 
-			for (Chat c : instance.getChatManager().getChat()) {
+        try (FileWriter writer = new FileWriter(file)) {
 
-				if(c.getMode().equalsIgnoreCase("ColorPicker")) {
-					cJsonObject.addProperty(c.getName(), c.getColor().getRGB());
-					cJsonObject.addProperty(c.getName(), c.getSideColor().getRGB());
-					cJsonObject.addProperty(c.getName(), c.getSideSlider());
-					float[] values = c.getMainSlider();
-					JsonArray sliderArray = new JsonArray();
-					for (float value : values) {
-						sliderArray.add(value);
-					}
-					cJsonObject.add(c.getName(), sliderArray);
-				}
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-				if(c.getMode().equalsIgnoreCase("CheckBox")) {
-					cJsonObject.addProperty(c.getName(), c.isCheckToggled());
-				}
+            JsonObject jsonObject = new JsonObject();
+            //JsonObject appJsonObject = new JsonObject();
+            JsonObject modJsonObject = new JsonObject();
+            JsonObject profileData = new JsonObject();
 
-				if(c.getMode().equalsIgnoreCase("ModePicker")) {
-					cJsonObject.addProperty(c.getName(), c.getCurrentMode());
-					cJsonObject.addProperty(c.getName(), c.getModeIndex());
-				}
+            profileData.addProperty("Icon", icon.getId());
+            profileData.addProperty("Type", type.getId());
+            profileData.addProperty("Server", serverIp);
 
-				if(c.getMode().equalsIgnoreCase("Slider")) {
-					cJsonObject.addProperty(c.getName(), c.getCurrentNumber());
-				}
+            jsonObject.add("Profile Data", profileData);
 
-				if (c.getMode().equalsIgnoreCase("Keybinding")) {
-					cJsonObject.addProperty(c.getName(), c.getKey());
-				}
-			}
-			jsonObject.add("Chat", cJsonObject);
+            //appJsonObject.addProperty("Background", backgroundManager.getCurrentBackground().getId());
 
-			JsonObject pJsonObject = new JsonObject();
+            //jsonObject.add("Appearance", appJsonObject);
 
-			for (Patcher p : instance.getPatcherManager().getPatcher()) {
+            for (Mod m : modManager.getMods()) {
 
-				if (p.getMode().equalsIgnoreCase("ColorPicker")) {
-					pJsonObject.addProperty(p.getName(), p.getColor().getRGB());
-					pJsonObject.addProperty(p.getName(), p.getSideColor().getRGB());
-					pJsonObject.addProperty(p.getName(), p.getSideSlider());
-					float[] values = p.getMainSlider();
-					JsonArray sliderArray = new JsonArray();
-					for (float value : values) {
-						sliderArray.add(value);
-					}
-					pJsonObject.add(p.getName(), sliderArray);
-				}
+                JsonObject mJsonObject = new JsonObject();
 
-				if(p.getMode().equalsIgnoreCase("CheckBox")) {
-					pJsonObject.addProperty(p.getName(), p.isCheckToggled());
-				}
+                mJsonObject.addProperty("Toggle", m.isToggled());
 
-				if(p.getMode().equalsIgnoreCase("ModePicker")) {
-					pJsonObject.addProperty(p.getName(), p.getCurrentMode());
-					pJsonObject.addProperty(p.getName(), p.getModeIndex());
-				}
+                if (instance.getHudEditor().getHudMod(m.getName()) != null) {
 
-				if(p.getMode().equalsIgnoreCase("Slider")) {
-					pJsonObject.addProperty(p.getName(), p.getCurrentNumber());
-				}
+                    HudMod hMod = instance.getHudEditor().getHudMod(m.getName());
 
-				if (p.getMode().equalsIgnoreCase("Keybinding")) {
-					pJsonObject.addProperty(p.getName(), p.getKey());
-				}
-			}
+                    //mJsonObject.addProperty("Toggle", hMod.isToggled());
+                    mJsonObject.addProperty("X", hMod.getX());
+                    mJsonObject.addProperty("Y", hMod.getY());
+                    mJsonObject.addProperty("Width", hMod.getW());
+                    mJsonObject.addProperty("Height", hMod.getH());
+                    mJsonObject.addProperty("Size", hMod.getSize());
+                }
 
-			jsonObject.add("Patcher", pJsonObject);
-			gson.toJson(jsonObject, writer);
-			
-		} catch(Exception e) {
-			ShindoLogger.error("Failed to save profile", e);
-		}
-	}
-	
-	public void save() {
-		save(new File(Shindo.getInstance().getFileManager().getProfileDir(), "Default.json"), "", ProfileType.ALL, ProfileIcon.GRASS);
-	}
-	
-	public void load(File file) {
-		
-		Shindo instance = Shindo.getInstance();
-		ModManager modManager = instance.getModManager();
-		FileManager fileManager = instance.getFileManager();
-		
-		if(file == null) {
-			return;
-		}
-		
-		try (FileReader reader = new FileReader(file)) {
-			
-            Gson gson = new Gson();
+                modJsonObject.add(m.getName(), mJsonObject);
+
+                if (instance.getSettingManager().getSettingsByMod(m) != null) {
+
+                    JsonObject sJsonObject = new JsonObject();
+
+                    for (Setting s : instance.getSettingManager().getSettingsByMod(m)) {
+
+                        if (s.getMode().equalsIgnoreCase("ColorPicker")) {
+
+                            sJsonObject.addProperty(s.getName(), s.getColor().getRGB());
+                            sJsonObject.addProperty(s.getName(), s.getSideColor().getRGB());
+                            sJsonObject.addProperty(s.getName(), s.getSideSlider());
+
+                            float[] values = s.getMainSlider();
+                            JsonArray sliderArray = new JsonArray();
+
+                            for (float value : values) {
+                                sliderArray.add(value);
+                            }
+
+                            sJsonObject.add(s.getName(), sliderArray);
+                        }
+
+                        if (s.getMode().equalsIgnoreCase("CheckBox")) {
+
+                            sJsonObject.addProperty(s.getName(), s.isCheckToggled());
+                        }
+
+                        if (s.getMode().equalsIgnoreCase("ModePicker")) {
+
+                            sJsonObject.addProperty(s.getName(), s.getCurrentMode());
+                            sJsonObject.addProperty(s.getName(), s.getModeIndex());
+                        }
+
+                        if (s.getMode().equalsIgnoreCase("Slider")) {
+
+                            sJsonObject.addProperty(s.getName(), s.getCurrentNumber());
+                        }
+
+                        if (s.getMode().equalsIgnoreCase("TextBox")) {
+
+                            sJsonObject.addProperty(s.getName(), s.getText());
+                        }
+
+                        if (s.getMode().equalsIgnoreCase("Keybinding")) {
+
+                            sJsonObject.addProperty(s.getName(), s.getKey());
+                        }
+
+                        if (s.getMode().equalsIgnoreCase("CellGrid")) {
+
+                            JsonArray outerArray = new JsonArray();
+
+                            boolean[][] cells = s.getCells();
+                            for (boolean[] row : cells) {
+                                JsonArray innerArray = new JsonArray();
+                                for (boolean cell : row) {
+                                    innerArray.add(cell);
+                                }
+                                outerArray.add(innerArray);
+                            }
+                            sJsonObject.add(s.getName(), outerArray);
+                        }
+                    }
+                    mJsonObject.add("Settings", sJsonObject);
+                }
+            }
+
+            jsonObject.add("Mods", modJsonObject);
+
+            JsonObject oJsonObject = new JsonObject();
+
+            for (Option o : instance.getOptionManager().getOptions()) {
+
+                if (o.getMode().equalsIgnoreCase("ColorPicker")) {
+                    oJsonObject.addProperty(o.getName(), o.getColor().getRGB());
+                    oJsonObject.addProperty(o.getName(), o.getSideColor().getRGB());
+                    oJsonObject.addProperty(o.getName(), o.getSideSlider());
+                    float[] values = o.getMainSlider();
+                    JsonArray sliderArray = new JsonArray();
+                    for (float value : values) {
+                        sliderArray.add(value);
+                    }
+                    oJsonObject.add(o.getName(), sliderArray);
+                }
+
+                if (o.getMode().equalsIgnoreCase("CheckBox")) {
+                    oJsonObject.addProperty(o.getName(), o.isCheckToggled());
+                }
+
+                if (o.getMode().equalsIgnoreCase("ModePicker")) {
+                    oJsonObject.addProperty(o.getName(), o.getCurrentMode());
+                    oJsonObject.addProperty(o.getName(), o.getModeIndex());
+                }
+
+                if (o.getMode().equalsIgnoreCase("Slider")) {
+                    oJsonObject.addProperty(o.getName(), o.getCurrentNumber());
+                }
+
+                if (o.getMode().equalsIgnoreCase("TextBox")) {
+                    oJsonObject.addProperty(o.getName(), o.getText());
+                }
+
+                if (o.getMode().equalsIgnoreCase("Keybinding")) {
+                    oJsonObject.addProperty(o.getName(), o.getKey());
+                }
+            }
+            jsonObject.add("Options", oJsonObject);
+
+            JsonObject cJsonObject = new JsonObject();
+
+            for (Chat c : instance.getChatManager().getChat()) {
+
+                if (c.getMode().equalsIgnoreCase("ColorPicker")) {
+                    cJsonObject.addProperty(c.getName(), c.getColor().getRGB());
+                    cJsonObject.addProperty(c.getName(), c.getSideColor().getRGB());
+                    cJsonObject.addProperty(c.getName(), c.getSideSlider());
+                    float[] values = c.getMainSlider();
+                    JsonArray sliderArray = new JsonArray();
+                    for (float value : values) {
+                        sliderArray.add(value);
+                    }
+                    cJsonObject.add(c.getName(), sliderArray);
+                }
+
+                if (c.getMode().equalsIgnoreCase("CheckBox")) {
+                    cJsonObject.addProperty(c.getName(), c.isCheckToggled());
+                }
+
+                if (c.getMode().equalsIgnoreCase("ModePicker")) {
+                    cJsonObject.addProperty(c.getName(), c.getCurrentMode());
+                    cJsonObject.addProperty(c.getName(), c.getModeIndex());
+                }
+
+                if (c.getMode().equalsIgnoreCase("Slider")) {
+                    cJsonObject.addProperty(c.getName(), c.getCurrentNumber());
+                }
+
+                if (c.getMode().equalsIgnoreCase("Keybinding")) {
+                    cJsonObject.addProperty(c.getName(), c.getKey());
+                }
+            }
+            jsonObject.add("Chat", cJsonObject);
+
+            JsonObject pJsonObject = new JsonObject();
+
+            for (Patcher p : instance.getPatcherManager().getPatcher()) {
+
+                if (p.getMode().equalsIgnoreCase("ColorPicker")) {
+                    pJsonObject.addProperty(p.getName(), p.getColor().getRGB());
+                    pJsonObject.addProperty(p.getName(), p.getSideColor().getRGB());
+                    pJsonObject.addProperty(p.getName(), p.getSideSlider());
+                    float[] values = p.getMainSlider();
+                    JsonArray sliderArray = new JsonArray();
+                    for (float value : values) {
+                        sliderArray.add(value);
+                    }
+                    pJsonObject.add(p.getName(), sliderArray);
+                }
+
+                if (p.getMode().equalsIgnoreCase("CheckBox")) {
+                    pJsonObject.addProperty(p.getName(), p.isCheckToggled());
+                }
+
+                if (p.getMode().equalsIgnoreCase("ModePicker")) {
+                    pJsonObject.addProperty(p.getName(), p.getCurrentMode());
+                    pJsonObject.addProperty(p.getName(), p.getModeIndex());
+                }
+
+                if (p.getMode().equalsIgnoreCase("Slider")) {
+                    pJsonObject.addProperty(p.getName(), p.getCurrentNumber());
+                }
+
+                if (p.getMode().equalsIgnoreCase("Keybinding")) {
+                    pJsonObject.addProperty(p.getName(), p.getKey());
+                }
+            }
+
+            jsonObject.add("Patcher", pJsonObject);
+            gson.toJson(jsonObject, writer);
+
+        } catch (Exception e) {
+            ShindoLogger.error("Failed to save profile", e);
+        }
+    }
+
+    public void save() {
+        save(new File(Shindo.getInstance().getFileManager().getProfileDir(), "Default.json"), "", ProfileType.ALL, ProfileIcon.GRASS);
+    }
+
+    public void load(File file) {
+
+        Shindo instance = Shindo.getInstance();
+        ModManager modManager = instance.getModManager();
+        FileManager fileManager = instance.getFileManager();
+
+        if (file == null) {
+            return;
+        }
+
+        try (FileReader reader = new FileReader(file)) {
+
+            Gson gson = new GsonBuilder().create();
             JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
             //JsonObject appJsonObject = JsonHelper.getObjectProperty(jsonObject, "Appearance");
-			JsonObject modJsonObject = JsonHelper.getObjectProperty(jsonObject, "Mods");
-			JsonObject optionJsonObject = JsonHelper.getObjectProperty(jsonObject, "Options");
-			JsonObject chatsJsonObject = JsonHelper.getObjectProperty(jsonObject, "Chat");
-			JsonObject patchersJsonObject = JsonHelper.getObjectProperty(jsonObject, "Patcher");
+            JsonObject modJsonObject = JsonHelper.getObjectProperty(jsonObject, "Mods");
+            JsonObject optionJsonObject = JsonHelper.getObjectProperty(jsonObject, "Options");
+            JsonObject chatsJsonObject = JsonHelper.getObjectProperty(jsonObject, "Chat");
+            JsonObject patchersJsonObject = JsonHelper.getObjectProperty(jsonObject, "Patcher");
 
-			//backgroundManager.setCurrentBackground(backgroundManager.getBackgroundById(JsonHelper.getIntProperty(appJsonObject, "Background", 0)));
-			
-			for(Mod m : modManager.getMods()) {
-				
-				JsonObject mJsonObject = JsonHelper.getObjectProperty(modJsonObject, m.getName());
-				
-				if(mJsonObject != null) {
-					
-					m.setToggled(JsonHelper.getBooleanProperty(mJsonObject, "Toggle", false));
-					
-					if(instance.getHudEditor().getHudMod(m.getName()) != null) {
+            //backgroundManager.setCurrentBackground(backgroundManager.getBackgroundById(JsonHelper.getIntProperty(appJsonObject, "Background", 0)));
 
-						HudMod hMod = instance.getHudEditor().getHudMod(m.getName());
-						
-						hMod.setX(JsonHelper.getIntProperty(mJsonObject, "X", 100));
-						hMod.setY(JsonHelper.getIntProperty(mJsonObject, "Y", 100));
-						hMod.setW(JsonHelper.getIntProperty(mJsonObject, "Width", 100));
-						hMod.setH(JsonHelper.getIntProperty(mJsonObject, "Height", 100));
-						hMod.setSize(JsonHelper.getFloatProperty(mJsonObject, "Size", 1));
-					}
-					
-					if(instance.getSettingManager().getSettingsByMod(m) != null) {
-						
-						JsonObject sJsonObject = JsonHelper.getObjectProperty(mJsonObject, "Settings");
-						
-						if(sJsonObject != null) {
+            for (Mod m : modManager.getMods()) {
 
-							for(Setting s : instance.getSettingManager().getSettingsByMod(m)) {
-								
-								if(s.getMode().equalsIgnoreCase("ColorPicker")) {
-									
-									s.setColor(ColorHelper.intColorToRGB(JsonHelper.getIntProperty(sJsonObject, s.getName(), Color.WHITE.getRGB())));
-									s.setSideColor(ColorHelper.intColorToRGB(JsonHelper.getIntProperty(sJsonObject, s.getName(), Color.WHITE.getRGB())));
-									s.setSideSlider(JsonHelper.getFloatProperty(sJsonObject, s.getName(), 60));
-									JsonArray sliderArray = sJsonObject.getAsJsonArray(s.getName());
+                JsonObject mJsonObject = JsonHelper.getObjectProperty(modJsonObject, m.getName());
 
-									float[] sliderValues = new float[sliderArray.size()];
+                if (mJsonObject != null) {
 
-									for (int i = 0; i < sliderArray.size(); i++) {
-										sliderValues[i] = sliderArray.get(i).getAsFloat();
-									}
+                    m.setToggled(JsonHelper.getBooleanProperty(mJsonObject, "Toggle", false));
 
-									s.setMainSlider(sliderValues);
-								}
-								
-								if(s.getMode().equalsIgnoreCase("CheckBox")) {
+                    if (instance.getHudEditor().getHudMod(m.getName()) != null) {
 
-									
-									s.setCheckToggled(JsonHelper.getBooleanProperty(sJsonObject, s.getName(), false));
-								}
-								
-								if(s.getMode().equalsIgnoreCase("ModePicker")) {
+                        HudMod hMod = instance.getHudEditor().getHudMod(m.getName());
 
-									s.setMode(JsonHelper.getStringProperty(sJsonObject, s.getName(), "Modern"));
-									s.setModeIndex(JsonHelper.getIntProperty(sJsonObject, s.getName(), 0));
-								}
-								
-								if(s.getMode().equalsIgnoreCase("Slider")) {
+                        hMod.setX(JsonHelper.getIntProperty(mJsonObject, "X", 100));
+                        hMod.setY(JsonHelper.getIntProperty(mJsonObject, "Y", 100));
+                        hMod.setW(JsonHelper.getIntProperty(mJsonObject, "Width", 100));
+                        hMod.setH(JsonHelper.getIntProperty(mJsonObject, "Height", 100));
+                        hMod.setSize(JsonHelper.getFloatProperty(mJsonObject, "Size", 1));
+                    }
 
-									
-									s.setCurrentNumber(JsonHelper.getFloatProperty(sJsonObject, s.getName(), 1));
-								}
-								
-								if(s.getMode().equalsIgnoreCase("TextBox")) {
+                    if (instance.getSettingManager().getSettingsByMod(m) != null) {
 
-									s.setText(JsonHelper.getStringProperty(sJsonObject, s.getName(), "NONE"));
-								}
-								
-								if(s.getMode().equalsIgnoreCase("Keybinding")) {
+                        JsonObject sJsonObject = JsonHelper.getObjectProperty(mJsonObject, "Settings");
 
-									
-									s.setKey(JsonHelper.getIntProperty(sJsonObject, s.getName(), Keyboard.KEY_NONE));
-								}
-								
-								if(s.getMode().equalsIgnoreCase("CellGrid")) {
+                        if (sJsonObject != null) {
 
-									JsonArray outerArray = sJsonObject.getAsJsonArray(s.getName());
-									boolean[][] cells = new boolean[outerArray.size()][];
+                            for (Setting s : instance.getSettingManager().getSettingsByMod(m)) {
 
-									for (int i = 0; i < outerArray.size(); i++) {
-										JsonArray innerArray = outerArray.get(i).getAsJsonArray();
-										cells[i] = new boolean[innerArray.size()];
+                                if (s.getMode().equalsIgnoreCase("ColorPicker")) {
 
-										for (int j = 0; j < innerArray.size(); j++) {
-											cells[i][j] = innerArray.get(j).getAsBoolean();
-										}
-									}
-									s.setCells(cells);
-								}
-							}
-						}
-					}
-				}
-			}
+                                    s.setColor(ColorHelper.intColorToRGB(JsonHelper.getIntProperty(sJsonObject, s.getName(), Color.WHITE.getRGB())));
+                                    s.setSideColor(ColorHelper.intColorToRGB(JsonHelper.getIntProperty(sJsonObject, s.getName(), Color.WHITE.getRGB())));
+                                    s.setSideSlider(JsonHelper.getFloatProperty(sJsonObject, s.getName(), 60));
+                                    JsonArray sliderArray = sJsonObject.getAsJsonArray(s.getName());
 
-			for (Option o : instance.getOptionManager().getOptions()) {
+                                    float[] sliderValues = new float[sliderArray.size()];
 
-				JsonObject oJsonObject = JsonHelper.getObjectProperty(optionJsonObject, "Options");
+                                    for (int i = 0; i < sliderArray.size(); i++) {
+                                        sliderValues[i] = sliderArray.get(i).getAsFloat();
+                                    }
 
-				if(oJsonObject != null) {
+                                    s.setMainSlider(sliderValues);
+                                }
 
-					if (o.getMode().equalsIgnoreCase("ColorPicker")) {
+                                if (s.getMode().equalsIgnoreCase("CheckBox")) {
 
-						o.setColor(ColorHelper.intColorToRGB(JsonHelper.getIntProperty(oJsonObject, o.getName(), Color.WHITE.getRGB())));
-						o.setSideColor(ColorHelper.intColorToRGB(JsonHelper.getIntProperty(oJsonObject, o.getName(), Color.WHITE.getRGB())));
-						o.setSideSlider(JsonHelper.getFloatProperty(oJsonObject, o.getName(), 60));
-						JsonArray sliderArray = oJsonObject.getAsJsonArray(o.getName());
-						float[] sliderValues = new float[sliderArray.size()];
-						for (int i = 0; i < sliderArray.size(); i++) {
-							sliderValues[i] = sliderArray.get(i).getAsFloat();
-						}
-						o.setMainSlider(sliderValues);
-					}
 
-					if (o.getMode().equalsIgnoreCase("CheckBox")) {
-						o.setCheckToggled(JsonHelper.getBooleanProperty(oJsonObject, o.getName(), false));
-					}
+                                    s.setCheckToggled(JsonHelper.getBooleanProperty(sJsonObject, s.getName(), false));
+                                }
 
-					if (o.getMode().equalsIgnoreCase("ModePicker")) {
-						o.setMode(JsonHelper.getStringProperty(oJsonObject, o.getName(), null));
-						o.setModeIndex(JsonHelper.getIntProperty(oJsonObject, o.getName(), 0));
-					}
+                                if (s.getMode().equalsIgnoreCase("ModePicker")) {
 
-					if (o.getMode().equalsIgnoreCase("Slider")) {
-						o.setCurrentNumber(JsonHelper.getFloatProperty(oJsonObject, o.getName(), 1));
-					}
+                                    s.setMode(JsonHelper.getStringProperty(sJsonObject, s.getName(), "Modern"));
+                                    s.setModeIndex(JsonHelper.getIntProperty(sJsonObject, s.getName(), 0));
+                                }
 
-					if (o.getMode().equalsIgnoreCase("TextBox")) {
-						o.setText(JsonHelper.getStringProperty(oJsonObject, o.getName(), null));
-					}
+                                if (s.getMode().equalsIgnoreCase("Slider")) {
 
-					if (o.getMode().equalsIgnoreCase("Keybinding")) {
-						o.setKey(JsonHelper.getIntProperty(oJsonObject, o.getName(), Keyboard.KEY_NONE));
-					}
-				}
-			}
 
-			for (Chat c : instance.getChatManager().getChat()) {
+                                    s.setCurrentNumber(JsonHelper.getFloatProperty(sJsonObject, s.getName(), 1));
+                                }
 
-				JsonObject cJsonObject = JsonHelper.getObjectProperty(chatsJsonObject, "Chat");
+                                if (s.getMode().equalsIgnoreCase("TextBox")) {
 
-				if (cJsonObject != null) {
+                                    s.setText(JsonHelper.getStringProperty(sJsonObject, s.getName(), "NONE"));
+                                }
 
-					if (c.getMode().equalsIgnoreCase("ColorPicker")) {
-						c.setColor(ColorHelper.intColorToRGB(JsonHelper.getIntProperty(cJsonObject, c.getName(), Color.WHITE.getRGB())));
-						c.setSideColor(ColorHelper.intColorToRGB(JsonHelper.getIntProperty(cJsonObject, c.getName(), Color.WHITE.getRGB())));
-						c.setSideSlider(JsonHelper.getFloatProperty(cJsonObject, c.getName(), 60));
-						JsonArray sliderArray = cJsonObject.getAsJsonArray(c.getName());
-						float[] sliderValues = new float[sliderArray.size()];
-						for (int i = 0; i < sliderArray.size(); i++) {
-							sliderValues[i] = sliderArray.get(i).getAsFloat();
-						}
-						c.setMainSlider(sliderValues);
-					}
+                                if (s.getMode().equalsIgnoreCase("Keybinding")) {
 
-					if (c.getMode().equalsIgnoreCase("CheckBox")) {
-						c.setCheckToggled(JsonHelper.getBooleanProperty(cJsonObject, c.getName(), false));
-					}
 
-					if (c.getMode().equalsIgnoreCase("ModePicker")) {
-						c.setMode(JsonHelper.getStringProperty(cJsonObject, c.getName(), null));
-						c.setModeIndex(JsonHelper.getIntProperty(cJsonObject, c.getName(), 0));
-					}
+                                    s.setKey(JsonHelper.getIntProperty(sJsonObject, s.getName(), Keyboard.KEY_NONE));
+                                }
 
-					if (c.getMode().equalsIgnoreCase("Slider")) {
-						c.setCurrentNumber(JsonHelper.getFloatProperty(cJsonObject, c.getName(), 1));
-					}
+                                if (s.getMode().equalsIgnoreCase("CellGrid")) {
 
-					if (c.getMode().equalsIgnoreCase("Keybinding")) {
-						c.setKey(JsonHelper.getIntProperty(cJsonObject, c.getName(), Keyboard.KEY_NONE));
-					}
-				}
-			}
+                                    JsonArray outerArray = sJsonObject.getAsJsonArray(s.getName());
+                                    boolean[][] cells = new boolean[outerArray.size()][];
 
-			for (Patcher p : instance.getPatcherManager().getPatcher()) {
+                                    for (int i = 0; i < outerArray.size(); i++) {
+                                        JsonArray innerArray = outerArray.get(i).getAsJsonArray();
+                                        cells[i] = new boolean[innerArray.size()];
 
-				JsonObject pJsonObject = JsonHelper.getObjectProperty(patchersJsonObject, "Patcher");
+                                        for (int j = 0; j < innerArray.size(); j++) {
+                                            cells[i][j] = innerArray.get(j).getAsBoolean();
+                                        }
+                                    }
+                                    s.setCells(cells);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
-				if (pJsonObject != null) {
-					if (p.getMode().equalsIgnoreCase("ColorPicker")) {
-						p.setColor(ColorHelper.intColorToRGB(JsonHelper.getIntProperty(pJsonObject, p.getName(), Color.WHITE.getRGB())));
-						p.setSideColor(ColorHelper.intColorToRGB(JsonHelper.getIntProperty(pJsonObject, p.getName(), Color.WHITE.getRGB())));
-						p.setSideSlider(JsonHelper.getFloatProperty(pJsonObject, p.getName(), 60));
-						JsonArray sliderArray = pJsonObject.getAsJsonArray(p.getName());
-						float[] sliderValues = new float[sliderArray.size()];
-						for (int i = 0; i < sliderArray.size(); i++) {
-							sliderValues[i] = sliderArray.get(i).getAsFloat();
-						}
-						p.setMainSlider(sliderValues);
-					}
+            for (Option o : instance.getOptionManager().getOptions()) {
 
-					if (p.getMode().equalsIgnoreCase("CheckBox")) {
-						p.setCheckToggled(JsonHelper.getBooleanProperty(pJsonObject, p.getName(), false));
-					}
+                JsonObject oJsonObject = JsonHelper.getObjectProperty(optionJsonObject, "Options");
 
-					if (p.getMode().equalsIgnoreCase("ModePicker")) {
-						p.setMode(JsonHelper.getStringProperty(pJsonObject, p.getName(), null));
-						p.setModeIndex(JsonHelper.getIntProperty(pJsonObject, p.getName(), 0));
-					}
+                if (oJsonObject != null) {
 
-					if (p.getMode().equalsIgnoreCase("Slider")) {
-						p.setCurrentNumber(JsonHelper.getFloatProperty(pJsonObject, p.getName(), 1));
-					}
+                    if (o.getMode().equalsIgnoreCase("ColorPicker")) {
 
-					if (p.getMode().equalsIgnoreCase("Keybinding")) {
-						p.setKey(JsonHelper.getIntProperty(pJsonObject, p.getName(), Keyboard.KEY_NONE));
-					}
-				}
-			}
-		} catch (Exception e) {
-			ShindoLogger.error("Failed to load profile", e);
-		}
-	}
-	
-	public void delete(Profile profile) {
-		profiles.remove(profile);
-		profile.getJsonFile().delete();
-	}
-	
-	public BackgroundManager getBackgroundManager() {
-		return backgroundManager;
-	}
+                        o.setColor(ColorHelper.intColorToRGB(JsonHelper.getIntProperty(oJsonObject, o.getName(), Color.WHITE.getRGB())));
+                        o.setSideColor(ColorHelper.intColorToRGB(JsonHelper.getIntProperty(oJsonObject, o.getName(), Color.WHITE.getRGB())));
+                        o.setSideSlider(JsonHelper.getFloatProperty(oJsonObject, o.getName(), 60));
+                        JsonArray sliderArray = oJsonObject.getAsJsonArray(o.getName());
+                        float[] sliderValues = new float[sliderArray.size()];
+                        for (int i = 0; i < sliderArray.size(); i++) {
+                            sliderValues[i] = sliderArray.get(i).getAsFloat();
+                        }
+                        o.setMainSlider(sliderValues);
+                    }
 
-	public CopyOnWriteArrayList<Profile> getProfiles() {
-		return profiles;
-	}
+                    if (o.getMode().equalsIgnoreCase("CheckBox")) {
+                        o.setCheckToggled(JsonHelper.getBooleanProperty(oJsonObject, o.getName(), false));
+                    }
+
+                    if (o.getMode().equalsIgnoreCase("ModePicker")) {
+                        o.setMode(JsonHelper.getStringProperty(oJsonObject, o.getName(), null));
+                        o.setModeIndex(JsonHelper.getIntProperty(oJsonObject, o.getName(), 0));
+                    }
+
+                    if (o.getMode().equalsIgnoreCase("Slider")) {
+                        o.setCurrentNumber(JsonHelper.getFloatProperty(oJsonObject, o.getName(), 1));
+                    }
+
+                    if (o.getMode().equalsIgnoreCase("TextBox")) {
+                        o.setText(JsonHelper.getStringProperty(oJsonObject, o.getName(), null));
+                    }
+
+                    if (o.getMode().equalsIgnoreCase("Keybinding")) {
+                        o.setKey(JsonHelper.getIntProperty(oJsonObject, o.getName(), Keyboard.KEY_NONE));
+                    }
+                }
+            }
+
+            for (Chat c : instance.getChatManager().getChat()) {
+
+                JsonObject cJsonObject = JsonHelper.getObjectProperty(chatsJsonObject, "Chat");
+
+                if (cJsonObject != null) {
+
+                    if (c.getMode().equalsIgnoreCase("ColorPicker")) {
+                        c.setColor(ColorHelper.intColorToRGB(JsonHelper.getIntProperty(cJsonObject, c.getName(), Color.WHITE.getRGB())));
+                        c.setSideColor(ColorHelper.intColorToRGB(JsonHelper.getIntProperty(cJsonObject, c.getName(), Color.WHITE.getRGB())));
+                        c.setSideSlider(JsonHelper.getFloatProperty(cJsonObject, c.getName(), 60));
+                        JsonArray sliderArray = cJsonObject.getAsJsonArray(c.getName());
+                        float[] sliderValues = new float[sliderArray.size()];
+                        for (int i = 0; i < sliderArray.size(); i++) {
+                            sliderValues[i] = sliderArray.get(i).getAsFloat();
+                        }
+                        c.setMainSlider(sliderValues);
+                    }
+
+                    if (c.getMode().equalsIgnoreCase("CheckBox")) {
+                        c.setCheckToggled(JsonHelper.getBooleanProperty(cJsonObject, c.getName(), false));
+                    }
+
+                    if (c.getMode().equalsIgnoreCase("ModePicker")) {
+                        c.setMode(JsonHelper.getStringProperty(cJsonObject, c.getName(), null));
+                        c.setModeIndex(JsonHelper.getIntProperty(cJsonObject, c.getName(), 0));
+                    }
+
+                    if (c.getMode().equalsIgnoreCase("Slider")) {
+                        c.setCurrentNumber(JsonHelper.getFloatProperty(cJsonObject, c.getName(), 1));
+                    }
+
+                    if (c.getMode().equalsIgnoreCase("Keybinding")) {
+                        c.setKey(JsonHelper.getIntProperty(cJsonObject, c.getName(), Keyboard.KEY_NONE));
+                    }
+                }
+            }
+
+            for (Patcher p : instance.getPatcherManager().getPatcher()) {
+
+                JsonObject pJsonObject = JsonHelper.getObjectProperty(patchersJsonObject, "Patcher");
+
+                if (pJsonObject != null) {
+                    if (p.getMode().equalsIgnoreCase("ColorPicker")) {
+                        p.setColor(ColorHelper.intColorToRGB(JsonHelper.getIntProperty(pJsonObject, p.getName(), Color.WHITE.getRGB())));
+                        p.setSideColor(ColorHelper.intColorToRGB(JsonHelper.getIntProperty(pJsonObject, p.getName(), Color.WHITE.getRGB())));
+                        p.setSideSlider(JsonHelper.getFloatProperty(pJsonObject, p.getName(), 60));
+                        JsonArray sliderArray = pJsonObject.getAsJsonArray(p.getName());
+                        float[] sliderValues = new float[sliderArray.size()];
+                        for (int i = 0; i < sliderArray.size(); i++) {
+                            sliderValues[i] = sliderArray.get(i).getAsFloat();
+                        }
+                        p.setMainSlider(sliderValues);
+                    }
+
+                    if (p.getMode().equalsIgnoreCase("CheckBox")) {
+                        p.setCheckToggled(JsonHelper.getBooleanProperty(pJsonObject, p.getName(), false));
+                    }
+
+                    if (p.getMode().equalsIgnoreCase("ModePicker")) {
+                        p.setMode(JsonHelper.getStringProperty(pJsonObject, p.getName(), null));
+                        p.setModeIndex(JsonHelper.getIntProperty(pJsonObject, p.getName(), 0));
+                    }
+
+                    if (p.getMode().equalsIgnoreCase("Slider")) {
+                        p.setCurrentNumber(JsonHelper.getFloatProperty(pJsonObject, p.getName(), 1));
+                    }
+
+                    if (p.getMode().equalsIgnoreCase("Keybinding")) {
+                        p.setKey(JsonHelper.getIntProperty(pJsonObject, p.getName(), Keyboard.KEY_NONE));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            ShindoLogger.error("Failed to load profile", e);
+        }
+    }
+
+    public void delete(Profile profile) {
+        profiles.remove(profile);
+        profile.getJsonFile().delete();
+    }
+
+    public BackgroundManager getBackgroundManager() {
+        return backgroundManager;
+    }
+
+    public CopyOnWriteArrayList<Profile> getProfiles() {
+        return profiles;
+    }
 }

@@ -26,7 +26,7 @@ public class MessageHelper {
         animate.update();
         animate.setMax(messageWidth);
         if (!(time > timeLength)) {
-            if(message != null && subMessage != null) {
+            if (message != null && subMessage != null) {
                 Helper2D.drawRoundedRectangle(5 + animate.getValueI() - messageWidth, 5, messageWidth, 40, 2, 0x30ffffff, 0);
                 Helper2D.drawPicture(10 + animate.getValueI() - messageWidth, 10, 30, 30, -1, "icon/warning.png");
                 Shindo.getInstance().getFontHelper().size30.drawString(message, 50 + animate.getValueI() - messageWidth, 12.5f, -1);

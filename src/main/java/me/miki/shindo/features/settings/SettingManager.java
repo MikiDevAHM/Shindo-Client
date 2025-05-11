@@ -19,6 +19,7 @@ public class SettingManager {
 
     /**
      * Adds a setting to the settings List
+     *
      * @param setting The setting to be added
      */
 
@@ -36,6 +37,7 @@ public class SettingManager {
 
     /**
      * Returns a list of all settings from a given mod
+     *
      * @param mod The mod
      * @return The Arraylist of settings
      */

@@ -15,8 +15,11 @@ public class MusicFrame {
     private final String starFilled = "icon/star.png";
     private final String starEmpty = "icon/star_empty.png";
 
-    private int x, y, w, h;
-    private Music music;
+    private int x;
+    private int y;
+    private final int w;
+    private final int h;
+    private final Music music;
 
     public MusicFrame(int x, int y, int w, int h, Music music) {
         this.x = x;
@@ -60,11 +63,22 @@ public class MusicFrame {
         }
     }
 
+    public int getX() {
+        return x;
+    }
+
     // Getters and setters
-    public void setX(int x) { this.x = x; }
-    public void setY(int y) { this.y = y; }
-    public int getX() { return x; }
-    public int getY() { return y; }
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
 
     public int getH() {
         return h;

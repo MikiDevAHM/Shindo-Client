@@ -36,28 +36,32 @@ public class Config {
         modConfigList.add(modConfig);
     }
 
-    public void addConfigOption(Option option){
+    public void addConfigOption(Option option) {
         optionsConfigList.add(option);
     }
 
-    public void addConfigChat(Chat chat){ chatConfigList.add(chat); }
-
-    public void addConfigPatcher(Patcher patcher){ patcherConfigList.add(patcher); }
-
-    public void setDarkMode(boolean toggled){
-        darkMode = toggled;
+    public void addConfigChat(Chat chat) {
+        chatConfigList.add(chat);
     }
 
-    public void setSnapping(boolean snapping) {
-        this.snapping = snapping;
+    public void addConfigPatcher(Patcher patcher) {
+        patcherConfigList.add(patcher);
     }
 
-    public boolean isDarkMode(){
+    public boolean isDarkMode() {
         return darkMode;
+    }
+
+    public void setDarkMode(boolean toggled) {
+        darkMode = toggled;
     }
 
     public boolean isSnapping() {
         return snapping;
+    }
+
+    public void setSnapping(boolean snapping) {
+        this.snapping = snapping;
     }
 
     public ArrayList<ModConfig> getConfig() {
@@ -68,7 +72,11 @@ public class Config {
         return optionsConfigList;
     }
 
-    public ArrayList<Chat> getChatConfigList() { return chatConfigList; }
+    public ArrayList<Chat> getChatConfigList() {
+        return chatConfigList;
+    }
 
-    public ArrayList<Patcher> getPatcherConfigList() { return patcherConfigList; }
+    public ArrayList<Patcher> getPatcherConfigList() {
+        return patcherConfigList;
+    }
 }

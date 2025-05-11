@@ -5,9 +5,11 @@ import java.util.ArrayList;
 
 public class PatcherManager {
 
-    private ArrayList<Patcher> patcherList = new ArrayList<>();
+    private final ArrayList<Patcher> patcherList = new ArrayList<>();
 
-    public PatcherManager() { init(); }
+    public PatcherManager() {
+        init();
+    }
 
     public void init() {
         addPatcher(new Patcher("Tweaks"));
@@ -29,9 +31,13 @@ public class PatcherManager {
 
     }
 
-    public ArrayList<Patcher> getPatcher() { return patcherList; }
+    public ArrayList<Patcher> getPatcher() {
+        return patcherList;
+    }
 
-    public void addPatcher(Patcher patcher) { patcherList.add(patcher); }
+    public void addPatcher(Patcher patcher) {
+        patcherList.add(patcher);
+    }
 
     public Patcher getPatcherByName(String name) {
         for (Patcher patcher : patcherList) {

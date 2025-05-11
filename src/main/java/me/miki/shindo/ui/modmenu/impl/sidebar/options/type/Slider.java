@@ -17,10 +17,9 @@ import me.miki.shindo.ui.modmenu.impl.sidebar.options.Options;
 public class Slider extends Options {
 
     private final PositionHelper posHelper = new PositionHelper(125);
-
+    private final int sliderWidth = 150;
     private boolean drag;
     private float sliderPos;
-    private final int sliderWidth = 150;
 
     public Slider(Option option, Panel panel, int y) {
         super(option, panel, y);

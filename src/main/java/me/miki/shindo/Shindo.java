@@ -1,9 +1,12 @@
 package me.miki.shindo;
 
 import me.miki.shindo.events.EventManager;
+import me.miki.shindo.features.account.AccountManager;
 import me.miki.shindo.features.chat.ChatManager;
+import me.miki.shindo.features.download.DownloadManager;
 import me.miki.shindo.features.mods.ModManager;
 import me.miki.shindo.features.music.MusicManager;
+import me.miki.shindo.features.notification.NotificationManager;
 import me.miki.shindo.features.options.OptionManager;
 import me.miki.shindo.features.patcher.PatcherManager;
 import me.miki.shindo.features.profile.ProfileManager;
@@ -17,38 +20,47 @@ import me.miki.shindo.ui.hudeditor.HudEditor;
 import net.minecraft.client.Minecraft;
 
 /**
- * @description Shindo Client Main Class
  * @author MikiDevAHM
+ * @description Shindo Client Main Class
  */
 public class Shindo {
 
+    // INFO STUFF HERE
+    public static final String NAME = "Shindo";
+    public static final String VERSION = "v1.0.1";
+    public static final String AUTHOR = "MikiDevAHM";
     // IMPORTANT CONSTANTS HERE
     private static final Shindo INSTANCE = new Shindo();
-    private final Minecraft mc =Minecraft.getMinecraft();
-
-
-    // INFO STUFF HERE
-    public static final String NAME =    "Shindo";
-    public static final String VERSION = "v1";
-    public static final String AUTHOR =  "MikiDevAHM";
-
+    private final Minecraft mc = Minecraft.getMinecraft();
     // IMPORTANT VARIABLES AND FIELDS HERE
     private ShindoHandler shindoHandler;
     private ShindoAPI shindoAPI;
     private EventManager eventManager;
+    private AccountManager accountManager;
+
     private FileManager fileManager;
-    private SettingManager settingManager;
+    private DownloadManager downloadManager;
+
     private ModManager modManager;
+    private SettingManager settingManager;
     private OptionManager optionManager;
-    private HudEditor hudEditor;
-    private SecurityManager securityManager;
-    private FontHelper fontHelper;
-    private CpsHelper cpsHelper;
-    private MessageHelper messageHelper;
     private ChatManager chatManager;
     private PatcherManager patcherManager;
     private MusicManager musicManager;
     private ProfileManager profileManager;
+    private NotificationManager notificationManager;
+    private SecurityManager securityManager;
+
+    private HudEditor hudEditor;
+
+    private FontHelper fontHelper;
+    private CpsHelper cpsHelper;
+    private MessageHelper messageHelper;
+
+    // GETTERS
+    public static Shindo getInstance() {
+        return INSTANCE;
+    }
 
     // MAIN METHODS
     public void startup() {
@@ -56,6 +68,8 @@ public class Shindo {
 
         registerEvents(
                 fileManager = new FileManager(),
+                accountManager = new AccountManager(),
+                downloadManager = new DownloadManager(),
                 cpsHelper = new CpsHelper(),
                 settingManager = new SettingManager(),
                 modManager = new ModManager(),
@@ -68,19 +82,12 @@ public class Shindo {
                 patcherManager = new PatcherManager(),
                 musicManager = new MusicManager(),
                 profileManager = new ProfileManager(),
+                notificationManager = new NotificationManager(),
+
                 shindoHandler = new ShindoHandler(),
                 shindoAPI = new ShindoAPI()
 
         );
-
-        //try {
-        //    if (!ConfigSaver.configExists()) {
-        //        ConfigSaver.saveConfig();
-        //    }
-        //    ConfigLoader.loadConfig();
-        //} catch (Exception e) {
-        //    ShindoLogger.error("Failed to load config file.", e);
-        //}
 
         fontHelper.init();
         shindoHandler.init();
@@ -94,59 +101,89 @@ public class Shindo {
     }
 
     public void shutdown() {
-        // try {
-        //    ConfigSaver.saveConfig();
-        //} catch (Exception e) {
-        //    ShindoLogger.error("Failed to save config file.", e);
-        //}
-
         profileManager.save();
+        accountManager.save();
         EventManager.unregister(this);
     }
 
-    // GETTERS
-    public static Shindo getInstance() { return INSTANCE; }
+    public ShindoAPI getShindoAPI() {
+        return shindoAPI;
+    }
 
-    public ShindoAPI getShindoAPI() { return shindoAPI; }
+    public ShindoHandler getShindoHandler() {
+        return shindoHandler;
+    }
 
-    public ShindoHandler getShindoHandler() { return shindoHandler; }
+    public AccountManager getAccountManager() {
+        return accountManager;
+    }
 
-    public HudEditor getHudEditor() { return hudEditor; }
+    public FileManager getFileManager() {
+        return fileManager;
+    }
 
-    public FontHelper getFontHelper() { return fontHelper; }
+    public DownloadManager getDownloadManager() {
+        return downloadManager;
+    }
 
-    public CpsHelper getCpsHelper() { return cpsHelper; }
+    public ModManager getModManager() {
+        return modManager;
+    }
 
-    public MessageHelper getMessageHelper() { return messageHelper; }
+    public SettingManager getSettingManager() {
+        return settingManager;
+    }
 
-    public ModManager getModManager() { return modManager; }
+    public OptionManager getOptionManager() {
+        return optionManager;
+    }
 
-    public SettingManager getSettingManager() { return settingManager; }
+    public ChatManager getChatManager() {
+        return chatManager;
+    }
 
-    public OptionManager getOptionManager() { return optionManager; }
+    public PatcherManager getPatcherManager() {
+        return patcherManager;
+    }
 
-    public ChatManager getChatManager() { return chatManager; }
+    public MusicManager getMusicManager() {
+        return musicManager;
+    }
 
-    public PatcherManager getPatcherManager() { return patcherManager; }
+    public ProfileManager getProfileManager() {
+        return profileManager;
+    }
 
-    public MusicManager getMusicManager() { return musicManager; }
+    public NotificationManager getNotificationManager() {
+        return notificationManager;
+    }
 
-    public ProfileManager getProfileManager() { return profileManager; }
+    public SecurityManager getSecurityManager() {
+        return securityManager;
+    }
 
-    public SecurityManager getSecurityManager() { return securityManager; }
+    public FontHelper getFontHelper() {
+        return fontHelper;
+    }
 
-    public FileManager getFileManager() { return fileManager; }
+    public CpsHelper getCpsHelper() {
+        return cpsHelper;
+    }
+
+    public MessageHelper getMessageHelper() {
+        return messageHelper;
+    }
+
+    public HudEditor getHudEditor() {
+        return hudEditor;
+    }
+
 
     private void registerEvents(Object... events) {
         for (Object event : events) {
             EventManager.register(event);
         }
     }
-
-
-
-
-
 
 
 }

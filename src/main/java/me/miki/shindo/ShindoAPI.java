@@ -7,7 +7,8 @@ import java.io.File;
 public class ShindoAPI {
 
     private long launchTime;
-    private File firstLoginFile;
+    private final File firstLoginFile;
+
     public ShindoAPI() {
         FileManager fm = Shindo.getInstance().getFileManager();
 
@@ -18,7 +19,7 @@ public class ShindoAPI {
         launchTime = System.currentTimeMillis();
     }
 
-    public boolean isSpecialUser()  {
+    public boolean isSpecialUser() {
         return true;
     }
 

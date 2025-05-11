@@ -164,14 +164,11 @@ public interface Easing {
     Easing BOUNCE_OUT = (t, b, c, d) -> {
         if ((t /= d) < (1 / 2.75f)) {
             return c * (7.5625f * t * t) + b;
-        }
-        else if (t < (2 / 2.75f)) {
+        } else if (t < (2 / 2.75f)) {
             return c * (7.5625f * (t -= (1.5f / 2.75f)) * t + .75f) + b;
-        }
-        else if (t < (2.5f / 2.75f)) {
+        } else if (t < (2.5f / 2.75f)) {
             return c * (7.5625f * (t -= (2.25f / 2.75f)) * t + .9375f) + b;
-        }
-        else {
+        } else {
             return c * (7.5625f * (t -= (2.625f / 2.75f)) * t + .984375f) + b;
         }
     };
@@ -284,8 +281,7 @@ public interface Easing {
             if (a < Math.abs(c)) {
                 a = c;
                 s = p / 4;
-            }
-            else s = p / (float) (2 * Math.PI) * (float) Math.asin(c / a);
+            } else s = p / (float) (2 * Math.PI) * (float) Math.asin(c / a);
             return -(a * (float) Math.pow(2, 10 * (t -= 1)) * (float) Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
         }
     }
@@ -312,8 +308,7 @@ public interface Easing {
             if (a < Math.abs(c)) {
                 a = c;
                 s = p / 4;
-            }
-            else s = p / (float) (2 * Math.PI) * (float) Math.asin(c / a);
+            } else s = p / (float) (2 * Math.PI) * (float) Math.asin(c / a);
             return a * (float) Math.pow(2, -10 * t) * (float) Math.sin((t * d - s) * (2 * Math.PI) / p) + c + b;
         }
     }
@@ -340,8 +335,7 @@ public interface Easing {
             if (a < Math.abs(c)) {
                 a = c;
                 s = p / 4f;
-            }
-            else s = p / (float) (2 * Math.PI) * (float) Math.asin(c / a);
+            } else s = p / (float) (2 * Math.PI) * (float) Math.asin(c / a);
             if (t < 1)
                 return -.5f * (a * (float) Math.pow(2, 10 * (t -= 1)) * (float) Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
             return a * (float) Math.pow(2, -10 * (t -= 1)) * (float) Math.sin((t * d - s) * (2 * Math.PI) / p) * .5f + c + b;

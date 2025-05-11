@@ -22,6 +22,7 @@ public class OptionCategory extends Category {
     public OptionCategory(Panel panel) {
         super(panel);
         setName("Settings");
+        setIcon("icon/button/sidebar/settings.png");
         setScrollHelper(scrollHelperOptions);
         setValue(2);
     }
@@ -59,7 +60,7 @@ public class OptionCategory extends Category {
             }
             Options opt = null;
             switch (option.getMode()) {
-                case "CheckBox" :
+                case "CheckBox":
                     opt = new CheckBox(option, getPanel(), addOptionY);
                     break;
                 case "Slider":
@@ -74,9 +75,10 @@ public class OptionCategory extends Category {
                 case "Keybinding":
                     opt = new Keybinding(option, getPanel(), addOptionY);
                     break;
-                default: opt = null;
+                default:
+                    opt = null;
                     break;
-            };
+            }
 
             if (opt != null) {
                 optionsList.add(opt);
@@ -118,7 +120,7 @@ public class OptionCategory extends Category {
             }
             Options opt = null;
             switch (option.getMode()) {
-                case "CheckBox" :
+                case "CheckBox":
                     opt = new CheckBox(option, getPanel(), addOptionY);
                     break;
                 case "Slider":
@@ -133,9 +135,10 @@ public class OptionCategory extends Category {
                 case "Keybinding":
                     opt = new Keybinding(option, getPanel(), addOptionY);
                     break;
-                default: opt = null;
+                default:
+                    opt = null;
                     break;
-            };
+            }
 
             if (opt != null) {
                 optionsList.add(opt);

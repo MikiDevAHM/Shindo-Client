@@ -30,13 +30,15 @@ public class ProfileCategory extends Category {
     private TextField nameBox;
     private TextField serverIpBox;
 
-   private TextBox searchBox = new TextBox("Pesquisar Profile", getPanel().getX() + getPanel().getW() - 205, getPanel().getY() + 35, 80, 20);
+    private final TextBox searchBox = new TextBox("Pesquisar Profile", getPanel().getX() + getPanel().getW() - 205, getPanel().getY() + 35, 80, 20);
 
     private boolean openProfile;
+    private boolean openIcon;
 
     public ProfileCategory(Panel panel) {
         super(panel);
         setName("Profiles");
+        setIcon("icon/button/sidebar/profiles.png");
         setScrollHelper(scrollHelperProfile);
         setValue(6);
     }
@@ -46,8 +48,10 @@ public class ProfileCategory extends Category {
         currentType = ProfileType.ALL;
         currentIcon = ProfileIcon.COMMAND;
         openProfile = false;
-        nameBox = new TextField(getPanel().getX() + 80 + 32, getPanel().getY() + getPanel().getH()  + 266, 80, 14, "Name");
-        serverIpBox = new TextField(getPanel().getX() + 80 + 32, getPanel().getY() + getPanel().getH()  + 284, 80, 14, "Server IP");
+        openIcon = false;
+
+        nameBox = new TextField(getPanel().getX() + 80 + 32, getPanel().getY() + getPanel().getH() + 266, 80, 14, "Name");
+        serverIpBox = new TextField(getPanel().getX() + 80 + 32, getPanel().getY() + getPanel().getH() + 284, 80, 14, "Server IP");
         searchBox.setFocused(false);
     }
 
@@ -56,15 +60,17 @@ public class ProfileCategory extends Category {
         currentType = ProfileType.ALL;
         currentIcon = ProfileIcon.COMMAND;
         openProfile = false;
-        nameBox = new TextField(getPanel().getX() + 80 + 32, getPanel().getY() + getPanel().getH()  + 266, 80, 14, "Name");
-        serverIpBox = new TextField(getPanel().getX() + 80 + 32, getPanel().getY() + getPanel().getH()  + 284, 80, 14, "Server IP");
+        openIcon = false;
+
+        nameBox = new TextField(getPanel().getX() + 80 + 32, getPanel().getY() + getPanel().getH() + 266, 80, 14, "Name");
+        serverIpBox = new TextField(getPanel().getX() + 80 + 32, getPanel().getY() + getPanel().getH() + 284, 80, 14, "Server IP");
 
         searchBox.setFocused(false);
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY) {
-        Shindo instance  = Shindo.getInstance();
+        Shindo instance = Shindo.getInstance();
         ProfileManager profileManager = instance.getProfileManager();
         GlyphPageFontRenderer font = instance.getFontHelper().size20;
 
@@ -73,89 +79,89 @@ public class ProfileCategory extends Category {
         this.setCanClose(true);
 
 
-
         int i = 0;
         for (ProfileType t : ProfileType.values()) {
 
             int textWidth = font.getStringWidth(t.getName());
             boolean isCurrentType = t.equals(currentType);
 
-            int x = getPanel().getX() + 130 ;
+            int x = getPanel().getX() + 130;
             int y = getPanel().getY() + 38;
             int w = textWidth + 20;
             int h = 16;
 
-            Helper2D.drawRoundedRectangle(x + i, y, w, h, 6, Style.getColorTheme(isCurrentType ? 8 : 5).getRGB(), 0 );
+            Helper2D.drawRoundedRectangle(x + i, y, w, h, 6, Style.getColorTheme(isCurrentType ? 8 : 5).getRGB(), 0);
             font.drawStringWidthShadow(t.getName(), x + 10 + i, y + 2, Style.getColorTheme(19).getRGB());
-            i+=textWidth+30;
+            i += textWidth + 30;
         }
 
         int offsetX = 0;
         int offsetY = 13;
         int index = 1;
 
-        offsetX = 0;;
+        offsetX = 0;
 
-        for(Profile p : profileManager.getProfiles()) {
+        for (Profile p : profileManager.getProfiles()) {
 
-            if(filter(p)) {
+            if (filter(p)) {
                 continue;
             }
 
-            int x = getPanel().getX() + 80 + offsetX ;
+            int x = getPanel().getX() + 80 + offsetX;
             int y = getPanel().getY() + 70 + offsetY;
-            Helper2D.drawRoundedRectangle(x, y, 120, 46, 6, Style.getColorTheme(4).getRGB(), 0 );
+            boolean hovered = MathHelper.withinBox(x, y, 120, 46, mouseX, mouseY);
+            Helper2D.drawRoundedRectangle(x, y, 140, 46, 6, Style.getColorTheme(hovered ? 8 : 5).getRGB(), 0);
 
-            if(p.getIcon() != null) {
+            if (p.getIcon() != null) {
                 Helper2D.drawPicture(x + 6, y + 6, 34, 34, 0, p.getIcon().getIcon());
             }
 
-            if(!p.getName().isEmpty()) {
+            if (!p.getName().isEmpty()) {
                 font.drawStringLimited(p.getName(), x + 42, y + 9, 70, Style.getColorTheme(19).getRGB());
             }
 
-            if(p.getId() == 999) {
-                Helper2D.drawPicture( x + (120 / 2) - 10, y + 13, 20, 20, 0, "icon/plus.png");
+
+            if (p.getId() == 999) {
+                Helper2D.drawPicture(x + (140 / 2) - 10, y + 13, 20, 20, 0, "icon/plus.png");
             } else {
 
-                boolean isFav = p.getType().equals(ProfileType.FAVORITE);
-                if (isFav) {
-                    Helper2D.drawPicture(x + 98, y + 2, 10, 10, Color.YELLOW.getRGB(), "icon/star.png");
-                } else {
-                    Helper2D.drawPicture(x + 98, y + 2, 10, 10, Color.YELLOW.getRGB(), "icon/star_empty.png");
+                if (!p.getName().equals("Default")) {
+
+                    boolean isFav = p.getType().equals(ProfileType.FAVORITE);
+                    if (isFav) {
+                        Helper2D.drawPicture(x + 118, y + 2, 10, 10, Color.YELLOW.getRGB(), "icon/star.png");
+                    } else {
+                        Helper2D.drawPicture(x + 118, y + 2, 10, 10, Color.YELLOW.getRGB(), "icon/star_empty.png");
+                    }
+
+
+                    Helper2D.drawPicture(x + 129, y + 2, 10, 10, 0, "icon/cross.png");
                 }
-
-
-                Helper2D.drawPicture(x + 109, y + 2, 10, 10, 0, "icon/cross.png");
             }
 
-            offsetX+=125;
+            offsetX += 150;
 
-            if(index % 3 == 0) {
+            if (index % 3 == 0) {
                 offsetX = 0;
-                offsetY+=56;
+                offsetY += 56;
             }
 
             index++;
         }
 
 
-        offsetY = 15;
-        offsetX = 0;
-
-
         if (openProfile) {
             Helper2D.drawRectangle(getPanel().getX() + 70, getPanel().getY() + getPanel().getH() + 260, getPanel().getW() - 70, 40, Style.getColorTheme(4).getRGB());
             //font.drawString("Add Profile", getPanel().getX() + 80, getPanel().getY() + getPanel().getH()  + 270, Style.getColorTheme(19).getRGB());
-            boolean hovered = MathHelper.withinBox(getPanel().getX() + 200 - 2, getPanel().getY() + getPanel().getH() + 270 - 8, 60, 15, mouseX, mouseY);
-            Helper2D.drawRoundedRectangle(getPanel().getX() + 200 - 2, getPanel().getY() + getPanel().getH() + 270 - 8, 60, 15, 3, hovered ? Style.getColorTheme(9).getRGB() : Style.getColorTheme(6).getRGB(), 0);
-            Helper2D.drawPicture(getPanel().getX() + 202, getPanel().getY() + getPanel().getH() + 270 - 5, 8, 8, hovered ? new Color(200, 200, 200).getRGB() : 0, "icon/plus.png");
-            Shindo.getInstance().getFontHelper().size15.drawStringWidthShadow("Add Icon", getPanel().getX() + 200 + 12, getPanel().getY() + getPanel().getH() + 265, Style.getColorTheme(19).getRGB());
+            boolean hovered = MathHelper.withinBox(getPanel().getX() + 200 - 2, getPanel().getY() + getPanel().getH() + 270 - 5, 60, 15, mouseX, mouseY);
+            Helper2D.drawRoundedRectangle(getPanel().getX() + 200 - 2, getPanel().getY() + getPanel().getH() + 270 - 5, 60, 15, 3, hovered ? Style.getColorTheme(9).getRGB() : Style.getColorTheme(6).getRGB(), 0);
+            Helper2D.drawPicture(getPanel().getX() + 202, getPanel().getY() + getPanel().getH() + 270 - 2, 8, 8, hovered ? new Color(200, 200, 200).getRGB() : 0, "icon/plus.png");
+            Shindo.getInstance().getFontHelper().size15.drawStringWidthShadow("Add Icon", getPanel().getX() + 200 + 12, getPanel().getY() + getPanel().getH() + 265 + 3, Style.getColorTheme(19).getRGB());
 
-            boolean hovered1 = MathHelper.withinBox(getPanel().getX() + 200 - 2, getPanel().getY() + getPanel().getH() + 280, 60, 15, mouseX, mouseY);
-            Helper2D.drawRoundedRectangle(getPanel().getX() + 200 - 2, getPanel().getY() + getPanel().getH() + 280, 60, 15, 3, hovered1 ? Style.getColorTheme(9).getRGB() : Style.getColorTheme(6).getRGB(), 0);
-            Helper2D.drawPicture(getPanel().getX() + 202 , getPanel().getY() + getPanel().getH() + 284, 8, 8, hovered ? new Color(200, 200, 200).getRGB() : 0, "icon/plus.png");
-            Shindo.getInstance().getFontHelper().size15.drawStringWidthShadow("Add Profile", getPanel().getX() + 200 + 12, getPanel().getY() + getPanel().getH() + 284, Style.getColorTheme(19).getRGB());
+            boolean hovered1 = MathHelper.withinBox(getPanel().getX() + 200 - 2, getPanel().getY() + getPanel().getH() + 280 + 3, 60, 15, mouseX, mouseY);
+            Helper2D.drawRoundedRectangle(getPanel().getX() + 200 - 2, getPanel().getY() + getPanel().getH() + 280 + 3, 60, 15, 3, hovered1 ? Style.getColorTheme(9).getRGB() : Style.getColorTheme(6).getRGB(), 0);
+            Helper2D.drawPicture(getPanel().getX() + 202, getPanel().getY() + getPanel().getH() + 284 + 3, 8, 8, hovered ? new Color(200, 200, 200).getRGB() : 0, "icon/plus.png");
+            Shindo.getInstance().getFontHelper().size15.drawStringWidthShadow("Add Profile", getPanel().getX() + 200 + 12, getPanel().getY() + getPanel().getH() + 284 + 3, Style.getColorTheme(19).getRGB());
 
 
             font.drawString("Name", getPanel().getX() + 80, getPanel().getY() + getPanel().getH() + 269, Style.getColorTheme(19).getRGB());
@@ -165,6 +171,22 @@ public class ProfileCategory extends Category {
 
             font.drawString("Server", getPanel().getX() + 80, getPanel().getY() + getPanel().getH() + 287, Style.getColorTheme(19).getRGB());
             serverIpBox.render(mouseX, mouseY);
+
+            offsetY = 15;
+            offsetX = 0;
+            if (openIcon) {
+                for (ProfileIcon icon : ProfileIcon.values()) {
+
+
+                    int x = getPanel().getX() + 275 + offsetX;
+                    int y = getPanel().getY() + getPanel().getH() + 269;
+                    boolean hovered2 = currentIcon.equals(icon);
+                    Helper2D.drawPicture(x, y, 25, 25, 0, icon.getIcon());
+                    Helper2D.drawOutlinedRectangle(x, y, 25, 25, 2, Style.getColorTheme(hovered2 ? 9 : 6).getRGB());
+
+                    offsetX += 30;
+                }
+            }
         }
     }
 
@@ -175,17 +197,33 @@ public class ProfileCategory extends Category {
         ModManager modManager = instance.getModManager();
         FileManager fileManager = instance.getFileManager();
 
+        int offsetX = 0;
+        int offsetY = 13;
+        int index = 1;
+
         if (openProfile) {
 
-            for (ProfileIcon icon : ProfileIcon.values()) {
-                if (MathHelper.withinBox(getPanel().getX() + 200 - 2, getPanel().getY() + getPanel().getH() + 270 - 8, 60, 15, mouseX, mouseY)) {
+            offsetY = 15;
+            offsetX = 0;
+            if (MathHelper.withinBox(getPanel().getX() + 200 - 2, getPanel().getY() + getPanel().getH() + 270 - 5, 60, 15, mouseX, mouseY)) {
+                openIcon = true;
+            }
 
+            if (openIcon) {
+
+                for (ProfileIcon icon : ProfileIcon.values()) {
+                    if (MathHelper.withinBox(getPanel().getX() + 275 + offsetX, getPanel().getY() + getPanel().getH() + 269, 25, 25, mouseX, mouseY)) {
+                        currentIcon = icon;
+                    }
+
+                    offsetX += 30;
                 }
             }
+
             nameBox.onClick(mouseX, mouseY, mouseButton);
             serverIpBox.onClick(mouseX, mouseY, mouseButton);
 
-            if (MathHelper.withinBox(getPanel().getX() + 200 - 2, getPanel().getY() + getPanel().getH() + 280, 60, 15, mouseX, mouseY)) {
+            if (MathHelper.withinBox(getPanel().getX() + 200 - 2, getPanel().getY() + getPanel().getH() + 280 + 3, 60, 15, mouseX, mouseY)) {
 
                 if (!nameBox.getText().isEmpty()) {
 
@@ -196,8 +234,9 @@ public class ProfileCategory extends Category {
                     }
 
                     profileManager.save(new File(fileManager.getProfileDir(), nameBox.getText() + ".json"), serverIp, ProfileType.ALL, currentIcon);
-                    profileManager.loadProfiles(false);
-
+                    profileManager.loadProfiles();
+                    openProfile = false;
+                    openIcon = false;
                 }
             }
         } else {
@@ -219,9 +258,6 @@ public class ProfileCategory extends Category {
                 i += textWidth + 30;
             }
 
-            int offsetX = 0;
-            int offsetY = 13;
-            int index = 1;
 
             offsetX = 0;
 
@@ -236,8 +272,8 @@ public class ProfileCategory extends Category {
 
                 if (mouseButton == 0) {
 
-                    boolean favorite = MathHelper.withinBox(x + 98, y + 2, 10, 10, mouseX, mouseY);
-                    boolean delete = MathHelper.withinBox(x + 109, y + 2, 10, 10, mouseX, mouseY);
+                    boolean favorite = MathHelper.withinBox(x + 118, y + 2, 10, 10, mouseX, mouseY);
+                    boolean delete = MathHelper.withinBox(x + 129, y + 2, 10, 10, mouseX, mouseY);
                     boolean inside = MathHelper.withinBox(x, y, 120, 46, mouseX, mouseY);
 
                     if (inside) {
@@ -252,24 +288,26 @@ public class ProfileCategory extends Category {
                     }
 
                     if (p.getId() != 999) {
-                        if (favorite) {
+                        if (!p.getName().equals("Default")) {
+                            if (favorite) {
 
-                            if (p.getType().equals(ProfileType.FAVORITE)) {
-                                p.setType(ProfileType.ALL);
-                            } else {
-                                p.setType(ProfileType.FAVORITE);
+                                if (p.getType().equals(ProfileType.FAVORITE)) {
+                                    p.setType(ProfileType.ALL);
+                                } else {
+                                    p.setType(ProfileType.FAVORITE);
+                                }
+
+                                profileManager.save(p.getJsonFile(), p.getServerIp(), p.getType(), p.getIcon());
                             }
 
-                            profileManager.save(p.getJsonFile(), p.getServerIp(), p.getType(), p.getIcon());
-                        }
-
-                        if (delete) {
-                            profileManager.delete(p);
+                            if (delete) {
+                                profileManager.delete(p);
+                            }
                         }
                     }
                 }
 
-                offsetX += 100;
+                offsetX += 125;
 
                 if (index % 3 == 0) {
                     offsetX = 0;
@@ -290,14 +328,10 @@ public class ProfileCategory extends Category {
 
     private boolean filter(Profile p) {
 
-        if(currentType.equals(ProfileType.FAVORITE) && !p.getType().equals(ProfileType.FAVORITE)) {
+        if (currentType.equals(ProfileType.FAVORITE) && !p.getType().equals(ProfileType.FAVORITE)) {
             return true;
         }
 
-       if(!this.searchBox.getText().isEmpty() && !(p.getName().toLowerCase().contains(this.searchBox.getText().toLowerCase()))) {
-           return true;
-       }
-
-        return false;
+        return !this.searchBox.getText().isEmpty() && !(p.getName().toLowerCase().contains(this.searchBox.getText().toLowerCase()));
     }
 }

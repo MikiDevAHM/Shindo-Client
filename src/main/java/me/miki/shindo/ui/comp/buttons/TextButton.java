@@ -14,8 +14,8 @@ public class TextButton {
 
 
     private final String text;
-    private int x, y;
     private final int w, h;
+    private int x, y;
 
     public TextButton(String text, int x, int y) {
         this.text = text;

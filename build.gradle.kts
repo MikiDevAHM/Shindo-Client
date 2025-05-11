@@ -1,5 +1,6 @@
 plugins {
     java
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 val group by properties
@@ -45,8 +46,22 @@ dependencies {
     implementation("tv.twitch:twitch:6.5")
 
     // SHINDO LIBS
-    implementation("com.github.umjammer:jlayer:1.0.2")
     implementation(fileTree("/libs"))
+}
+
+tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
+    archiveClassifier.set("") // Isso remove o "-all" do nome do JAR
+
+    // Se quiser incluir tudo, mantenha assim.
+    // Se quiser incluir apenas algumas dependências específicas:
+    dependencies {
+        include(dependency("io.netty:netty-all:4.0.23.Final"))
+        include(dependency(fileTree("/libs")))
+        // Adicione outras que deseja incluir
+    }
+
+    // Opcional: minimizar (remover classes não utilizadas)
+    // minimize()
 }
 
 tasks.register<JavaExec>("runClient") {
@@ -60,4 +75,8 @@ tasks.register<JavaExec>("runClient") {
         jvmArgs("-Djava.library.path=../natives/linux")
     }
     workingDir = project.projectDir.resolve("run")
+}
+
+tasks.build {
+    dependsOn(tasks.shadowJar)
 }

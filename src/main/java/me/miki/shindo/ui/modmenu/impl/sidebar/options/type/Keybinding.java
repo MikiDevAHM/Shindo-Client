@@ -76,7 +76,7 @@ public class Keybinding extends Options {
                 70, 20, mouseX, mouseY)
         ) {
             active = !active;
-            if(active) {
+            if (active) {
                 option.setKey(Keyboard.KEY_NONE);
             }
         }

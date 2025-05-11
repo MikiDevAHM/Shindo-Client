@@ -51,17 +51,17 @@ public class Mod {
         return toggled;
     }
 
+    public void setToggled(boolean toggled) {
+        this.toggled = toggled;
+        callMethod();
+    }
+
     public Type getType() {
         return type;
     }
 
     public void setType(Type type) {
         this.type = type;
-    }
-
-    public void setToggled(boolean toggled) {
-        this.toggled = toggled;
-        callMethod();
     }
 
     public void toggle() {
@@ -72,8 +72,7 @@ public class Mod {
     private void callMethod() {
         if (toggled) {
             onEnable();
-        }
-        else {
+        } else {
             onDisable();
         }
     }

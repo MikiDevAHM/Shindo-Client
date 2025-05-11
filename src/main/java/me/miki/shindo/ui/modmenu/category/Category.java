@@ -7,11 +7,11 @@ import net.minecraft.client.Minecraft;
 public class Category {
 
     public Minecraft mc = Minecraft.getMinecraft();
-    private Panel panel;
+    private final Panel panel;
     private ScrollHelper scrollHelper;
 
     private int value;
-    private String name;
+    private String name, icon;
     private boolean initialized;
 
     public Category(Panel panel) {
@@ -19,19 +19,27 @@ public class Category {
         initialized = false;
     }
 
-    public void initGui() {}
+    public void initGui() {
+    }
 
-    public void initCategory() {}
+    public void initCategory() {
+    }
 
-    public void drawScreen(int mouseX, int mouseY) {}
+    public void drawScreen(int mouseX, int mouseY) {
+    }
 
-    public void mouseClicked(int mouseX, int mouseY, int mouseButton) {}
+    public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+    }
 
-    public void mouseReleased(int mouseX, int mouseY, int mouseButton) {}
+    public void mouseReleased(int mouseX, int mouseY, int mouseButton) {
+    }
 
-    public void keyTyped(char typedChar, int keyCode) {}
+    public void keyTyped(char typedChar, int keyCode) {
+    }
 
-    public Panel getPanel() { return panel; }
+    public Panel getPanel() {
+        return panel;
+    }
 
     public boolean isInitialized() {
         return initialized;
@@ -57,11 +65,20 @@ public class Category {
         this.name = name;
     }
 
-    public void setScrollHelper(ScrollHelper scrollHelper) {
-        this.scrollHelper = scrollHelper;
+    public String getIcon() {
+        return icon;
     }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
     public ScrollHelper getScrollHelper() {
         return scrollHelper;
+    }
+
+    public void setScrollHelper(ScrollHelper scrollHelper) {
+        this.scrollHelper = scrollHelper;
     }
 
     public int getValue() {

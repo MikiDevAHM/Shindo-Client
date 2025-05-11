@@ -10,12 +10,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.play.server.S2EPacketCloseWindow;
 import org.lwjgl.input.Keyboard;
 
-public class ShindoHandler
-{
+public class ShindoHandler {
 
     private final Minecraft mc = Minecraft.getMinecraft();
 
-    private Shindo INSTANCE;
+    private final Shindo INSTANCE;
 
     public ShindoHandler() {
         INSTANCE = Shindo.getInstance();

@@ -28,7 +28,7 @@ public class ModConfig {
     @Expose
     private float size;
 
-    public ModConfig(String name, boolean toggled, ArrayList<Setting> settings, int[] positions, float size){
+    public ModConfig(String name, boolean toggled, ArrayList<Setting> settings, int[] positions, float size) {
         this.name = name;
         this.toggled = toggled;
         this.settings = settings;

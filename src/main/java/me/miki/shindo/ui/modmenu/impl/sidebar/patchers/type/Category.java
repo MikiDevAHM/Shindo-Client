@@ -17,8 +17,8 @@ import me.miki.shindo.ui.modmenu.impl.sidebar.patchers.Patchers;
 
 public class Category extends Patchers {
 
-    private boolean expanded = false; // Começa expandida
     private final Animate animation = new Animate();
+    private final boolean expanded = false; // Começa expandida
 
     public Category(Patcher patcher, Panel panel, int y) {
         super(patcher, panel, y);

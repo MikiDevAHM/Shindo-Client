@@ -14,14 +14,17 @@ import org.lwjgl.input.Keyboard;
 
 public class TextBox extends Settings {
 
+    private boolean focused;
+    private boolean allSelected;
+    private int x, y, w, h;
+
     public TextBox(Setting setting, Button button, int y) {
         super(setting, button, y);
     }
 
-    private boolean focused;
-    private boolean allSelected;
-
-    private int x, y, w, h;
+    public static boolean isCtrlKeyDown() {
+        return Minecraft.isRunningOnMac ? Keyboard.isKeyDown(219) || Keyboard.isKeyDown(220) : Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157);
+    }
 
     @Override
     public void renderSetting(int mouseX, int mouseY) {
@@ -84,10 +87,6 @@ public class TextBox extends Settings {
         }
     }
 
-    public static boolean isCtrlKeyDown() {
-        return Minecraft.isRunningOnMac ? Keyboard.isKeyDown(219) || Keyboard.isKeyDown(220) : Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157);
-    }
-
     public void typeText(String currentText) {
         if (allSelected) {
             setting.setCursorPosition(0);
@@ -129,14 +128,14 @@ public class TextBox extends Settings {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if(isHovered(mouseX, mouseY)) {
+        if (isHovered(mouseX, mouseY)) {
             setFocused(true);
         }
     }
 
     @Override
     public void mouseReleased(int mouseX, int mouseY, int state) {
-        if(!isHovered(mouseX, mouseY)) {
+        if (!isHovered(mouseX, mouseY)) {
             setFocused(false);
         }
     }

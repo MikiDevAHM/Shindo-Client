@@ -2,7 +2,7 @@ package net.minecraft.client.gui;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import me.miki.shindo.ui.titlescreen.TitleScreen;
+import me.miki.shindo.ui.titlescreen.ShindoMainMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -201,7 +201,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
      */
     public void initGui()
     {
-        mc.displayGuiScreen(new TitleScreen());
+        mc.displayGuiScreen(new ShindoMainMenu());
 
         this.viewportTexture = new DynamicTexture(256, 256);
         this.backgroundTexture = this.mc.getTextureManager().getDynamicTextureLocation("background", this.viewportTexture);

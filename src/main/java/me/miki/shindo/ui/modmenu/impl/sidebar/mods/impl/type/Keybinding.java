@@ -75,7 +75,7 @@ public class Keybinding extends Settings {
                 70, 20, mouseX, mouseY)
         ) {
             active = !active;
-            if(active) {
+            if (active) {
                 setting.setKey(Keyboard.KEY_NONE);
             }
         }

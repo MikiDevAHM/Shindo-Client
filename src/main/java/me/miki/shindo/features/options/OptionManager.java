@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class OptionManager {
 
-    public ArrayList<Option> optionList  = new ArrayList<>();
+    public ArrayList<Option> optionList = new ArrayList<>();
 
     public OptionManager() {
         init();

@@ -4,7 +4,7 @@ import me.miki.shindo.events.Event;
 
 public class MouseEvent extends Event {
 
-    private int button;
+    private final int button;
 
     public MouseEvent(int button) {
         this.button = button;

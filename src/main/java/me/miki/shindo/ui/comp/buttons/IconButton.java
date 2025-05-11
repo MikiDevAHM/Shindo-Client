@@ -17,8 +17,8 @@ public class IconButton {
     private final Animate animate = new Animate();
 
     private final String icon;
-    private int x, y;
     private final int w, h;
+    private int x, y;
 
     public IconButton(String icon, int x, int y) {
         this.icon = icon;

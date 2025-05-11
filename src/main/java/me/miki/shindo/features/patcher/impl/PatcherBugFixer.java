@@ -19,7 +19,7 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.Locale;
 
-public class PatcherBugFixer  {
+public class PatcherBugFixer {
 
     /*
      * @Mixin(BlockFluidRenderer.class)
@@ -27,7 +27,7 @@ public class PatcherBugFixer  {
      * @ModifyConstant( method = "renderFluid", constant = @Constant(floatValue = 0.001F))
      */
     public static float fixFluidStitching() {
-        return  0.0F;
+        return 0.0F;
     }
 
     /*
@@ -85,7 +85,8 @@ public class PatcherBugFixer  {
      * @Inject(method = "spawnRunningParticles", at = @At("HEAD"), cancellable = true)
      */
     public static void checkGroundState(Entity entity) {
-        if (!entity.onGround) return;
+        if (!entity.onGround) {
+        }
     }
 
     /*
@@ -157,7 +158,6 @@ public class PatcherBugFixer  {
         Minecraft mc = Minecraft.getMinecraft();
         if (container.dragSplittingButton == 2) {
             container.dragSplittingRemnant = mc.thePlayer.inventory.getItemStack().getMaxStackSize();
-            return;
         }
     }
 
@@ -196,7 +196,8 @@ public class PatcherBugFixer  {
     public static void stopEventsOutsideWindow(int mouseX, int mouseY, ScaledResolution scaledresolution, int i, float f, int j, int k, int l, GuiNewChat gui) {
         Minecraft mc = Minecraft.getMinecraft();
         int line = k / mc.fontRendererObj.FONT_HEIGHT;
-        if (line >= gui.getLineCount()) return ;
+        if (line >= gui.getLineCount()) {
+        }
     }
 
     /*
@@ -275,7 +276,6 @@ public class PatcherBugFixer  {
         Minecraft mc = Minecraft.getMinecraft();
         if (mouseButton - 100 == mc.gameSettings.keyBindInventory.getKeyCode()) {
             mc.thePlayer.closeScreen();
-            return;
         }
     }
 }

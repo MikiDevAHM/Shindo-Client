@@ -6,23 +6,18 @@ import javax.swing.filechooser.FileFilter;
 import java.io.File;
 
 public class SoundFileFilter extends FileFilter {
-	
+
     @Override
     public boolean accept(File file) {
-    	
+
         if (file.isDirectory()) {
             return true;
         }
 
         String extension = FileHelper.getExtension(file);
-        
-        if (extension != null &&
-                extension.equalsIgnoreCase("mp3")
-        ) {
-            return true;
-        }
 
-        return false;
+        return extension != null &&
+                extension.equalsIgnoreCase("mp3");
     }
 
     @Override

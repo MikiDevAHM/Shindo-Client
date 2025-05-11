@@ -6,7 +6,7 @@ import me.miki.shindo.features.mods.Type;
 
 public class DiscordRPCMod extends Mod {
 
-    private DiscordRPC discord = new DiscordRPC();
+    private final DiscordRPC discord = new DiscordRPC();
 
     public DiscordRPCMod() {
         super(
@@ -15,6 +15,7 @@ public class DiscordRPCMod extends Mod {
                 Type.Tweaks
         );
     }
+
     @Override
     public void onEnable() {
         super.onEnable();
@@ -24,7 +25,7 @@ public class DiscordRPCMod extends Mod {
     @Override
     public void onDisable() {
         super.onDisable();
-        if(discord.isStarted()) {
+        if (discord.isStarted()) {
             discord.stop();
         }
     }

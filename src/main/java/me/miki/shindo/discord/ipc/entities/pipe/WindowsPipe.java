@@ -37,18 +37,19 @@ public class WindowsPipe extends Pipe {
 
     @Override
     public Packet read() throws IOException {
-    	
-        while(file.length() == 0 && status == PipeStatus.CONNECTED) {
+
+        while (file.length() == 0 && status == PipeStatus.CONNECTED) {
             try {
                 Thread.sleep(50);
-            } catch(InterruptedException ignored) {}
+            } catch (InterruptedException ignored) {
+            }
         }
 
-        if(status==PipeStatus.DISCONNECTED) {
+        if (status == PipeStatus.DISCONNECTED) {
             throw new IOException("Disconnected!");
         }
 
-        if(status==PipeStatus.CLOSED) {
+        if (status == PipeStatus.CLOSED) {
             return new Packet(Packet.OpCode.CLOSE, null);
         }
 
@@ -65,11 +66,11 @@ public class WindowsPipe extends Pipe {
         Packet p = gson.fromJson(jsonObject, Packet.class);
 
         LOGGER.debug(String.format("Received packet: %s", p.toString()));
-        
-        if(listener != null) {
+
+        if (listener != null) {
             listener.onPacketReceived(ipcClient, p);
         }
-        
+
         return p;
     }
 

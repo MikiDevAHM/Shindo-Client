@@ -17,10 +17,9 @@ import me.miki.shindo.ui.modmenu.impl.sidebar.mods.impl.Settings;
 public class Slider extends Settings {
 
     private final PositionHelper posHelper = new PositionHelper(125);
-
+    private final int sliderWidth = 150;
     private boolean drag;
     private float sliderPos;
-    private final int sliderWidth = 150;
 
     public Slider(Setting setting, Button button, int y) {
         super(setting, button, y);

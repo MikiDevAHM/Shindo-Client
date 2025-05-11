@@ -31,10 +31,9 @@ public class HudEditor extends GuiScreen {
     private final Animate animateLogo = new Animate();
     private final Animate animateSnapping = new Animate();
     private final Animate animate = new Animate();
-
+    private final int offset;
     private int counter;
     private int index;
-    private final int offset;
 
     public HudEditor() {
         counter = 0;
@@ -44,6 +43,31 @@ public class HudEditor extends GuiScreen {
         animateLogo.setEase(Easing.CUBIC_OUT).setMin(0).setMax(70).setSpeed(100).setReversed(false);
         animateSnapping.setEase(Easing.CUBIC_OUT).setMin(0).setMax(50).setSpeed(100).setReversed(false);
         animate.setEase(Easing.LINEAR).setMin(0).setMax(25).setSpeed(200);
+    }
+
+    private static SnapPosition getSnapPosition(HudMod hudMod, HudMod sHudMod) {
+        SnapPosition snap = new SnapPosition();
+        snap.setSnapping(true);
+        int snapRange = 5;
+        if (MathHelper.withinBoundsRange(hudMod.getX(), sHudMod.getX(), snapRange))
+            snap.setAll(sHudMod.getX(), sHudMod.getX(), false);
+        else if (MathHelper.withinBoundsRange(hudMod.getX() + hudMod.getW() * hudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), snapRange))
+            snap.setAll(sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize() - hudMod.getW() * hudMod.getSize(), false);
+        else if (MathHelper.withinBoundsRange(hudMod.getX() + hudMod.getW() * hudMod.getSize(), sHudMod.getX(), snapRange))
+            snap.setAll(sHudMod.getX(), sHudMod.getX() - hudMod.getW() * hudMod.getSize(), false);
+        else if (MathHelper.withinBoundsRange(hudMod.getX(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), snapRange))
+            snap.setAll(sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), false);
+        else if (MathHelper.withinBoundsRange(hudMod.getY(), sHudMod.getY(), snapRange))
+            snap.setAll(sHudMod.getY(), sHudMod.getY(), true);
+        else if (MathHelper.withinBoundsRange(hudMod.getY() + hudMod.getH() * hudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), snapRange))
+            snap.setAll(sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize() - hudMod.getH() * hudMod.getSize(), true);
+        else if (MathHelper.withinBoundsRange(hudMod.getY() + hudMod.getH() * hudMod.getSize(), sHudMod.getY(), snapRange))
+            snap.setAll(sHudMod.getY(), sHudMod.getY() - hudMod.getH() * hudMod.getSize(), true);
+        else if (MathHelper.withinBoundsRange(hudMod.getY(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), snapRange))
+            snap.setAll(sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), true);
+        else
+            snap.setSnapping(false);
+        return snap;
     }
 
     /**
@@ -113,7 +137,7 @@ public class HudEditor extends GuiScreen {
                 height / 2f,
                 color
         );
-        boolean hovered1 = MathHelper.withinBox(width / 2 - 50, height / 2  + 20, 20, 20, mouseX, mouseY);
+        boolean hovered1 = MathHelper.withinBox(width / 2 - 50, height / 2 + 20, 20, 20, mouseX, mouseY);
         Helper2D.drawRoundedRectangle(
                 ResolutionHelper.getWidth() / 2 - 50,
                 ResolutionHelper.getHeight() / 2 + 20,
@@ -122,7 +146,7 @@ public class HudEditor extends GuiScreen {
                 roundedCorners ? 0 : -1
         );
 
-        boolean hovered2 = MathHelper.withinBox(width / 2 - 25, height / 2  + 20, 20, 20, mouseX, mouseY);
+        boolean hovered2 = MathHelper.withinBox(width / 2 - 25, height / 2 + 20, 20, 20, mouseX, mouseY);
         Helper2D.drawRoundedRectangle(
                 ResolutionHelper.getWidth() / 2 - 25,
                 ResolutionHelper.getHeight() / 2 + 20,
@@ -131,7 +155,7 @@ public class HudEditor extends GuiScreen {
                 roundedCorners ? 0 : -1
         );
 
-        boolean hovered3 = MathHelper.withinBox(width / 2 + 5, height / 2  + 20, 20, 20, mouseX, mouseY);
+        boolean hovered3 = MathHelper.withinBox(width / 2 + 5, height / 2 + 20, 20, 20, mouseX, mouseY);
         Helper2D.drawRoundedRectangle(
                 ResolutionHelper.getWidth() / 2 + 5,
                 ResolutionHelper.getHeight() / 2 + 20,
@@ -139,7 +163,7 @@ public class HudEditor extends GuiScreen {
                 Style.getColorTheme(hovered3 ? 5 : 2).getRGB(),
                 roundedCorners ? 0 : -1
         );
-        boolean hovered4 = MathHelper.withinBox(width / 2 + 30, height / 2  + 20, 20, 20, mouseX, mouseY);
+        boolean hovered4 = MathHelper.withinBox(width / 2 + 30, height / 2 + 20, 20, 20, mouseX, mouseY);
         Helper2D.drawRoundedRectangle(
                 ResolutionHelper.getWidth() / 2 + 30,
                 ResolutionHelper.getHeight() / 2 + 20,
@@ -202,31 +226,6 @@ public class HudEditor extends GuiScreen {
         Helper2D.drawPicture(15, height + 5 - animateSnapping.getValueI(), 30, 30, color, Style.isSnapping() ? "icon/grid.png" : "icon/nogrid.png");
     }
 
-    private static SnapPosition getSnapPosition(HudMod hudMod, HudMod sHudMod) {
-        SnapPosition snap = new SnapPosition();
-        snap.setSnapping(true);
-        int snapRange = 5;
-        if (MathHelper.withinBoundsRange(hudMod.getX(), sHudMod.getX(), snapRange))
-            snap.setAll(sHudMod.getX(), sHudMod.getX(), false);
-        else if (MathHelper.withinBoundsRange(hudMod.getX() + hudMod.getW() * hudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), snapRange))
-            snap.setAll(sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize() - hudMod.getW() * hudMod.getSize(), false);
-        else if (MathHelper.withinBoundsRange(hudMod.getX() + hudMod.getW() * hudMod.getSize(), sHudMod.getX(), snapRange))
-            snap.setAll(sHudMod.getX(), sHudMod.getX() - hudMod.getW() * hudMod.getSize(), false);
-        else if (MathHelper.withinBoundsRange(hudMod.getX(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), snapRange))
-            snap.setAll(sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), false);
-        else if (MathHelper.withinBoundsRange(hudMod.getY(), sHudMod.getY(), snapRange))
-            snap.setAll(sHudMod.getY(), sHudMod.getY(), true);
-        else if (MathHelper.withinBoundsRange(hudMod.getY() + hudMod.getH() * hudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), snapRange))
-            snap.setAll(sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize() - hudMod.getH() * hudMod.getSize(), true);
-        else if (MathHelper.withinBoundsRange(hudMod.getY() + hudMod.getH() * hudMod.getSize(), sHudMod.getY(), snapRange))
-            snap.setAll(sHudMod.getY(), sHudMod.getY() - hudMod.getH() * hudMod.getSize(), true);
-        else if (MathHelper.withinBoundsRange(hudMod.getY(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), snapRange))
-            snap.setAll(sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), true);
-        else
-            snap.setSnapping(false);
-        return snap;
-    }
-
     /**
      * Sets the gui screen to the modmenu when the middle button is clicked
      * Toggles the Dark mode if the bottom left button is pressed
@@ -258,18 +257,18 @@ public class HudEditor extends GuiScreen {
                 Style.setSnapping(!Style.isSnapping());
             }
 
-            if (MathHelper.withinBox(width / 2 - 50, height / 2  + 20, 20, 20, mouseX, mouseY)) {
+            if (MathHelper.withinBox(width / 2 - 50, height / 2 + 20, 20, 20, mouseX, mouseY)) {
                 //mc.displayGuiScreen(new CosmeticsMenu());
             }
 
-            if (MathHelper.withinBox(width / 2 - 25, height / 2  + 20, 20, 20, mouseX, mouseY)) {
+            if (MathHelper.withinBox(width / 2 - 25, height / 2 + 20, 20, 20, mouseX, mouseY)) {
                 //mc.displayGuiScreen(new FriendsMenu());
             }
-            if (MathHelper.withinBox(width / 2 + 5, height / 2  + 20, 20, 20, mouseX, mouseY)) {
+            if (MathHelper.withinBox(width / 2 + 5, height / 2 + 20, 20, 20, mouseX, mouseY)) {
                 //mc.displayGuiScreen(new AutoTextMenu());
             }
 
-            if (MathHelper.withinBox(width / 2 + 30, height / 2  + 20, 20, 20, mouseX, mouseY)) {
+            if (MathHelper.withinBox(width / 2 + 30, height / 2 + 20, 20, 20, mouseX, mouseY)) {
                 //mc.displayGuiScreen(new MusicPlayerMenu());
             }
         }

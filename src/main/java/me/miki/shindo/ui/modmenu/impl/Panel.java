@@ -27,17 +27,15 @@ public class Panel {
     private final String[] sideButtons = {"Home", "Mods", "Settings", "Chat", "Patcher", "Music", "Profiles"};
     private final Animate animateSideBar = new Animate();
     private final Animate animateTransition = new Animate();
-
+    boolean needsRefreshOptions = false;
     private int x, y, w, h;
     private int offsetX, offsetY;
     private boolean dragging;
     private boolean anyButtonOpen;
-
     //
-    private ArrayList<Category> categories = new ArrayList<Category>();
+    private final ArrayList<Category> categories = new ArrayList<Category>();
     private Category currentCategory;
     private boolean canClose;
-    boolean needsRefreshOptions = false;
     //
 
 
@@ -62,7 +60,7 @@ public class Panel {
         this.offsetY = 0;
         this.dragging = false;
 
-        for(Category c : categories) {
+        for (Category c : categories) {
             c.initGui();
         }
 
@@ -86,7 +84,7 @@ public class Panel {
         Helper2D.drawRoundedRectangle(x, y + 30, w, h - 28, 2, Style.getColorTheme(2).getRGB(), 0);
         Helper2D.drawRoundedRectangle(x,
                 currentCategory == getCategoryByClass(ModCategory.class) ? y + 60 : y + 30, w,
-                currentCategory == getCategoryByClass(ModCategory.class)  ? h + 240 : h + 270, 2,
+                currentCategory == getCategoryByClass(ModCategory.class) ? h + 240 : h + 270, 2,
                 Style.getColorTheme(2).getRGB(), 0
         );
         Helper2D.drawRectangle(x, y + 30, w, 30, Style.getColorTheme(3).getRGB());
@@ -94,14 +92,14 @@ public class Panel {
 
         // CLOCK
         Helper2D.drawRoundedRectangle(x + 70, y - 5, 120, 20, 2, Style.getColorTheme(4).getRGB(), 0);
-        Helper2D.drawPicture(x + 20, y - 10, 30, 30, color,  "logo.png");
+        Helper2D.drawPicture(x + 20, y - 10, 30, 30, color, "logo.png");
 
-        Shindo.getInstance().getFontHelper().size20.drawString(TimeHelper.getFormattedDate(), x + 124 , y + 2, -1);
-        Shindo.getInstance().getFontHelper().size20.drawString(TimeHelper.getFormattedTimeMinute(), x + 94 , y + 2, -1);
+        Shindo.getInstance().getFontHelper().size20.drawString(TimeHelper.getFormattedDate(), x + 124, y + 2, -1);
+        Shindo.getInstance().getFontHelper().size20.drawString(TimeHelper.getFormattedTimeMinute(), x + 94, y + 2, -1);
 
         Date date = new Date();
-        boolean isDay = date.getHours() < 19 && date.getHours() > 6 ;
-        Helper2D.drawPicture(x + 72, y - 2, 15, 15, color,  isDay ? "icon/light.png" : "icon/dark.png" );
+        boolean isDay = date.getHours() < 19 && date.getHours() > 6;
+        Helper2D.drawPicture(x + 72, y - 2, 15, 15, color, isDay ? "icon/light.png" : "icon/dark.png");
 
         // CLOSE BUTTON
         boolean hovered = MathHelper.withinBox(x + w - 30, y - 6, 25, 25, mouseX, mouseY);
@@ -119,8 +117,8 @@ public class Panel {
 
         for (Category c : categories) {
 
-            if(c.equals(currentCategory)) {
-                if(!c.isInitialized()) {
+            if (c.equals(currentCategory)) {
+                if (!c.isInitialized()) {
                     c.setInitialized(true);
                     c.initCategory();
                     c.setCanClose(true);
@@ -132,7 +130,7 @@ public class Panel {
                 }
 
                 c.drawScreen(mouseX, mouseY);
-            } else if(c.isInitialized()) {
+            } else if (c.isInitialized()) {
                 c.setInitialized(false);
             }
         }
@@ -148,18 +146,18 @@ public class Panel {
 
         int space = 0;
         int value = 0;
-        for (int i = 0 ; i <= 6; i++) {
-            Helper2D.drawRoundedRectangle(x + 20, y  + 45 + i * 40 + MathHelper.addIntToInt(space, 1, i), 30, 30, 2, Style.getColorTheme(6).getRGB(), roundedCorners ? 0 : -1);
+        for (int i = 0; i <= 6; i++) {
+            Helper2D.drawRoundedRectangle(x + 20, y + 45 + i * 40 + MathHelper.addIntToInt(space, 1, i), 30, 30, 2, Style.getColorTheme(6).getRGB(), roundedCorners ? 0 : -1);
         }
 
-        Helper2D.drawRoundedRectangle(x + 20 , y + 45 + MathHelper.addIntToInt(value, 1, currentCategory.getValue())  * 40 + MathHelper.addIntToInt(space, 1, currentCategory.getValue()) , 30 , 30, 2, Style.getColorTheme(8).getRGB(), roundedCorners ? 0 : -1);
+        Helper2D.drawRoundedRectangle(x + 20, y + 45 + MathHelper.addIntToInt(value, 1, currentCategory.getValue()) * 40 + MathHelper.addIntToInt(space, 1, currentCategory.getValue()), 30, 30, 2, Style.getColorTheme(8).getRGB(), roundedCorners ? 0 : -1);
 
         int index = 0;
         int space1 = 0;
         for (Category c : categories) {
 
             //Shindo.getInstance().getFontHelper().size15.drawString(button, x + 25 - Shindo.getInstance().getFontHelper().size15.getStringWidth(button) / 2f + index * 40 + MathHelper.addIntToInt(space1, 5, index), y + 18 , color);
-            Helper2D.drawPicture(x + 28 , y + 52 + index * 40 + MathHelper.addIntToInt(space1, 1, index), 15, 15, color, "icon/button/sidebar/" + c.getName() + ".png");
+            Helper2D.drawPicture(x + 28, y + 52 + index * 40 + MathHelper.addIntToInt(space1, 1, index), 15, 15, color, c.getIcon());
 
             index++;
         }
@@ -174,12 +172,12 @@ public class Panel {
      * @param mouseButton The current mouse button which is pressed
      */
 
-    public void mouseClicked(int mouseX, int mouseY, int mouseButton)  {
+    public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         if (mouseButton == 0) {
             int index = 0;
             int space = 0;
             for (Category c : categories) {
-                if (MathHelper.withinBox(x + 20 , y + 45 + index * 40 + MathHelper.addIntToInt(space, 1, index) , 35 , 35, mouseX, mouseY)) {
+                if (MathHelper.withinBox(x + 20, y + 45 + index * 40 + MathHelper.addIntToInt(space, 1, index), 35, 35, mouseX, mouseY)) {
                     currentCategory = c;
                 }
                 index++;
@@ -258,20 +256,26 @@ public class Panel {
         this.dragging = dragging;
     }
 
-    public boolean isAnyButtonOpen() { return anyButtonOpen; }
+    public boolean isAnyButtonOpen() {
+        return anyButtonOpen;
+    }
 
-    public void setAnyButtonOpen(boolean anyButtonOpen) { this.anyButtonOpen = anyButtonOpen; }
+    public void setAnyButtonOpen(boolean anyButtonOpen) {
+        this.anyButtonOpen = anyButtonOpen;
+    }
 
     public void setNeedsRefreshOptions(boolean needsRefreshOptions) {
         this.needsRefreshOptions = needsRefreshOptions;
     }
 
-    public ArrayList<Category> getCategories() { return categories; }
+    public ArrayList<Category> getCategories() {
+        return categories;
+    }
 
     public Category getCategoryByClass(Class<?> clazz) {
 
-        for(Category c : categories) {
-            if(c.getClass().equals(clazz)) {
+        for (Category c : categories) {
+            if (c.getClass().equals(clazz)) {
                 return c;
             }
         }

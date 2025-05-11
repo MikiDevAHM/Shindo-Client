@@ -12,17 +12,17 @@ public class OptifineHelper {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
 
-    
+
     public static void disableFastRender() {
         mc.gameSettings.ofFastRender = false;
-		mc.gameSettings.useVbo = true;
-		mc.gameSettings.fboEnable = true;
+        mc.gameSettings.useVbo = true;
+        mc.gameSettings.fboEnable = true;
     }
 
     public static void removeOptifineZoom() {
         try {
             unregisterKeybind((KeyBinding) GameSettings.class.getField("ofKeyBindZoom").get(mc.gameSettings));
-        } catch(Exception e) {
+        } catch (Exception e) {
             ShindoLogger.error("Failed to unregister zoom key", e);
         }
     }

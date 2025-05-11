@@ -24,7 +24,7 @@ public class NickHiderMod extends Mod {
     }
 
     public static String replaceNickname(String nick) {
-        if(Shindo.getInstance() != null) {
+        if (Shindo.getInstance() != null) {
             if (Shindo.getInstance().getModManager() != null) {
                 if (Shindo.getInstance().getModManager().getMod("NickHider").isToggled()) {
                     return nick.replace(

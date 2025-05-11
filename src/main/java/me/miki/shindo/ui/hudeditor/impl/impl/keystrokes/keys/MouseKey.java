@@ -25,10 +25,9 @@ public class MouseKey {
 
     public void renderKey(int x, int y, int width, int height, boolean modern, int mouseButton, int color, int fontColor, boolean background, boolean cps) {
         boolean mouseDown;
-        if(mc.currentScreen == null) {
+        if (mc.currentScreen == null) {
             mouseDown = Mouse.isButtonDown(mouseButton);
-        }
-        else {
+        } else {
             mouseDown = false;
         }
 
@@ -49,8 +48,7 @@ public class MouseKey {
                     y + height / 2f - 4,
                     fontColor
             );
-        }
-        else {
+        } else {
             if (background) {
                 Helper2D.drawRectangle(x, y, width, height, color);
             }

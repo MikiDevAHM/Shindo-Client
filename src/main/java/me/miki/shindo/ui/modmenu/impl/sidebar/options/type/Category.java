@@ -17,8 +17,8 @@ import me.miki.shindo.ui.modmenu.impl.sidebar.options.Options;
 
 public class Category extends Options {
 
-    private boolean expanded = false; // Começa expandida
     private final Animate animation = new Animate();
+    private final boolean expanded = false; // Começa expandida
 
     public Category(Option option, Panel panel, int y) {
         super(option, panel, y);

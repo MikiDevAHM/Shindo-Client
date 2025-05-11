@@ -26,6 +26,7 @@ public class ModCategory extends Category {
     public ModCategory(Panel panel) {
         super(panel);
         setName("Mods");
+        setIcon("icon/button/sidebar/mods.png");
         setScrollHelper(scrollHelperMods);
         setValue(1);
     }
@@ -72,7 +73,7 @@ public class ModCategory extends Category {
 
         int offset = 0;
         for (Type type : Type.values()) {
-            if(!type.equals(Type.Hidden)) {
+            if (!type.equals(Type.Hidden)) {
                 String text = type.name();
                 int length = Shindo.getInstance().getFontHelper().size20.getStringWidth(text);
                 Helper2D.drawRoundedRectangle(
@@ -91,7 +92,7 @@ public class ModCategory extends Category {
 
         textBox.renderTextBox(getPanel().getX() + getPanel().getW() - textBox.getW() - 5, getPanel().getY() + getPanel().getH() + 5, mouseX, mouseY);
 
-        GLHelper.startScissor(getPanel().getX(), getPanel().getY()+ 60, getPanel().getW(), getPanel().getH() + 240);
+        GLHelper.startScissor(getPanel().getX(), getPanel().getY() + 60, getPanel().getW(), getPanel().getH() + 240);
         for (Button button : buttonList) {
             button.renderButton(mouseX, mouseY);
         }
@@ -148,7 +149,7 @@ public class ModCategory extends Category {
     @Override
     public void keyTyped(char typedChar, int keyCode) {
 
-        if(getPanel().isAnyButtonOpen()) {
+        if (getPanel().isAnyButtonOpen()) {
             for (Button button : buttonList) {
                 button.keyTyped(typedChar, keyCode);
             }

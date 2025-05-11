@@ -53,8 +53,8 @@ public class ConfigSaver {
                     mod.isToggled(),
                     settings,
                     Shindo.getInstance().getHudEditor().getHudMod(mod.getName()) != null ?
-                            new int[] { Shindo.getInstance().getHudEditor().getHudMod(mod.getName()).getX(), Shindo.getInstance().getHudEditor().getHudMod(mod.getName()).getY() } :
-                            new int[] { 0, 0 },
+                            new int[]{Shindo.getInstance().getHudEditor().getHudMod(mod.getName()).getX(), Shindo.getInstance().getHudEditor().getHudMod(mod.getName()).getY()} :
+                            new int[]{0, 0},
                     Shindo.getInstance().getHudEditor().getHudMod(mod.getName()) != null ?
                             Shindo.getInstance().getHudEditor().getHudMod(mod.getName()).getSize() : 1
             );
@@ -65,7 +65,7 @@ public class ConfigSaver {
             System.out.println("Settings: " + gson.toJson(settings));
         }
 
-        for(Option option : Shindo.getInstance().getOptionManager().getOptions()){
+        for (Option option : Shindo.getInstance().getOptionManager().getOptions()) {
             config.addConfigOption(option);
         }
 

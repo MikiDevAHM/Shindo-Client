@@ -26,7 +26,7 @@ public class ModePicker extends Options {
         super(option, panel, y);
         setOptionHeight(option.getOptions().length * 15 + 5);
         animateSelect.setEase(Easing.CUBIC_OUT).setMin(0).setMax(option.getOptions().length * 15 + 2).setReversed(false);
-        if(option.getName().equalsIgnoreCase("font changer")){
+        if (option.getName().equalsIgnoreCase("font changer")) {
             fontChanger = true;
         }
     }
@@ -127,8 +127,8 @@ public class ModePicker extends Options {
      * Opens and closes the setting
      * Loops through every Mode in the Setting and checks if it is pressed
      *
-     * @param mouseX The current X position of the mouse
-     * @param mouseY The current Y position of the mouse
+     * @param mouseX      The current X position of the mouse
+     * @param mouseY      The current Y position of the mouse
      * @param mouseButton The current mouse button which is pressed
      */
 
@@ -162,7 +162,7 @@ public class ModePicker extends Options {
 
                 if (hovered) {
                     option.setCurrentMode(option.getOptions()[i]);
-                    if(fontChanger){
+                    if (fontChanger) {
                         Shindo.getInstance().getFontHelper().setFont(option.getCurrentMode());
                         Shindo.getInstance().getFontHelper().init();
                     }

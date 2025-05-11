@@ -76,7 +76,7 @@ public class Keybinding extends Patchers {
                 70, 20, mouseX, mouseY)
         ) {
             active = !active;
-            if(active) {
+            if (active) {
                 patcher.setKey(Keyboard.KEY_NONE);
             }
         }

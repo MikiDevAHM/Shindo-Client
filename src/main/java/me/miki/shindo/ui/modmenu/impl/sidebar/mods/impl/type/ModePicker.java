@@ -121,15 +121,15 @@ public class ModePicker extends Settings {
      * Opens and closes the setting
      * Loops through every Mode in the Setting and checks if it is pressed
      *
-     * @param mouseX The current X position of the mouse
-     * @param mouseY The current Y position of the mouse
+     * @param mouseX      The current X position of the mouse
+     * @param mouseY      The current Y position of the mouse
      * @param mouseButton The current mouse button which is pressed
      */
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         if (MathHelper.withinBox(
-                button.getPanel().getX()  + button.getPanel().getW() - 30 - longestString,
+                button.getPanel().getX() + button.getPanel().getW() - 30 - longestString,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 4,
                 longestString + 10, 20, mouseX, mouseY)
         ) {

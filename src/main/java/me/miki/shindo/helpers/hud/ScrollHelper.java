@@ -6,12 +6,12 @@ import org.lwjgl.input.Mouse;
 
 public class ScrollHelper {
 
+    private final Animate animate = new Animate();
+    private final int scrollStepSize;
     private float scrollStep = 0;
     private boolean direction = true;
-    private final Animate animate = new Animate();
     private float minScroll, maxScroll, height;
     private float calculatedScroll;
-    private final int scrollStepSize;
 
     public ScrollHelper(int minScroll, int maxScroll, int scrollStepSize, int speed) {
         this.minScroll = minScroll;

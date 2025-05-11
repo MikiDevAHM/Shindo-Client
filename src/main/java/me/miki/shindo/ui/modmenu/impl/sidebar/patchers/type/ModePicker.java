@@ -26,7 +26,7 @@ public class ModePicker extends Patchers {
         super(patcher, panel, y);
         setOptionHeight(patcher.getOptions().length * 15 + 5);
         animateSelect.setEase(Easing.CUBIC_OUT).setMin(0).setMax(patcher.getOptions().length * 15 + 2).setReversed(false);
-        if(patcher.getName().equalsIgnoreCase("font changer")){
+        if (patcher.getName().equalsIgnoreCase("font changer")) {
             fontChanger = true;
         }
     }
@@ -127,8 +127,8 @@ public class ModePicker extends Patchers {
      * Opens and closes the setting
      * Loops through every Mode in the Setting and checks if it is pressed
      *
-     * @param mouseX The current X position of the mouse
-     * @param mouseY The current Y position of the mouse
+     * @param mouseX      The current X position of the mouse
+     * @param mouseY      The current Y position of the mouse
      * @param mouseButton The current mouse button which is pressed
      */
 
@@ -162,7 +162,7 @@ public class ModePicker extends Patchers {
 
                 if (hovered) {
                     patcher.setCurrentMode(patcher.getOptions()[i]);
-                    if(fontChanger){
+                    if (fontChanger) {
                         Shindo.getInstance().getFontHelper().setFont(patcher.getCurrentMode());
                         Shindo.getInstance().getFontHelper().init();
                     }

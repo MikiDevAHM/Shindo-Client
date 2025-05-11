@@ -76,7 +76,7 @@ public class Keybinding extends Chats {
                 70, 20, mouseX, mouseY)
         ) {
             active = !active;
-            if(active) {
+            if (active) {
                 chat.setKey(Keyboard.KEY_NONE);
             }
         }

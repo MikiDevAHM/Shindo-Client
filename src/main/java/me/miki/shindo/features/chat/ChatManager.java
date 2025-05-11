@@ -5,9 +5,11 @@ import java.util.ArrayList;
 
 public class ChatManager {
 
-    private ArrayList<Chat> chatList = new ArrayList<>();
+    private final ArrayList<Chat> chatList = new ArrayList<>();
 
-    public ChatManager() { init(); }
+    public ChatManager() {
+        init();
+    }
 
     public void init() {
         addChat(new Chat("Options"));
@@ -20,9 +22,13 @@ public class ChatManager {
         addChat(new Chat("Smooth Speed", 10, 4, 1));
     }
 
-    public ArrayList<Chat> getChat() { return chatList; }
+    public ArrayList<Chat> getChat() {
+        return chatList;
+    }
 
-    public void addChat(Chat chat) { chatList.add(chat); }
+    public void addChat(Chat chat) {
+        chatList.add(chat);
+    }
 
     public Chat getChatByName(String name) {
         for (Chat chat : chatList) {

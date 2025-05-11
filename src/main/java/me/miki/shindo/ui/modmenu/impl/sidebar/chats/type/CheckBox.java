@@ -66,14 +66,14 @@ public class CheckBox extends Chats {
     /**
      * Toggles the state of the setting if it is pressed
      *
-     * @param mouseX The current X position of the mouse
-     * @param mouseY The current Y position of the mouse
+     * @param mouseX      The current X position of the mouse
+     * @param mouseY      The current Y position of the mouse
      * @param mouseButton The current mouse button which is pressed
      */
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if(mouseButton == 0){
+        if (mouseButton == 0) {
             if (MathHelper.withinBox(
                     panel.getX() + panel.getW() - 40,
                     panel.getY() + panel.getH() + 2 + getY(),

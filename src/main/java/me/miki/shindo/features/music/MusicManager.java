@@ -6,6 +6,7 @@ import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.AudioDevice;
 import javazoom.jl.player.advanced.AdvancedPlayer;
 import me.miki.shindo.Shindo;
+import me.miki.shindo.features.music.ytdlp.Ytdlp;
 import me.miki.shindo.helpers.file.FileHelper;
 import me.miki.shindo.helpers.file.FileManager;
 import me.miki.shindo.helpers.logger.ShindoLogger;
@@ -22,16 +23,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MusicManager {
 
-
-
-
-    private CopyOnWriteArrayList<Music> musics = new CopyOnWriteArrayList<Music>();
+    private final Object lock = new Object();
+    private final CopyOnWriteArrayList<Music> musics = new CopyOnWriteArrayList<Music>();
     private AdvancedPlayer player;
     private Thread playThread;
+    private final Ytdlp ytdlp = new Ytdlp();
     private volatile boolean paused = false;
     private volatile boolean stopped = false;
-    private final Object lock = new Object();
-
     private float volume; // De 0.0f a 1.0f
 
     private Music currentMusic;
@@ -52,7 +50,7 @@ public class MusicManager {
 
         ArrayList<String> favorites = new ArrayList<String>();
 
-        if(!dataJson.exists()) {
+        if (!dataJson.exists()) {
             fileManager.createFile(dataJson);
         }
 
@@ -62,19 +60,19 @@ public class MusicManager {
                     .create();
             JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
 
-            if(jsonObject != null) {
+            if (jsonObject != null) {
 
                 JsonArray jsonArray = JsonHelper.getArrayProperty(jsonObject, "Favorite Musics");
 
 
-                if(jsonArray != null) {
+                if (jsonArray != null) {
 
                     Iterator<JsonElement> iterator = jsonArray.iterator();
 
 
-                    while(iterator.hasNext()) {
+                    while (iterator.hasNext()) {
 
-                        JsonElement jsonElement = (JsonElement) iterator.next();
+                        JsonElement jsonElement = iterator.next();
                         JsonObject rJsonObject = gson.fromJson(jsonElement, JsonObject.class);
 
                         favorites.add(JsonHelper.getStringProperty(rJsonObject, "Favorite", "null"));
@@ -94,8 +92,8 @@ public class MusicManager {
             ShindoLogger.error("error loading data", e);
         }
 
-        for(Music m : musics) {
-            if(favorites.contains(m.getName())) {
+        for (Music m : musics) {
+            if (favorites.contains(m.getName())) {
                 m.setType(MusicType.FAVORITE);
             }
         }
@@ -107,11 +105,11 @@ public class MusicManager {
         File cacheDir = new File(fileManager.getCacheDir(), "music");
         File dataJson = new File(cacheDir, "Data.json");
 
-        if(!dataJson.exists()) {
+        if (!dataJson.exists()) {
             fileManager.createFile(dataJson);
         }
 
-        try(FileWriter writer = new FileWriter(dataJson)) {
+        try (FileWriter writer = new FileWriter(dataJson)) {
 
             JsonObject jsonObject = new JsonObject();
             JsonArray jsonArray = new JsonArray();
@@ -119,9 +117,9 @@ public class MusicManager {
                     .setPrettyPrinting()
                     .create();
 
-            for(Music m : musics) {
+            for (Music m : musics) {
 
-                if(m.getType().equals(MusicType.FAVORITE)) {
+                if (m.getType().equals(MusicType.FAVORITE)) {
 
                     JsonObject innerJsonObject = new JsonObject();
 
@@ -144,7 +142,7 @@ public class MusicManager {
 
             gson.toJson(jsonObject, writer);
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             ShindoLogger.error("Error saving data", e);
         }
     }
@@ -154,14 +152,14 @@ public class MusicManager {
         FileManager fileManager = Shindo.getInstance().getFileManager();
         File musicDir = fileManager.getMusicDir();
 
-        for(File f : musicDir.listFiles()) {
-            if(FileHelper.isAudioFile(f)) {
+        for (File f : musicDir.listFiles()) {
+            if (FileHelper.isAudioFile(f)) {
 
-                if(getMusicByAudioFile(f) != null) {
+                if (getMusicByAudioFile(f) != null) {
                     continue;
                 }
 
-                if(FileHelper.getExtension(f).equals("mp3")) {
+                if (FileHelper.getExtension(f).equals("mp3")) {
                     musics.add(new Music(f, null, MusicType.ALL));
                 }
             }
@@ -179,7 +177,7 @@ public class MusicManager {
             return;
         }
 
-        if(isPlaying()) {
+        if (isPlaying()) {
             stop();
         }
 
@@ -197,12 +195,12 @@ public class MusicManager {
         playThread.start();
     }
 
-    public void setVolume(float volume) {
-        this.volume = volume;
+    public float getVolume() {
+        return volume;
     }
 
-    public float getVolume() {
-        return volume ;
+    public void setVolume(float volume) {
+        this.volume = volume;
     }
 
     public void next() {
@@ -223,16 +221,16 @@ public class MusicManager {
     }
 
     public void back() {
-        if(currentMusic == null) {
+        if (currentMusic == null) {
             return;
         }
 
         int max = musics.size();
         int index = musics.indexOf(currentMusic);
 
-        if(index > 0) {
+        if (index > 0) {
             index--;
-        }else {
+        } else {
             index = max - 1;
         }
 
@@ -241,7 +239,7 @@ public class MusicManager {
     }
 
     public void switchPlayBack() {
-        if(player != null) {
+        if (player != null) {
             if (isPlaying()) pause();
             else resume();
         }
@@ -274,10 +272,52 @@ public class MusicManager {
     }
 
 
-
-
     private AudioDevice createAudioDevice() throws JavaLayerException {
         return new VolumeAudioDevice();
+    }
+
+    public Music getMusicByName(String name) {
+
+        for (Music m : musics) {
+            if (m.getName().equals(name)) {
+                return m;
+            }
+        }
+
+        return null;
+    }
+
+    public Music getMusicByAudioFile(File file) {
+
+        for (Music m : musics) {
+            if (m.getAudio().equals(file)) {
+                return m;
+            }
+        }
+
+        return null;
+    }
+
+    public void delete(Music m) {
+        musics.remove(m);
+        m.getAudio().delete();
+        load();
+    }
+
+    public CopyOnWriteArrayList<Music> getMusics() {
+        return musics;
+    }
+
+    public Music getCurrentMusic() {
+        return currentMusic;
+    }
+
+    public void setCurrentMusic(Music currentMusic) {
+        this.currentMusic = currentMusic;
+    }
+
+    public Ytdlp getYtdlp() {
+        return ytdlp;
     }
 
     // Inner class que permite controle de volume
@@ -302,48 +342,5 @@ public class MusicManager {
 
             super.writeImpl(samples, offs, len);
         }
-    }
-
-
-
-
-    public Music getMusicByName(String name) {
-
-        for(Music m : musics) {
-            if(m.getName().equals(name)) {
-                return m;
-            }
-        }
-
-        return null;
-    }
-
-    public Music getMusicByAudioFile(File file) {
-
-        for(Music m : musics) {
-            if(m.getAudio().equals(file)) {
-                return m;
-            }
-        }
-
-        return null;
-    }
-
-    public void delete(Music m) {
-        musics.remove(m);
-        m.getAudio().delete();
-        load();
-    }
-
-    public CopyOnWriteArrayList<Music> getMusics() {
-        return musics;
-    }
-
-    public Music getCurrentMusic() {
-        return currentMusic;
-    }
-
-    public void setCurrentMusic(Music currentMusic) {
-        this.currentMusic = currentMusic;
     }
 }

@@ -58,6 +58,7 @@ public class ModManager {
 
     /**
      * Returns a given mod using its name
+     *
      * @param name The name of the mod
      * @return The returned mod
      */
@@ -74,6 +75,7 @@ public class ModManager {
 
     /**
      * Adds a mod to the list
+     *
      * @param mod The mod which should be added
      */
 
@@ -82,7 +84,7 @@ public class ModManager {
     }
 
     public void disableAll() {
-        for(Mod m : mods) {
+        for (Mod m : mods) {
             m.setToggled(false);
         }
         getMod("GlobalSettings").setToggled(true);

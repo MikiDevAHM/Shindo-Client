@@ -128,7 +128,7 @@ public class Setting {
         this.cells = cells;
     }
 
-    public Setting(String name, Mod mod, int key){
+    public Setting(String name, Mod mod, int key) {
         this.mode = "Keybinding";
         this.name = name;
         this.mod = mod;
@@ -136,7 +136,7 @@ public class Setting {
         this.key = key;
     }
 
-    public Setting(String name, Mod mod, String placeholderText, String text, int cursorPosition){
+    public Setting(String name, Mod mod, String placeholderText, String text, int cursorPosition) {
         this.mode = "TextBox";
         this.name = name;
         this.mod = mod;

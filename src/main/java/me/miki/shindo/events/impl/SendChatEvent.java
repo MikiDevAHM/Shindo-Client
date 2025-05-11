@@ -4,7 +4,7 @@ import me.miki.shindo.events.Event;
 
 public class SendChatEvent extends Event {
 
-    private String message;
+    private final String message;
 
     public SendChatEvent(String message) {
         this.message = message;

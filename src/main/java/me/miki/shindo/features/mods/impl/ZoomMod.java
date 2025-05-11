@@ -37,25 +37,6 @@ public class ZoomMod extends Mod {
         animate.setEase(Easing.LINEAR).setSpeed(700);
     }
 
-    @EventTarget
-    public void onRender2D(RenderEvent e) {
-        animate.setMin(getAmount() / 2).setMax(mc.gameSettings.fovSetting).update();
-        scrollHelper.setMinScroll(isSmooth() ? animate.getValueI() - 5 : getAmount() - 5);
-        scrollHelper.update();
-
-        if (zoom && mc.currentScreen == null) {
-            scrollHelper.updateScroll();
-        } else {
-            scrollHelper.setScrollStep(0);
-        }
-    }
-
-    @EventTarget
-    public void onKey(KeyEvent e) {
-        zoom = Keyboard.isKeyDown(getKey());
-        animate.setReversed(zoom);
-    }
-
     public static float getFOV() {
         if (isSmooth()) {
             return animate.getValueI() - scrollHelper.getCalculatedScroll();
@@ -73,6 +54,25 @@ public class ZoomMod extends Mod {
 
     private static float getAmount() {
         return Shindo.getInstance().getSettingManager().getSettingByModAndName("Zoom", "Zoom Amount").getCurrentNumber();
+    }
+
+    @EventTarget
+    public void onRender2D(RenderEvent e) {
+        animate.setMin(getAmount() / 2).setMax(mc.gameSettings.fovSetting).update();
+        scrollHelper.setMinScroll(isSmooth() ? animate.getValueI() - 5 : getAmount() - 5);
+        scrollHelper.update();
+
+        if (zoom && mc.currentScreen == null) {
+            scrollHelper.updateScroll();
+        } else {
+            scrollHelper.setScrollStep(0);
+        }
+    }
+
+    @EventTarget
+    public void onKey(KeyEvent e) {
+        zoom = Keyboard.isKeyDown(getKey());
+        animate.setReversed(zoom);
     }
 
     private int getKey() {

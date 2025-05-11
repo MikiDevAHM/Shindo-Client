@@ -1,7 +1,7 @@
 package me.miki.shindo.helpers;
 
 public class TimerHelper {
-	
+
     public long lastMs;
 
     public TimerHelper() {
@@ -34,11 +34,11 @@ public class TimerHelper {
         return System.currentTimeMillis() - this.lastMs;
     }
 
-	public long getLastMs() {
-		return lastMs;
-	}
+    public long getLastMs() {
+        return lastMs;
+    }
 
-	public void setLastMs(long lastMs) {
-		this.lastMs = lastMs;
-	}
+    public void setLastMs(long lastMs) {
+        this.lastMs = lastMs;
+    }
 }

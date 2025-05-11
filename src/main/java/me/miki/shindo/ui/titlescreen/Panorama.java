@@ -19,10 +19,6 @@ import org.lwjgl.util.glu.Project;
 
 public class Panorama extends GuiScreen {
 
-    public static int panoramaTimer = 0;
-
-    private final DynamicTexture viewportTexture = new DynamicTexture(256, 256);
-
     /**
      * An array of all the paths to the panorama pictures.
      */
@@ -34,6 +30,8 @@ public class Panorama extends GuiScreen {
             new ResourceLocation("shindo/panorama/panorama_4.png"),
             new ResourceLocation("shindo/panorama/panorama_5.png")
     };
+    public static int panoramaTimer = 0;
+    private final DynamicTexture viewportTexture = new DynamicTexture(256, 256);
 
     /**
      * Called from the main game loop to update the screen.

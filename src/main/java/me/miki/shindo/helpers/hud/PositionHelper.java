@@ -8,7 +8,7 @@ public class PositionHelper {
 
     private float difference;
     private boolean direction = false;
-    private Animate animate = new Animate();
+    private final Animate animate = new Animate();
     private float pre;
     private float post;
 
@@ -20,14 +20,14 @@ public class PositionHelper {
         pre = pos;
     }
 
-    public void post(float pos){
+    public void post(float pos) {
         post = pos;
     }
 
-    public void update(){
-        if(post != pre) {
+    public void update() {
+        if (post != pre) {
             difference = post - pre;
-            if(difference > 0) {
+            if (difference > 0) {
                 direction = false;
                 animate.setMax(difference);
             } else if (difference < 0) {

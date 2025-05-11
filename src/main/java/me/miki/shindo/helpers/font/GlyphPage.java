@@ -26,10 +26,10 @@ import static org.lwjgl.opengl.GL11.*;
 public class GlyphPage {
     private int imgSize;
     private int maxFontHeight = -1;
-    private Font font;
-    private boolean antiAliasing;
-    private boolean fractionalMetrics;
-    private HashMap<Character, Glyph> glyphCharacterMap = new HashMap<>();
+    private final Font font;
+    private final boolean antiAliasing;
+    private final boolean fractionalMetrics;
+    private final HashMap<Character, Glyph> glyphCharacterMap = new HashMap<>();
 
     private BufferedImage bufferedImage;
     private DynamicTexture loadedTexture;

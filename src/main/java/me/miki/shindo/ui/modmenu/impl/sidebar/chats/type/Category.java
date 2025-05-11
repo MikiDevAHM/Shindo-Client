@@ -7,7 +7,6 @@ package me.miki.shindo.ui.modmenu.impl.sidebar.chats.type;
 
 import me.miki.shindo.Shindo;
 import me.miki.shindo.features.chat.Chat;
-import me.miki.shindo.features.options.Option;
 import me.miki.shindo.helpers.MathHelper;
 import me.miki.shindo.helpers.animation.Animate;
 import me.miki.shindo.helpers.animation.Easing;
@@ -18,8 +17,8 @@ import me.miki.shindo.ui.modmenu.impl.sidebar.chats.Chats;
 
 public class Category extends Chats {
 
-    private boolean expanded = false; // Começa expandida
     private final Animate animation = new Animate();
+    private final boolean expanded = false; // Começa expandida
 
     public Category(Chat chat, Panel panel, int y) {
         super(chat, panel, y);

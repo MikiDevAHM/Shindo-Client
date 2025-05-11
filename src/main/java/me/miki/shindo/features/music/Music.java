@@ -6,9 +6,9 @@ import java.io.File;
 
 public class Music {
 
-    private String name;
-    private File audio;
-    private File icon;
+    private final String name;
+    private final File audio;
+    private final File icon;
     private MusicType type;
 
     public Music(File audio, File icon, MusicType type) {

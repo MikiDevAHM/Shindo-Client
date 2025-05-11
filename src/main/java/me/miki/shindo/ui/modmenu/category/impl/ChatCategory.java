@@ -18,9 +18,11 @@ public class ChatCategory extends Category {
 
     private final ArrayList<Chats> chatsList = new ArrayList<>();
     private final ScrollHelper scrollHelperChats = new ScrollHelper(0, 300, 35, 300);
+
     public ChatCategory(Panel panel) {
         super(panel);
         setName("Chat Options");
+        setIcon("icon/button/sidebar/chat.png");
         setScrollHelper(scrollHelperChats);
         setValue(3);
     }
@@ -58,7 +60,7 @@ public class ChatCategory extends Category {
             }
             Chats opt = null;
             switch (chat.getMode()) {
-                case "CheckBox" :
+                case "CheckBox":
                     opt = new CheckBox(chat, getPanel(), addOptionY);
                     break;
                 case "Slider":
@@ -73,9 +75,10 @@ public class ChatCategory extends Category {
                 case "Keybinding":
                     opt = new Keybinding(chat, getPanel(), addOptionY);
                     break;
-                default: opt = null;
+                default:
+                    opt = null;
                     break;
-            };
+            }
 
             if (opt != null) {
                 chatsList.add(opt);
@@ -117,7 +120,7 @@ public class ChatCategory extends Category {
             }
             Chats opt = null;
             switch (chat.getMode()) {
-                case "CheckBox" :
+                case "CheckBox":
                     opt = new CheckBox(chat, getPanel(), addOptionY);
                     break;
                 case "Slider":
@@ -132,9 +135,10 @@ public class ChatCategory extends Category {
                 case "Keybinding":
                     opt = new Keybinding(chat, getPanel(), addOptionY);
                     break;
-                default: opt = null;
+                default:
+                    opt = null;
                     break;
-            };
+            }
 
             if (opt != null) {
                 chatsList.add(opt);

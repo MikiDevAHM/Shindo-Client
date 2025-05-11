@@ -10,13 +10,12 @@ import me.miki.shindo.Shindo;
 
 public class FontHelper {
 
-    private String font;
-
     public GlyphPageFontRenderer size10;
     public GlyphPageFontRenderer size15;
     public GlyphPageFontRenderer size20;
     public GlyphPageFontRenderer size30;
     public GlyphPageFontRenderer size40;
+    private String font;
 
     public void init() {
         font = Shindo.getInstance().getOptionManager().getOptionByName("Font Changer").getCurrentMode();

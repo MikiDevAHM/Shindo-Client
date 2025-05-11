@@ -7,14 +7,12 @@ package me.miki.shindo.ui.modmenu;
 
 import me.miki.shindo.Shindo;
 import me.miki.shindo.helpers.ResolutionHelper;
-import me.miki.shindo.helpers.TimeHelper;
 import me.miki.shindo.helpers.render.Helper2D;
 import me.miki.shindo.ui.modmenu.impl.Panel;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
-import java.util.Date;
 
 public class ModMenu extends GuiScreen {
 
@@ -23,8 +21,8 @@ public class ModMenu extends GuiScreen {
     /**
      * Draws the panel of the modmenu used to toggle mods and change settings
      *
-     * @param mouseX The current X position of the mouse
-     * @param mouseY The current Y position of the mouse
+     * @param mouseX       The current X position of the mouse
+     * @param mouseY       The current Y position of the mouse
      * @param partialTicks The partial ticks used for rendering
      */
 
@@ -58,8 +56,8 @@ public class ModMenu extends GuiScreen {
      * Sets different values of the panel when any mouse button is clicked
      * Changes the darkMode boolean if the button in the bottom left is pressed
      *
-     * @param mouseX The current X position of the mouse
-     * @param mouseY The current Y position of the mouse
+     * @param mouseX      The current X position of the mouse
+     * @param mouseY      The current Y position of the mouse
      * @param mouseButton The current mouse button which is pressed
      */
 
@@ -67,19 +65,19 @@ public class ModMenu extends GuiScreen {
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         panel.mouseClicked(mouseX, mouseY, mouseButton);
         // if(mouseButton == 0) {
-            // if (MathHelper.withinBox(
-            //        panel.getX(), panel.getY(),
-            //        panel.getW(), panel.getH(),
-            //        mouseX, mouseY
-            // )) {
-            //    panel.setDragging(true);
-            //    panel.setOffsetX(mouseX - panel.getX());
-            //    panel.setOffsetY(mouseY - panel.getY());
-            // }
+        // if (MathHelper.withinBox(
+        //        panel.getX(), panel.getY(),
+        //        panel.getW(), panel.getH(),
+        //        mouseX, mouseY
+        // )) {
+        //    panel.setDragging(true);
+        //    panel.setOffsetX(mouseX - panel.getX());
+        //    panel.setOffsetY(mouseY - panel.getY());
+        // }
 
-            // if (MathHelper.withinBox(10, height - 50, 40, 40, mouseX, mouseY)) {
-            //    Style.setDarkMode(!Style.isDarkMode());
-            // }
+        // if (MathHelper.withinBox(10, height - 50, 40, 40, mouseX, mouseY)) {
+        //    Style.setDarkMode(!Style.isDarkMode());
+        // }
         // }
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }

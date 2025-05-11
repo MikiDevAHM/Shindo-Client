@@ -34,6 +34,8 @@ import static org.lwjgl.opengl.GL11.*;
 public class Helper2D {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
+    private static final ResourceLocation DEFAULT_COVER = new ResourceLocation("shindo/icon/music.png");
+    private static final Map<File, ResourceLocation> cache = new HashMap<>();
 
     /**
      * Draws a rounded Rectangle on the HUD using quarter circles and rectangles
@@ -88,15 +90,13 @@ public class Helper2D {
     }
 
     /**
-     *
      * @param startX The first X position
      * @param endX   The second X position
      * @param y      The Y position
      * @param color  The color
      */
     public static void drawHorizontalLine(int startX, int endX, int y, int color) {
-        if (endX < startX)
-        {
+        if (endX < startX) {
             int i = startX;
             startX = endX;
             endX = i;
@@ -106,16 +106,13 @@ public class Helper2D {
     }
 
     /**
-     *
      * @param x      The X position
      * @param startY The first Y position
      * @param endY   The second Y position
      * @param color  The color
      */
-    public static void drawVerticalLine(int x, int startY, int endY, int color)
-    {
-        if (endY < startY)
-        {
+    public static void drawVerticalLine(int x, int startY, int endY, int color) {
+        if (endY < startY) {
             int i = startY;
             startY = endY;
             endY = i;
@@ -147,6 +144,28 @@ public class Helper2D {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         Gui.drawModalRectWithCustomSizedTexture(x, y, 0.0F, 0.0F, w, h, w, h);
         GlStateManager.disableBlend();
+    }
+
+    public static void drawPicture(int x, int y, int w, int h, int color, ResourceLocation location) {
+        if (color == 0) {
+            GlStateManager.color(1, 1, 1);
+        } else {
+            ColorHelper.color(color);
+        }
+        mc.getTextureManager().bindTexture(location);
+        GlStateManager.enableBlend();
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        Gui.drawModalRectWithCustomSizedTexture(x, y, 0.0F, 0.0F, w, h, w, h);
+        GlStateManager.disableBlend();
+    }
+
+    public static void drawPicture(int x, int y, int w, int h, int color, File location) {
+        if (color == 0) {
+            GlStateManager.color(1, 1, 1);
+        } else {
+            ColorHelper.color(color);
+        }
+        renderImage(location, x, y, w, h);
     }
 
     /**
@@ -316,9 +335,6 @@ public class Helper2D {
         GlStateManager.disableBlend();
         GlStateManager.enableAlpha();
     }
-
-    private static final ResourceLocation DEFAULT_COVER = new ResourceLocation("shindo/icon/music.png");
-    private static final Map<File, ResourceLocation> cache = new HashMap<>();
 
     public static void renderCover(File mp3File, int x, int y, int size) {
         ResourceLocation texture = getOrLoadTexture(mp3File);

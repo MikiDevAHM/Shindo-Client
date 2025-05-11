@@ -42,8 +42,8 @@ public class GLHelper {
     /**
      * Scales everything with the given scale amount
      *
-     * @param x X Position of the Object
-     * @param y Y Position of the Object
+     * @param x     X Position of the Object
+     * @param y     Y Position of the Object
      * @param scale The Amount the Object should be scaled
      */
 

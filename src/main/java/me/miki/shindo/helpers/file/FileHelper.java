@@ -35,9 +35,9 @@ public class FileHelper {
         }
         return false;
     }
-    
+
     public static long getDirectorySize(File directory) {
-    	
+
         long size = 0;
 
         if (directory.isDirectory()) {
@@ -58,7 +58,7 @@ public class FileHelper {
 
         return size;
     }
-    
+
     public static void unzip(final File file, final File dest) {
         try {
             ZipInputStream zis = new ZipInputStream(new FileInputStream(file));
@@ -67,8 +67,7 @@ public class FileHelper {
                 final File f = new File(dest, ze.getName());
                 if (ze.isDirectory()) {
                     f.mkdirs();
-                }
-                else {
+                } else {
                     final FileOutputStream fos = new FileOutputStream(f);
                     final byte[] buffer = new byte[1024];
                     int len;
@@ -79,61 +78,60 @@ public class FileHelper {
                 }
             }
             zis.close();
-        }
-        catch (Exception e) {
-        	e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-    
-	public static File selectImageFile() {
-        
+
+    public static File selectImageFile() {
+
         JFileChooser fileChooser = new JFileChooser();
-        
+
         fileChooser.setFileFilter(new PngFileFilter());
         fileChooser.setAcceptAllFileFilterUsed(false);
 
         int result = fileChooser.showOpenDialog(null);
-        
-        if(result == JFileChooser.APPROVE_OPTION) {
-        	return fileChooser.getSelectedFile();
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            return fileChooser.getSelectedFile();
         }
-        
+
         return null;
-	}
-	
-	public static File selectSoundFile() {
-        
+    }
+
+    public static File selectSoundFile() {
+
         JFileChooser fileChooser = new JFileChooser();
-        
+
         fileChooser.setFileFilter(new SoundFileFilter());
         fileChooser.setAcceptAllFileFilterUsed(false);
 
         int result = fileChooser.showOpenDialog(null);
-        
-        if(result == JFileChooser.APPROVE_OPTION) {
-        	return fileChooser.getSelectedFile();
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            return fileChooser.getSelectedFile();
         }
-        
+
         return null;
-	}
-	
-	public static void copyFile(File sourceFile, File destFile) throws IOException {
-		
-		FileInputStream input = null;
-		FileOutputStream output = null;
-		
+    }
+
+    public static void copyFile(File sourceFile, File destFile) throws IOException {
+
+        FileInputStream input = null;
+        FileOutputStream output = null;
+
         try {
-        	
+
             input = new FileInputStream(sourceFile);
             output = new FileOutputStream(destFile);
 
             byte[] buffer = new byte[1024];
             int length;
-            
+
             while ((length = input.read(buffer)) > 0) {
                 output.write(buffer, 0, length);
             }
-        } finally{ 
+        } finally {
             if (input != null) {
                 input.close();
             }
@@ -141,10 +139,10 @@ public class FileHelper {
                 output.close();
             }
         }
-	}
-	
+    }
+
     public static void downloadFile(String url, File output) {
-    	try {
+        try {
             CloseableHttpClient httpClient = HttpClients.createDefault();
             HttpGet httpGet = new HttpGet(url);
 
@@ -164,76 +162,76 @@ public class FileHelper {
                 }
             }
             httpClient.close();
-    	}catch(Exception e) {
-    		ShindoLogger.error("Failed to download file: " + url, e);
-    	}
+        } catch (Exception e) {
+            ShindoLogger.error("Failed to download file: " + url, e);
+        }
     }
-    
-	public static String getBaseName(String fileName) {
-		
+
+    public static String getBaseName(String fileName) {
+
         if (fileName == null) {
             return "null";
         }
-        
+
         int point = fileName.lastIndexOf(".");
-        
+
         if (point != -1) {
             return fileName.substring(0, point);
         }
-        
+
         return fileName;
-	}
-	
-	public static String getBaseName(File file) {
-		return getBaseName(file.getName());
-	}
-	
-	public static String getExtension(String fileName) {
-		
-		if(fileName == null) {
-			return null;
-		}
-		
-	    int lastIndexOf = fileName.lastIndexOf(".");
-	    
-	    if (lastIndexOf == -1) {
-	        return "null";
-	    }
-	    
-	    return fileName.substring(lastIndexOf + 1);
-	}
-	
-	public static String getExtension(File file) {
-		return getExtension(file.getName());
-	}
-	
-	public static boolean isAudioFile(String fileName) {
-		
-		if(fileName == null) {
-			return false;
-		}
-		
-		String ext = getExtension(fileName);
-		
-		return ext.equals("mp3") || ext.equals("wav") || ext.equals("ogg");
-	}
-	
-	public static boolean isAudioFile(File file) {
-		return isAudioFile(file.getName());
-	}
-	
-	public static boolean isImageFile(String fileName) {
-		
-		if(fileName == null) {
-			return false;
-		}
-		
-		String ext = getExtension(fileName);
-		
-		return ext.equals("jpeg") || ext.equals("png") || ext.equals("jpg");
-	}
-	
-	public static boolean isImageFile(File file) {
-		return isImageFile(file.getName());
-	}
+    }
+
+    public static String getBaseName(File file) {
+        return getBaseName(file.getName());
+    }
+
+    public static String getExtension(String fileName) {
+
+        if (fileName == null) {
+            return null;
+        }
+
+        int lastIndexOf = fileName.lastIndexOf(".");
+
+        if (lastIndexOf == -1) {
+            return "null";
+        }
+
+        return fileName.substring(lastIndexOf + 1);
+    }
+
+    public static String getExtension(File file) {
+        return getExtension(file.getName());
+    }
+
+    public static boolean isAudioFile(String fileName) {
+
+        if (fileName == null) {
+            return false;
+        }
+
+        String ext = getExtension(fileName);
+
+        return ext.equals("mp3") || ext.equals("wav") || ext.equals("ogg");
+    }
+
+    public static boolean isAudioFile(File file) {
+        return isAudioFile(file.getName());
+    }
+
+    public static boolean isImageFile(String fileName) {
+
+        if (fileName == null) {
+            return false;
+        }
+
+        String ext = getExtension(fileName);
+
+        return ext.equals("jpeg") || ext.equals("png") || ext.equals("jpg");
+    }
+
+    public static boolean isImageFile(File file) {
+        return isImageFile(file.getName());
+    }
 }

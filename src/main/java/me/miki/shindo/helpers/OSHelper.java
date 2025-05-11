@@ -14,9 +14,17 @@ public class OSHelper {
     private static final Minecraft mc = Minecraft.getMinecraft();
     private static final String currentOS = System.getProperty("os.name").toLowerCase();
 
-    public static boolean isWindows() { return (currentOS.contains("windows")); }
-    public static boolean isMac() { return (currentOS.contains("mac")); }
-    public static boolean isLinux() { return (currentOS.contains("linux")); }
+    public static boolean isWindows() {
+        return (currentOS.contains("windows"));
+    }
+
+    public static boolean isMac() {
+        return (currentOS.contains("mac"));
+    }
+
+    public static boolean isLinux() {
+        return (currentOS.contains("linux"));
+    }
 
     /**
      * Returns the Location of the .minecraft directory

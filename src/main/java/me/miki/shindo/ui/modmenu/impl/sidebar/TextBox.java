@@ -14,7 +14,8 @@ public class TextBox {
     private String text;
     private String placeHolderText;
     private int x, y;
-    private int w, h;
+    private final int w;
+    private final int h;
     private boolean focused;
     private int cursorPosition;
     private boolean allSelected;
@@ -29,6 +30,10 @@ public class TextBox {
         this.focused = true;
     }
 
+    public static boolean isCtrlKeyDown() {
+        return Minecraft.isRunningOnMac ? Keyboard.isKeyDown(219) || Keyboard.isKeyDown(220) : Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157);
+    }
+
     public void renderTextBox(int x, int y, int mouseX, int mouseY) {
         this.x = x;
         this.y = y;
@@ -38,7 +43,7 @@ public class TextBox {
         GLHelper.startScissor(x, y, w, h);
         Helper2D.drawRoundedRectangle(x, y, w, h, 2, Style.getColorTheme(5).getRGB(), 0);
         Helper2D.drawPicture(x + offset + 2, y + offset + 3, 15, 15, 0x50ffffff, "icon/search.png");
-        if(text.isEmpty()) {
+        if (text.isEmpty()) {
             Shindo.getInstance().getFontHelper().size20.drawString(placeHolderText, x + offset + 20, y + offset + 6, 0x50ffffff);
         } else {
 
@@ -76,10 +81,6 @@ public class TextBox {
                     typeText(Character.toString(typedChar));
                 }
         }
-    }
-
-    public static boolean isCtrlKeyDown() {
-        return Minecraft.isRunningOnMac ? Keyboard.isKeyDown(219) || Keyboard.isKeyDown(220) : Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157);
     }
 
     public void typeText(String currentText) {

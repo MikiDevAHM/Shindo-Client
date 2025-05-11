@@ -29,21 +29,21 @@ public class SnaplookMod extends Mod {
 
     @EventTarget
     public void onKey(KeyEvent e) {
-        if(Keyboard.isKeyDown(getKey()) && !cameraToggled){
+        if (Keyboard.isKeyDown(getKey()) && !cameraToggled) {
             cameraToggled = true;
             mc.gameSettings.thirdPersonView = 1;
         }
     }
 
     @EventTarget
-    public void onTick(TickEvent e){
-        if(!Keyboard.isKeyDown(getKey()) && cameraToggled){
+    public void onTick(TickEvent e) {
+        if (!Keyboard.isKeyDown(getKey()) && cameraToggled) {
             cameraToggled = false;
             mc.gameSettings.thirdPersonView = 0;
         }
     }
 
-    private int getKey(){
+    private int getKey() {
         return Shindo.getInstance().getSettingManager().getSettingByModAndName(getName(), "Keybinding").getKey();
     }
 }

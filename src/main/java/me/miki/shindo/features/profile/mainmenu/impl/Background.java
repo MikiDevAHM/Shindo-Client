@@ -3,19 +3,19 @@ package me.miki.shindo.features.profile.mainmenu.impl;
 
 public class Background {
 
-	private int id;
-	private String name;
-	
-	public Background(int id, String name) {
-		this.name = name;
-		this.id = id;
-	}
-	
-	public int getId() {
-		return id;
-	}
+    private final int id;
+    private final String name;
 
-	public String getName() {
-		return name == null ? "null" : name;
-	}
+    public Background(int id, String name) {
+        this.name = name;
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name == null ? "null" : name;
+    }
 }

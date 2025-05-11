@@ -39,7 +39,7 @@ public class ToggleSprintMod extends Mod {
     }
 
     @Override
-    public void onDisable(){
+    public void onDisable() {
         super.onDisable();
         KeyBinding.setKeyBindState(mc.gameSettings.keyBindSprint.getKeyCode(), false);
     }
@@ -51,12 +51,12 @@ public class ToggleSprintMod extends Mod {
 
     @EventTarget
     public void key(KeyEvent e) {
-        if(Keyboard.isKeyDown(getKey())){
+        if (Keyboard.isKeyDown(getKey())) {
             toggled = !toggled;
         }
     }
 
-    private int getKey(){
+    private int getKey() {
         return Shindo.getInstance().getSettingManager().getSettingByModAndName(getName(), "Keybinding").getKey();
     }
 }

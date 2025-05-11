@@ -33,7 +33,7 @@ public class GlyphPageFontRenderer {
      * Array of RGB triplets defining the 16 standard chat colors followed by 16 darker version of the same colors for
      * drop shadows.
      */
-    private int[] colorCode = new int[32];
+    private final int[] colorCode = new int[32];
     /**
      * Used to specify new red value for the current color.
      */
@@ -76,7 +76,10 @@ public class GlyphPageFontRenderer {
      */
     private boolean strikethroughStyle;
 
-    private GlyphPage regularGlyphPage, boldGlyphPage, italicGlyphPage, boldItalicGlyphPage;
+    private final GlyphPage regularGlyphPage;
+    private final GlyphPage boldGlyphPage;
+    private final GlyphPage italicGlyphPage;
+    private final GlyphPage boldItalicGlyphPage;
 
     public GlyphPageFontRenderer(GlyphPage regularGlyphPage, GlyphPage boldGlyphPage, GlyphPage italicGlyphPage, GlyphPage boldItalicGlyphPage) {
         this.regularGlyphPage = regularGlyphPage;
@@ -207,8 +210,7 @@ public class GlyphPageFontRenderer {
     private int renderString(String text, float x, float y, int color, boolean dropShadow) {
         if (text == null) {
             return 0;
-        }
-        else {
+        } else {
 
             if ((color & -67108864) == 0) {
                 color |= -16777216;
@@ -273,23 +275,17 @@ public class GlyphPageFontRenderer {
                     this.textColor = j1;
 
                     GlStateManager.color((float) (j1 >> 16) / 255.0F, (float) (j1 >> 8 & 255) / 255.0F, (float) (j1 & 255) / 255.0F, this.alpha);
-                }
-                else if (i1 == 16) {
+                } else if (i1 == 16) {
                     this.randomStyle = true;
-                }
-                else if (i1 == 17) {
+                } else if (i1 == 17) {
                     this.boldStyle = true;
-                }
-                else if (i1 == 18) {
+                } else if (i1 == 18) {
                     this.strikethroughStyle = true;
-                }
-                else if (i1 == 19) {
+                } else if (i1 == 19) {
                     this.underlineStyle = true;
-                }
-                else if (i1 == 20) {
+                } else if (i1 == 20) {
                     this.italicStyle = true;
-                }
-                else {
+                } else {
                     this.randomStyle = false;
                     this.boldStyle = false;
                     this.strikethroughStyle = false;
@@ -300,8 +296,7 @@ public class GlyphPageFontRenderer {
                 }
 
                 ++i;
-            }
-            else {
+            } else {
                 glyphPage = getCurrentGlyphPage();
 
                 glyphPage.bindTexture();
@@ -323,10 +318,10 @@ public class GlyphPageFontRenderer {
             WorldRenderer worldrenderer = tessellator.getWorldRenderer();
             GlStateManager.disableTexture2D();
             worldrenderer.begin(7, DefaultVertexFormats.POSITION);
-            worldrenderer.pos((double) this.posX, (double) (this.posY + (float) (glyphPage.getMaxFontHeight() / 2)), 0.0D).endVertex();
-            worldrenderer.pos((double) (this.posX + f), (double) (this.posY + (float) (glyphPage.getMaxFontHeight() / 2)), 0.0D).endVertex();
-            worldrenderer.pos((double) (this.posX + f), (double) (this.posY + (float) (glyphPage.getMaxFontHeight() / 2) - 1.0F), 0.0D).endVertex();
-            worldrenderer.pos((double) this.posX, (double) (this.posY + (float) (glyphPage.getMaxFontHeight() / 2) - 1.0F), 0.0D).endVertex();
+            worldrenderer.pos(this.posX, this.posY + (float) (glyphPage.getMaxFontHeight() / 2), 0.0D).endVertex();
+            worldrenderer.pos(this.posX + f, this.posY + (float) (glyphPage.getMaxFontHeight() / 2), 0.0D).endVertex();
+            worldrenderer.pos(this.posX + f, this.posY + (float) (glyphPage.getMaxFontHeight() / 2) - 1.0F, 0.0D).endVertex();
+            worldrenderer.pos(this.posX, this.posY + (float) (glyphPage.getMaxFontHeight() / 2) - 1.0F, 0.0D).endVertex();
             tessellator.draw();
             GlStateManager.enableTexture2D();
         }
@@ -337,10 +332,10 @@ public class GlyphPageFontRenderer {
             GlStateManager.disableTexture2D();
             worldrenderer1.begin(7, DefaultVertexFormats.POSITION);
             int l = this.underlineStyle ? -1 : 0;
-            worldrenderer1.pos((double) (this.posX + (float) l), (double) (this.posY + (float) glyphPage.getMaxFontHeight()), 0.0D).endVertex();
-            worldrenderer1.pos((double) (this.posX + f), (double) (this.posY + (float) glyphPage.getMaxFontHeight()), 0.0D).endVertex();
-            worldrenderer1.pos((double) (this.posX + f), (double) (this.posY + (float) glyphPage.getMaxFontHeight() - 1.0F), 0.0D).endVertex();
-            worldrenderer1.pos((double) (this.posX + (float) l), (double) (this.posY + (float) glyphPage.getMaxFontHeight() - 1.0F), 0.0D).endVertex();
+            worldrenderer1.pos(this.posX + (float) l, this.posY + (float) glyphPage.getMaxFontHeight(), 0.0D).endVertex();
+            worldrenderer1.pos(this.posX + f, this.posY + (float) glyphPage.getMaxFontHeight(), 0.0D).endVertex();
+            worldrenderer1.pos(this.posX + f, this.posY + (float) glyphPage.getMaxFontHeight() - 1.0F, 0.0D).endVertex();
+            worldrenderer1.pos(this.posX + (float) l, this.posY + (float) glyphPage.getMaxFontHeight() - 1.0F, 0.0D).endVertex();
             tessellator1.draw();
             GlStateManager.enableTexture2D();
         }
@@ -397,21 +392,17 @@ public class GlyphPageFontRenderer {
                 if (colorIndex < 16) {
                     boldStyle = false;
                     italicStyle = false;
-                }
-                else if (colorIndex == 17) {
+                } else if (colorIndex == 17) {
                     boldStyle = true;
-                }
-                else if (colorIndex == 20) {
+                } else if (colorIndex == 20) {
                     italicStyle = true;
-                }
-                else if (colorIndex == 21) {
+                } else if (colorIndex == 21) {
                     boldStyle = false;
                     italicStyle = false;
                 }
                 i++;
                 on = false;
-            }
-            else {
+            } else {
                 if (on) i--;
 
                 character = text.charAt(i);
@@ -456,21 +447,17 @@ public class GlyphPageFontRenderer {
                 if (colorIndex < 16) {
                     boldStyle = false;
                     italicStyle = false;
-                }
-                else if (colorIndex == 17) {
+                } else if (colorIndex == 17) {
                     boldStyle = true;
-                }
-                else if (colorIndex == 20) {
+                } else if (colorIndex == 20) {
                     italicStyle = true;
-                }
-                else if (colorIndex == 21) {
+                } else if (colorIndex == 21) {
                     boldStyle = false;
                     italicStyle = false;
                 }
                 i++;
                 on = false;
-            }
-            else {
+            } else {
                 if (on) i--;
 
                 character = text.charAt(i);
@@ -486,8 +473,7 @@ public class GlyphPageFontRenderer {
 
             if (reverse) {
                 stringbuilder.insert(0, character);
-            }
-            else {
+            } else {
                 stringbuilder.append(character);
             }
         }

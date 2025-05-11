@@ -22,6 +22,7 @@ public class PatcherCategory extends Category {
     public PatcherCategory(Panel panel) {
         super(panel);
         setName("Patcher");
+        setIcon("icon/button/sidebar/patcher.png");
         setScrollHelper(scrollHelperPatcher);
         setValue(4);
     }
@@ -60,7 +61,7 @@ public class PatcherCategory extends Category {
             }
             Patchers opt = null;
             switch (patcher.getMode()) {
-                case "CheckBox" :
+                case "CheckBox":
                     opt = new CheckBox(patcher, getPanel(), addOptionY);
                     break;
                 case "Slider":
@@ -75,9 +76,10 @@ public class PatcherCategory extends Category {
                 case "Keybinding":
                     opt = new Keybinding(patcher, getPanel(), addOptionY);
                     break;
-                default: opt = null;
+                default:
+                    opt = null;
                     break;
-            };
+            }
 
             if (opt != null) {
                 patchersList.add(opt);
@@ -119,7 +121,7 @@ public class PatcherCategory extends Category {
             }
             Patchers opt = null;
             switch (patcher.getMode()) {
-                case "CheckBox" :
+                case "CheckBox":
                     opt = new CheckBox(patcher, getPanel(), addOptionY);
                     break;
                 case "Slider":
@@ -134,9 +136,10 @@ public class PatcherCategory extends Category {
                 case "Keybinding":
                     opt = new Keybinding(patcher, getPanel(), addOptionY);
                     break;
-                default: opt = null;
+                default:
+                    opt = null;
                     break;
-            };
+            }
 
             if (opt != null) {
                 patchersList.add(opt);

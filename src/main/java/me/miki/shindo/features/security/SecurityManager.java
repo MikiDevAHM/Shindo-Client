@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class SecurityManager {
 
-    private ArrayList<Security> features = new ArrayList<Security>();
+    private final ArrayList<Security> features = new ArrayList<Security>();
 
     public SecurityManager() {
         features.add(new DemoSecurity());
