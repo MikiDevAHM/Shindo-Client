@@ -21,7 +21,6 @@ public class TextField {
     private int blink;
     private int cursorPosition;
     private boolean allSelected;
-
     private boolean passwordMode = false;
     private char passwordChar = '*';
     private int backgroundColor = 0xffffffff;
@@ -90,7 +89,7 @@ public class TextField {
         // Desenhar texto
         Shindo.getInstance().getFontHelper().size15.drawString(
                 displayText,
-                x + 4 - textOffsetX,
+                x + 5 - textOffsetX,
                 y + 5,
                 em ? Style.getColorTheme(5).getRGB() : Style.getColorTheme(4).getRGB()
         );
