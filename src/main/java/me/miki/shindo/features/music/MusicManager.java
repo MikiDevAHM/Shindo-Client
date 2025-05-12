@@ -50,6 +50,9 @@ public class MusicManager {
 
         ArrayList<String> favorites = new ArrayList<String>();
 
+        if (!cacheDir.exists()) {
+            fileManager.createDir(cacheDir);
+        }
         if (!dataJson.exists()) {
             fileManager.createFile(dataJson);
         }
@@ -104,6 +107,10 @@ public class MusicManager {
         FileManager fileManager = Shindo.getInstance().getFileManager();
         File cacheDir = new File(fileManager.getCacheDir(), "music");
         File dataJson = new File(cacheDir, "Data.json");
+
+        if (!cacheDir.exists()) {
+            fileManager.createDir(cacheDir);
+        }
 
         if (!dataJson.exists()) {
             fileManager.createFile(dataJson);

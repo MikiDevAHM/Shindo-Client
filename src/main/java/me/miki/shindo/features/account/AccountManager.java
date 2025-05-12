@@ -27,20 +27,10 @@ public class AccountManager {
     public AccountManager() {
 
         FileManager fileManager = Shindo.getInstance().getFileManager();
-        File microsoftDir = new File(fileManager.getExternalDir(), "microsoft");
         File accountFile = new File(fileManager.getShindoDir(), "Account.json");
-        File skinDir = new File(fileManager.getCacheDir(), "skin");
-
-        if (!microsoftDir.exists()) {
-            fileManager.createDir(microsoftDir);
-        }
 
         if (!accountFile.exists()) {
             fileManager.createFile(accountFile);
-        }
-
-        if (!skinDir.exists()) {
-            fileManager.createDir(skinDir);
         }
 
         if (accountFile.length() > 0) {

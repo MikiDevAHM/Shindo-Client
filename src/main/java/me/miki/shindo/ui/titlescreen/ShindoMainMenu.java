@@ -56,6 +56,11 @@ public class ShindoMainMenu extends Panorama {
 
         if (Shindo.getInstance().getShindoAPI().isFirstLogin() || Shindo.getInstance().getAccountManager().getCurrentAccount() == null || Shindo.getInstance().getAccountManager().getAccounts().isEmpty()) {
             accountFrame = true;
+            Account account = new Account("ShindoUser", null, null, AccountType.OFFLINE);
+            SessionChanger.getInstance().setUserOffline(account.getName());
+            Shindo.getInstance().getAccountManager().setCurrentAccount(account);
+            Shindo.getInstance().getAccountManager().addAccounts(account);
+            Shindo.getInstance().getAccountManager().save();
         }
 
         nameTextField = new TextField(ResolutionHelper.getWidth() - 120, ResolutionHelper.getHeight() - 130, 80, 14, "NAME");
