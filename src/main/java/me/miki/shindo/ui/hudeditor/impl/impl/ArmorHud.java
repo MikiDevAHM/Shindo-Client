@@ -22,7 +22,7 @@ public class ArmorHud extends HudMod {
     private final ItemStack[] emptyArmorInventory = new ItemStack[4];
 
     public ArmorHud() {
-        super("Armor Status", 10, 10);
+        super("Armor Status", 70, 70);
         setW(25);
         setH(70);
     }

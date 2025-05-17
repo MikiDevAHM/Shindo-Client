@@ -29,7 +29,7 @@ public class PotionHud extends HudMod {
     Potion potion3 = Potion.potionTypes[16];
 
     public PotionHud() {
-        super("Potion Status", 10, 10);
+        super("Potion Status", 120, 10);
         setW(120);
         setH(30);
     }

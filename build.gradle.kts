@@ -56,9 +56,6 @@ tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJ
     // Se quiser incluir apenas algumas dependências específicas:
     dependencies {
         include(dependency("io.netty:netty-all:4.0.23.Final"))
-        include(dependency("com.paulscode:libraryjavasound"))
-        include(dependency("com.paulscode:librarylwjglopenal"))
-        include(dependency("com.paulscode:soundsystem"))
         include(dependency(fileTree("/libs")))
         // Adicione outras que deseja incluir
     }

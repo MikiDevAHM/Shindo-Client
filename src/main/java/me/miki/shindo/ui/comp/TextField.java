@@ -11,12 +11,12 @@ import net.minecraft.util.ChatAllowedCharacters;
 import org.lwjgl.input.Keyboard;
 
 public class TextField {
-    private final int x;
-    private final int y;
-    private final int width;
-    private final int height;
+    private int x;
+    private int y;
+    private int width;
+    private int height;
     private String text = "";
-    private final String hint;
+    private String hint;
     private boolean focused;
     private int blink;
     private int cursorPosition;
@@ -26,23 +26,17 @@ public class TextField {
     private int backgroundColor = 0xffffffff;
     private int textOffsetX = 0;
 
-    /**
-     * @param x      x position
-     * @param y      y position
-     * @param width  width of text field
-     * @param height height of text field
-     * @param hint   hint to display when the text is empty
-     */
-    public TextField(int x, int y, int width, int height, String hint) {
+
+    public static boolean isCtrlKeyDown() {
+        return Minecraft.isRunningOnMac ? Keyboard.isKeyDown(219) || Keyboard.isKeyDown(220) : Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157);
+    }
+
+    public void setPosition(int x, int y, int width, int height, String hint) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.hint = hint;
-    }
-
-    public static boolean isCtrlKeyDown() {
-        return Minecraft.isRunningOnMac ? Keyboard.isKeyDown(219) || Keyboard.isKeyDown(220) : Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157);
     }
 
     /**
@@ -139,11 +133,13 @@ public class TextField {
                 case Keyboard.KEY_LEFT:
                     moveCursor(-1);
                     break;
+
                 case Keyboard.KEY_A:
                     if (isCtrlKeyDown()) {
                         allSelected = true;
                         cursorPosition = text.length();
                     }
+
                 case Keyboard.KEY_V:
                     if (isCtrlKeyDown()) {
                         typeText(IOHelper.getStringFromClipboard());

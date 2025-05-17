@@ -26,16 +26,17 @@ import net.minecraft.client.Minecraft;
 public class Shindo {
 
     // INFO STUFF HERE
-    public static final String NAME = "Shindo";
-    public static final String VERSION = "v1.0.1";
-    public static final String AUTHOR = "MikiDevAHM";
+    public static final String NAME     =      "Shindo";
+    public static final String VERSION  =      "v1.0.3";
+    public static final String AUTHOR   =  "MikiDevAHM";
+
     // IMPORTANT CONSTANTS HERE
     private static final Shindo INSTANCE = new Shindo();
     private final Minecraft mc = Minecraft.getMinecraft();
+
     // IMPORTANT VARIABLES AND FIELDS HERE
     private ShindoHandler shindoHandler;
     private ShindoAPI shindoAPI;
-    private EventManager eventManager;
     private AccountManager accountManager;
 
     private FileManager fileManager;
@@ -57,7 +58,7 @@ public class Shindo {
     private CpsHelper cpsHelper;
     private MessageHelper messageHelper;
 
-    // GETTERS
+
     public static Shindo getInstance() {
         return INSTANCE;
     }
@@ -106,6 +107,7 @@ public class Shindo {
         EventManager.unregister(this);
     }
 
+    // GETTERS
     public ShindoAPI getShindoAPI() {
         return shindoAPI;
     }
@@ -184,6 +186,4 @@ public class Shindo {
             EventManager.register(event);
         }
     }
-
-
 }

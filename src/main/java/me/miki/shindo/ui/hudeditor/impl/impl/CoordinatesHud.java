@@ -19,7 +19,7 @@ import net.minecraft.util.BlockPos;
 public class CoordinatesHud extends HudMod {
 
     public CoordinatesHud() {
-        super("Coordinates", 10, 10);
+        super("Coordinates", 90, 10);
         setW(120);
         setH(60);
     }

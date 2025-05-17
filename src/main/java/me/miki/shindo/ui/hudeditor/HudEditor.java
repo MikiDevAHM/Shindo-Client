@@ -304,6 +304,7 @@ public class HudEditor extends GuiScreen {
         if (mc.entityRenderer.getShaderGroup() != null) {
             mc.entityRenderer.getShaderGroup().deleteShaderGroup();
         }
+        Shindo.getInstance().getProfileManager().save();
         super.onGuiClosed();
     }
 
@@ -345,4 +346,6 @@ public class HudEditor extends GuiScreen {
         }
         return null;
     }
+
+
 }

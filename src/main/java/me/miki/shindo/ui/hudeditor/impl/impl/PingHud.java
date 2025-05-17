@@ -17,7 +17,7 @@ import me.miki.shindo.ui.hudeditor.impl.HudMod;
 public class PingHud extends HudMod {
 
     public PingHud() {
-        super("Ping", 10, 10);
+        super("Ping", 10, 90);
         setW(70);
         setH(20);
     }

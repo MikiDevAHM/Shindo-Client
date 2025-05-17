@@ -27,8 +27,8 @@ public class ProfileCategory extends Category {
     private ProfileType currentType;
     private ProfileIcon currentIcon;
 
-    private TextField nameBox;
-    private TextField serverIpBox;
+    private TextField nameBox = new TextField();
+    private TextField serverIpBox = new TextField();
 
     private final TextBox searchBox = new TextBox("Pesquisar Profile", getPanel().getX() + getPanel().getW() - 205, getPanel().getY() + 35, 80, 20);
 
@@ -49,9 +49,6 @@ public class ProfileCategory extends Category {
         currentIcon = ProfileIcon.COMMAND;
         openProfile = false;
         openIcon = false;
-
-        nameBox = new TextField(getPanel().getX() + 80 + 32, getPanel().getY() + getPanel().getH() + 266, 80, 14, "Name");
-        serverIpBox = new TextField(getPanel().getX() + 80 + 32, getPanel().getY() + getPanel().getH() + 284, 80, 14, "Server IP");
         searchBox.setFocused(false);
     }
 
@@ -62,8 +59,6 @@ public class ProfileCategory extends Category {
         openProfile = false;
         openIcon = false;
 
-        nameBox = new TextField(getPanel().getX() + 80 + 32, getPanel().getY() + getPanel().getH() + 266, 80, 14, "Name");
-        serverIpBox = new TextField(getPanel().getX() + 80 + 32, getPanel().getY() + getPanel().getH() + 284, 80, 14, "Server IP");
 
         searchBox.setFocused(false);
     }
@@ -166,10 +161,12 @@ public class ProfileCategory extends Category {
 
             font.drawString("Name", getPanel().getX() + 80, getPanel().getY() + getPanel().getH() + 269, Style.getColorTheme(19).getRGB());
 
+            nameBox.setPosition(getPanel().getX() + 80 + 32, getPanel().getY() + getPanel().getH() + 266, 80, 14, "Name");
             nameBox.render(mouseX, mouseY);
 
 
             font.drawString("Server", getPanel().getX() + 80, getPanel().getY() + getPanel().getH() + 287, Style.getColorTheme(19).getRGB());
+            serverIpBox.setPosition(getPanel().getX() + 80 + 32, getPanel().getY() + getPanel().getH() + 284, 80, 14, "Server IP");
             serverIpBox.render(mouseX, mouseY);
 
             offsetY = 15;
@@ -307,7 +304,7 @@ public class ProfileCategory extends Category {
                     }
                 }
 
-                offsetX += 125;
+                offsetX += 150;
 
                 if (index % 3 == 0) {
                     offsetX = 0;

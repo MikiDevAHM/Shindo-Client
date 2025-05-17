@@ -17,7 +17,7 @@ import me.miki.shindo.ui.hudeditor.impl.HudMod;
 public class SprintHud extends HudMod {
 
     public SprintHud() {
-        super("ToggleSprint", 10, 10);
+        super("ToggleSprint", 10, 50);
         setW(90);
         setH(20);
     }

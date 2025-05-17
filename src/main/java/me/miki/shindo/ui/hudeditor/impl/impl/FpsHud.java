@@ -17,7 +17,7 @@ import net.minecraft.client.Minecraft;
 public class FpsHud extends HudMod {
 
     public FpsHud() {
-        super("FPS", 10, 10);
+        super("FPS", 20, 20);
         setW(60);
         setH(20);
     }

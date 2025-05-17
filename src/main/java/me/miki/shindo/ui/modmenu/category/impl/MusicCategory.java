@@ -28,7 +28,7 @@ public class MusicCategory extends Category {
     private final PositionHelper posHelper = new PositionHelper(125);
     List<MusicFrame> musicFrames = new ArrayList<>();
     private final TextBox searchBox = new TextBox("Pesquisar Musica", getPanel().getX() + getPanel().getW() - 205, getPanel().getY() + 35, 200, 18);
-    private TextField musicDownloader;
+    private TextField musicDownloader = new TextField();
     private boolean drag;
 
     private MusicType currentType;
@@ -45,8 +45,6 @@ public class MusicCategory extends Category {
     @Override
     public void initGui() {
         currentType = MusicType.ALL;
-
-        musicDownloader = new TextField(getPanel().getX() + getPanel().getW() - 215, getPanel().getY() + getPanel().getH() + 280, 170, 14, "URL");
         searchBox.setFocused(false);
     }
 
@@ -55,7 +53,6 @@ public class MusicCategory extends Category {
     public void initCategory() {
         currentType = MusicType.ALL;
 
-        musicDownloader = new TextField(getPanel().getX() + getPanel().getW() - 215, getPanel().getY() + getPanel().getH() + 280, 170, 14, "URL");
         searchBox.setFocused(false);
     }
 
@@ -215,6 +212,7 @@ public class MusicCategory extends Category {
         Helper2D.drawRoundedRectangle(getPanel().getX() + 75 + 45, getPanel().getY() + getPanel().getH() + 280 + 2, knobX, 6, 2, 0xFFFFFFFF, 0);
         Shindo.getInstance().getFontHelper().size20.drawString("Volume: " + MathHelper.round(knobX, 1), getPanel().getX() + 75 + 150, getPanel().getY() + getPanel().getH() + 280 + 2, -1);
 
+        musicDownloader.setPosition(getPanel().getX() + getPanel().getW() - 215, getPanel().getY() + getPanel().getH() + 280, 170, 14, "URL");
         musicDownloader.render(mouseX, mouseY);
 
         boolean hovered = MathHelper.withinBox(getPanel().getX() + getPanel().getW() - 30 - 5, getPanel().getY() + getPanel().getH() + 280, 15, 15, mouseX, mouseY);
@@ -318,6 +316,4 @@ public class MusicCategory extends Category {
 
         return !this.searchBox.getText().isEmpty() && !(m.getName().toLowerCase().contains(this.searchBox.getText().toLowerCase()));
     }
-
-
 }

@@ -17,7 +17,7 @@ import me.miki.shindo.ui.hudeditor.impl.HudMod;
 public class TimeHud extends HudMod {
 
     public TimeHud() {
-        super("Time", 10, 10);
+        super("Time", 10, 100);
         setW(60);
         setH(20);
     }

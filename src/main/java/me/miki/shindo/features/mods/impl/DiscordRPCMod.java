@@ -19,7 +19,7 @@ public class DiscordRPCMod extends Mod {
     @Override
     public void onEnable() {
         super.onEnable();
-        //discord.start();
+        discord.start();
     }
 
     @Override

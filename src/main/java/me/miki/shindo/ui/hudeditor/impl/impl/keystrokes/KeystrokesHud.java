@@ -26,7 +26,7 @@ public class KeystrokesHud extends HudMod {
     MouseKey mouseKey1 = new MouseKey();
 
     public KeystrokesHud() {
-        super("Keystrokes", 10, 10);
+        super("Keystrokes", 50, 10);
         setW(80);
         setH(80);
     }

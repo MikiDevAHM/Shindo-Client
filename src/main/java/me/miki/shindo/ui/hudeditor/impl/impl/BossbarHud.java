@@ -18,7 +18,7 @@ import net.minecraft.entity.boss.BossStatus;
 public class BossbarHud extends HudMod {
 
     public BossbarHud() {
-        super("Bossbar", 10, 10);
+        super("Bossbar", 120, 5);
     }
 
     @Override

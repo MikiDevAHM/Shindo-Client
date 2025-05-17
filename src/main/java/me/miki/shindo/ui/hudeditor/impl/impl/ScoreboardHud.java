@@ -27,7 +27,7 @@ public class ScoreboardHud extends HudMod {
 
 
     public ScoreboardHud() {
-        super("Scoreboard", 10, 10);
+        super("Scoreboard", 100, 100);
     }
 
 

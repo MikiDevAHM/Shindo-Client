@@ -46,32 +46,36 @@ public class ProfileManager {
         for (File f : profileDir.listFiles()) {
 
             if (FileHelper.getExtension(f).equals("json")) {
+                if (f.getName().equals("Default.json")) {
+                    load(f);
+                }
+                else {
+                    try (FileReader reader = new FileReader(f)) {
 
-                try (FileReader reader = new FileReader(f)) {
+                        String serverIp = "";
+                        ProfileIcon icon = ProfileIcon.GRASS;
+                        ProfileType type = ProfileType.ALL;
 
-                    String serverIp = "";
-                    ProfileIcon icon = ProfileIcon.GRASS;
-                    ProfileType type = ProfileType.ALL;
+                        Gson gson = new GsonBuilder()
+                                .create();
 
-                    Gson gson = new GsonBuilder()
-                            .create();
+                        JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
+                        JsonObject profileData = JsonHelper.getObjectProperty(jsonObject, "Profile Data");
 
-                    JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
-                    JsonObject profileData = JsonHelper.getObjectProperty(jsonObject, "Profile Data");
+                        serverIp = JsonHelper.getStringProperty(profileData, "Server", "");
+                        icon = ProfileIcon.getIconById(JsonHelper.getIntProperty(profileData, "Icon", ProfileIcon.GRASS.getId()));
+                        type = ProfileType.getTypeById(JsonHelper.getIntProperty(profileData, "Type", ProfileType.ALL.getId()));
 
-                    serverIp = JsonHelper.getStringProperty(profileData, "Server", "");
-                    icon = ProfileIcon.getIconById(JsonHelper.getIntProperty(profileData, "Icon", ProfileIcon.GRASS.getId()));
-                    type = ProfileType.getTypeById(JsonHelper.getIntProperty(profileData, "Type", ProfileType.ALL.getId()));
+                        Profile p = new Profile(id, serverIp, f, icon);
 
-                    Profile p = new Profile(id, serverIp, f, icon);
+                        p.setType(type);
 
-                    p.setType(type);
+                        profiles.add(p);
 
-                    profiles.add(p);
-
-                    id++;
-                } catch (Exception e) {
-                    ShindoLogger.error("Failed to load profile", e);
+                        id++;
+                    } catch (Exception e) {
+                        ShindoLogger.error("Failed to load profile", e);
+                    }
                 }
             }
         }
