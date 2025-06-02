@@ -7,11 +7,11 @@ package eu.shoroa.contrib.render;
 
 import eu.shoroa.contrib.shader.UIShader;
 import eu.shoroa.contrib.shader.uniform.Uniform;
-import me.eldodebug.soar.Shindo;
-import me.eldodebug.soar.management.language.TranslateText;
-import me.eldodebug.soar.management.mods.impl.InternalSettingsMod;
-import me.eldodebug.soar.management.mods.settings.impl.ComboSetting;
-import me.eldodebug.soar.management.mods.settings.impl.combo.Option;
+import me.miki.shindo.Shindo;
+import me.miki.shindo.management.language.TranslateText;
+import me.miki.shindo.management.mods.impl.InternalSettingsMod;
+import me.miki.shindo.management.mods.settings.impl.ComboSetting;
+import me.miki.shindo.management.mods.settings.impl.combo.Option;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.shader.Framebuffer;

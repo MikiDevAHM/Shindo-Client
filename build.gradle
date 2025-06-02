@@ -25,7 +25,7 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
 version = "Release"
-group= "me.eldodebug"
+group= "me.miki"
 archivesBaseName = "ShindoClient"
 
 sourceCompatibility = targetCompatibility = 1.8
@@ -33,7 +33,7 @@ compileJava.options.encoding = 'UTF-8'
 
 minecraft {
     version = "1.8.9"
-    tweakClass = "me.eldodebug.soar.injection.mixin.GlideTweaker"
+    tweakClass = "me.miki.shindo.injection.mixin.ShindoTweaker"
     runDir = "run"
     mappings = "stable_22"
     clientJvmArgs = ["-XX:-DisableExplicitGC"]
@@ -80,7 +80,7 @@ dependencies {
 
 mixin {
     defaultObfuscationEnv = "notch"
-    add sourceSets.main, "mixins.soar.refmap.json"
+    add sourceSets.main, "mixins.shindo.refmap.json"
 }
 
 processResources {
@@ -104,11 +104,11 @@ jar {
 
 jar {
     manifest.attributes(
-            "MixinConfigs": 'mixins.soar.json',
-            "TweakClass": 'me.eldodebug.soar.injection.mixin.GlideTweaker',
+            "MixinConfigs": 'mixins.shindo.json',
+            "TweakClass": 'me.miki.shindo.injection.mixin.ShindoTweaker',
             "TweakOrder": 0,
             "Manifest-Version": 1.0,
-            'FMLAT': 'soar_at.cfg'
+            'FMLAT': 'shindo_at.cfg'
     )
 
     configurations.embed.each { dep ->
