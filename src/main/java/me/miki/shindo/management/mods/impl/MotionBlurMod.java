@@ -106,7 +106,7 @@ public class MotionBlurMod extends Mod {
 		            if (error == 1282) {
 		            	this.setToggled(false);
 						try{
-							Sound.play("soar/audio/error.wav", false);
+							Sound.play("shindo/audio/error.wav", false);
 						} catch (Exception ignored) {}
 		            }
 		        }

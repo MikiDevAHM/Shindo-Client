@@ -40,7 +40,7 @@ public class ShBlur {
     private Framebuffer framebuffer2 = new Framebuffer(mc.displayWidth, mc.displayHeight, false);
     private Framebuffer framebuffer3 = new Framebuffer(mc.displayWidth, mc.displayHeight, false);
     private FloatBuffer weightBuffer = BufferUtils.createFloatBuffer(128);
-    private UIShader shader = new UIShader("soar/shaders/vertex.vert", "soar/shaders/blur.frag");
+    private UIShader shader = new UIShader("shindo/shaders/vertex.vert", "shindo/shaders/blur.frag");
     private long lastUpdate = System.currentTimeMillis();
     private float radius = 4f;
 

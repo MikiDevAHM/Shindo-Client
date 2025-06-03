@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 public class DuelsQuickPlay extends QuickPlay{
 
 	public DuelsQuickPlay() {
-		super("Duels", new ResourceLocation("soar/icons/hypixel/Duels.png"));
+		super("Duels", new ResourceLocation("shindo/icons/hypixel/Duels.png"));
 	}
 
 	@Override

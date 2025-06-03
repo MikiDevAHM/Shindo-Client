@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 public class SkywarsQuickPlay extends QuickPlay {
 
 	public SkywarsQuickPlay() {
-		super("Skywars", new ResourceLocation("soar/icons/hypixel/Skywars.png"));
+		super("Skywars", new ResourceLocation("shindo/icons/hypixel/Skywars.png"));
 	}
 
 	@Override

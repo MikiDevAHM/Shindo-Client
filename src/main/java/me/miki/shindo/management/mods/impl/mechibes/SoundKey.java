@@ -13,7 +13,7 @@ public class SoundKey {
 	public SoundKey(String mode, String key) {
 		sound = new Sound();
 		try {
-			sound.loadClip(new ResourceLocation("soar/mechvibes/" + mode + "/" + key + ".wav"));
+			sound.loadClip(new ResourceLocation("shindo/mechvibes/" + mode + "/" + key + ".wav"));
 		} catch (Exception e) {
 			ShindoLogger.error("Failed load sound", e);
 		}

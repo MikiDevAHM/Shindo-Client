@@ -1,13 +1,13 @@
 package me.miki.shindo.management.nanovg.font;
 
+import net.minecraft.util.ResourceLocation;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import net.minecraft.util.ResourceLocation;
-
 public class Fonts {
 	
-	private static final String PATH = "soar/fonts/";
+	private static final String PATH = "shindo/fonts/";
 
 	//public static final Font FLUENT = new Font("fluent", new ResourceLocation(PATH + "fluent.ttf"));
 	public static final Font FALLBACK = new Font("fallback", new ResourceLocation(PATH + "fallback.ttf"));

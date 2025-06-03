@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 public class BedwarsQuickPlay extends QuickPlay {
 
 	public BedwarsQuickPlay() {
-		super("Bedwars", new ResourceLocation("soar/icons/hypixel/Bedwars.png"));
+		super("Bedwars", new ResourceLocation("shindo/icons/hypixel/Bedwars.png"));
 	}
 
 	@Override

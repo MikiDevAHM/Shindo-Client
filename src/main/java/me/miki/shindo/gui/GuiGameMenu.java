@@ -15,6 +15,7 @@ import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.achievement.GuiAchievements;
 import net.minecraft.client.gui.achievement.GuiStats;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
@@ -72,7 +73,7 @@ public class GuiGameMenu extends GuiScreen {
         offset += standardPadding;
         drawButton(nvg, I18n.format("gui.achievements"), LegacyIcon.MAP, offset);
         offset += standardPadding;
-        drawButton(nvg, TranslateText.OPEN_MOD_MENU.getText(), LegacyIcon.SOAR, offset);
+        drawButton(nvg, TranslateText.OPEN_MOD_MENU.getText(), new ResourceLocation("shindo/logo.png"), offset);
         offset += standardPadding;
         drawButton(nvg, !this.mc.isIntegratedServerRunning() ? I18n.format("menu.disconnect") : TranslateText.EXIT_WORLD_SINGLEPLAYER.getText(), LegacyIcon.LOGOUT, offset);
     }
@@ -83,6 +84,14 @@ public class GuiGameMenu extends GuiScreen {
         nvg.drawText(i, centre - startX, y + offset + 6.5F, Color.WHITE, 9.5F, Fonts.LEGACYICON);
         nvg.drawText(s, centre - startX + 14, y + offset + 7F, Color.WHITE, 9.5F, Fonts.MEDIUM);
     }
+
+    private void drawButton(NanoVGManager nvg, String s, ResourceLocation icon, Float offset){
+        nvg.drawRoundedRect(x, y + offset, width , 22, 6, new Color(230, 230, 230, 80));
+        float startX = (nvg.getTextWidth(s, 9.5F, Fonts.MEDIUM) + 14) /2;
+        nvg.drawImage(icon, centre - startX, y + offset + 6.5F, 9.5F, 9.5F);
+        nvg.drawText(s, centre - startX + 14, y + offset + 7F, Color.WHITE, 9.5F, Fonts.MEDIUM);
+    }
+
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {

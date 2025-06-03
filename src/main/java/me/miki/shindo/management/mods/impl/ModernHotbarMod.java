@@ -1,9 +1,5 @@
 package me.miki.shindo.management.mods.impl;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import me.miki.shindo.Shindo;
 import me.miki.shindo.management.color.AccentColor;
 import me.miki.shindo.management.event.EventTarget;
@@ -24,6 +20,10 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class ModernHotbarMod extends HUDMod {
 
 	private SimpleAnimation animation = new SimpleAnimation(0.0F);
@@ -31,7 +31,7 @@ public class ModernHotbarMod extends HUDMod {
 	private float barX, barY, barWidth, barHeight, selX;
 	
 	private ComboSetting designSetting = new ComboSetting(TranslateText.DESIGN, this, TranslateText.CLIENT, new ArrayList<Option>(Arrays.asList(
-			new Option(TranslateText.NORMAL), new Option(TranslateText.SOAR), new Option(TranslateText.CHILL), new Option(TranslateText.CLIENT))));
+			new Option(TranslateText.NORMAL), new Option(TranslateText.SHINDO), new Option(TranslateText.CHILL), new Option(TranslateText.CLIENT))));
 	
 	private BooleanSetting smoothSetting = new BooleanSetting(TranslateText.SMOOTH, this, true);
 
@@ -132,7 +132,7 @@ public class ModernHotbarMod extends HUDMod {
     			barWidth = 91 * 2;
     			barHeight = 22;
     			
-    			if(option.getTranslate().equals(TranslateText.SOAR)) {
+    			if(option.getTranslate().equals(TranslateText.SHINDO)) {
     				nvg.drawShadow(barX, barY, barWidth, barHeight, 6);
     				nvg.drawGradientRoundedRect(barX, barY, barWidth, barHeight, 6, ColorUtils.applyAlpha(currentColor.getColor1(), 190), ColorUtils.applyAlpha(currentColor.getColor2(), 190));
     			} else if(option.getTranslate().equals(TranslateText.CLIENT)){
@@ -170,7 +170,7 @@ public class ModernHotbarMod extends HUDMod {
             }
 
         	if(!option.getTranslate().equals(TranslateText.CHILL)) {
-    			if(option.getTranslate().equals(TranslateText.SOAR)) {
+    			if(option.getTranslate().equals(TranslateText.SHINDO)) {
     				nvg.drawRoundedRect(selX + 1, sr.getScaledHeight() - 22 - 4, 22, 22, 6, new Color(255, 255, 255, 140));
         		}else {
         			nvg.drawRoundedRect(selX + 1, sr.getScaledHeight() - 22 - 4, 22, 22, 6, new Color(0, 0, 0, 100));

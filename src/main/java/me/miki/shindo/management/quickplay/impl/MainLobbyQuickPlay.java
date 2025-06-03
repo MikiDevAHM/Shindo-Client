@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 public class MainLobbyQuickPlay extends QuickPlay{
 
 	public MainLobbyQuickPlay() {
-		super("MainLobby", new ResourceLocation("soar/icons/hypixel/MainLobby.png"));
+		super("MainLobby", new ResourceLocation("shindo/icons/hypixel/MainLobby.png"));
 	}
 
 	@Override

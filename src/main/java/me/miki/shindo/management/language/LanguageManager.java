@@ -19,7 +19,7 @@ public class LanguageManager {
 	
 	private void loadMap(HashMap<String, String> map, String language) {
 		
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(LanguageManager.class.getClassLoader().getResourceAsStream("assets/minecraft/soar/language/" + language + ".properties"), StandardCharsets.UTF_8))) {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(LanguageManager.class.getClassLoader().getResourceAsStream("assets/minecraft/shindo/language/" + language + ".properties"), StandardCharsets.UTF_8))) {
 			
 			String s;
 			

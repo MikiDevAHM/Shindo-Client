@@ -1,881 +1,481 @@
 package me.miki.shindo.management.music;
 
-import com.google.gson.JsonParser;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
-import com.wrapper.spotify.SpotifyApi;
-import com.wrapper.spotify.SpotifyHttpManager;
-import com.wrapper.spotify.exceptions.SpotifyWebApiException;
-import com.wrapper.spotify.model_objects.credentials.AuthorizationCodeCredentials;
-import com.wrapper.spotify.model_objects.miscellaneous.CurrentlyPlaying;
-import com.wrapper.spotify.model_objects.miscellaneous.CurrentlyPlayingContext;
-import com.wrapper.spotify.model_objects.miscellaneous.Device;
-import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
-import com.wrapper.spotify.model_objects.specification.Track;
-import com.wrapper.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
-import com.wrapper.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
-import com.wrapper.spotify.requests.data.player.AddItemToUsersPlaybackQueueRequest;
-import com.wrapper.spotify.requests.data.player.PauseUsersPlaybackRequest;
-import com.wrapper.spotify.requests.data.player.StartResumeUsersPlaybackRequest;
-import com.wrapper.spotify.requests.data.playlists.GetListOfCurrentUsersPlaylistsRequest;
-import com.wrapper.spotify.requests.data.search.simplified.SearchPlaylistsRequest;
-import com.wrapper.spotify.requests.data.search.simplified.SearchTracksRequest;
+import com.google.gson.*;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.AudioDevice;
+import javazoom.jl.player.JavaSoundAudioDevice;
+import javazoom.jl.player.advanced.AdvancedPlayer;
+import me.miki.mp3agic.Mp3File;
+import me.miki.mp3agic.interfaces.ID3v2;
 import me.miki.shindo.Shindo;
 import me.miki.shindo.logger.ShindoLogger;
 import me.miki.shindo.management.file.FileManager;
 import me.miki.shindo.management.language.TranslateText;
-import me.miki.shindo.management.notification.NotificationType;
-import org.apache.hc.core5.http.ParseException;
+import me.miki.shindo.management.mods.impl.InternalSettingsMod;
+import me.miki.shindo.management.mods.impl.MusicInfoMod;
+import me.miki.shindo.management.mods.settings.impl.ComboSetting;
+import me.miki.shindo.management.music.ytdlp.Ytdlp;
+import me.miki.shindo.utils.ImageUtils;
+import me.miki.shindo.utils.JsonUtils;
+import me.miki.shindo.utils.Multithreading;
+import me.miki.shindo.utils.file.FileUtils;
+import org.jtransforms.fft.FloatFFT_1D;
 
+import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioSystem;
 import java.io.*;
-import java.net.InetSocketAddress;
-import java.net.URI;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.function.Supplier;
-
-public class MusicManager implements AutoCloseable {
-
-    private static final URI REDIRECT_URI = SpotifyHttpManager.makeUri("http://127.0.0.1:8888/callback");
-    private static final String TOKEN_FILE_NAME = "spotify_tokens.properties";
-    private static final String CREDENTIALS_FILE_NAME = "spotify_credentials.properties";
-    private static final int SEARCH_LIMIT = 30;
-    private static final int PLAYLIST_LIMIT = 50;
-    private static final long PLAYBACK_UPDATE_INTERVAL = 1000; // Reduced from 5000ms to 1000ms
-    private static final int BATCH_SIZE = 20;
-    private static final long THROTTLE_DELAY = 50; // 50ms between requests
-    private final FileManager fileManager;
-    private final AlbumArtCache albumArtCache;
-    private final LyricsManager lyricsManager;
-    private final SimpleRateLimiter rateLimiter = new SimpleRateLimiter(20.0); // 20 requests per second max
-    private final Map<String, Long> lastRequestTime = new ConcurrentHashMap<>();
-    private final Map<String, CompletableFuture<List<Track>>> searchCache = new ConcurrentHashMap<>();
-    private final Map<String, CompletableFuture<List<PlaylistSimplified>>> playlistCache = new ConcurrentHashMap<>();
-    private final String CLIENT_ID = "d94db01cef0743afa72e0869ffbb754d";
-    private final String CLIENT_SECRET = "19e88ba57df44b06b4f4a0aaac02c8a9";
-    private final boolean hasCredentials = true;
-    private final SpotifyApi spotifyApi;
-    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    private HttpServer server;
-    private boolean isAuthorized = false;
-    private Track currentTrack;
-    private boolean isPlaying = false;
-    private int currentVolume = 100;
-    private long trackPosition = 0;
-    private long trackDuration = 0;
-    private ScheduledExecutorService tokenRefreshScheduler = Executors.newSingleThreadScheduledExecutor();
-    private long lastPositionUpdateTime = 0;
-    private TrackInfoCallback trackInfoCallback;
-
-    public MusicManager(FileManager fileManager) {
-        this.fileManager = fileManager;
-        this.albumArtCache = new AlbumArtCache(fileManager);
-        this.lyricsManager = new LyricsManager();
-
-        initializeSchedulers();
-
-        this.spotifyApi = new SpotifyApi.Builder()
-                .setClientId(CLIENT_ID)
-                .setClientSecret(CLIENT_SECRET)
-                .setRedirectUri(REDIRECT_URI)
-                .build();
-
-        loadTokens();
-        if (spotifyApi.getAccessToken() != null) {
-            isAuthorized = true;
-        } else {
-            try {
-                startServer();
-            } catch (IOException e) {
-                ShindoLogger.error("Failed to start local server for Spotify authentication", e);
-                Shindo.getInstance().getNotificationManager().post(TranslateText.SPOTIFY_AUTH, TranslateText.SPOTIFY_FAIL_BROWSER, NotificationType.ERROR);
-            }
-        }
-        startPlaybackStateUpdater();
-        scheduleTokenRefresh();
-
-
-        Runtime.getRuntime().addShutdownHook(new Thread(this::cleanup));
-    }
-
-    private void initializeSchedulers() {
-        this.scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
-            Thread t = new Thread(r);
-            t.setDaemon(true);
-            return t;
-        });
-        this.tokenRefreshScheduler = Executors.newSingleThreadScheduledExecutor(r -> {
-            Thread t = new Thread(r);
-            t.setDaemon(true);
-            return t;
-        });
-    }
-
-    private void loadTokens() {
-        File tokenFile = new File(fileManager.getMusicDir(), TOKEN_FILE_NAME);
-        Properties props = new Properties();
-        try (FileInputStream in = new FileInputStream(tokenFile)) {
-            props.load(in);
-            String accessToken = props.getProperty("accessToken");
-            String refreshToken = props.getProperty("refreshToken");
-            if (accessToken != null && refreshToken != null) {
-                spotifyApi.setAccessToken(accessToken);
-                spotifyApi.setRefreshToken(refreshToken);
-                refreshAccessToken();
-            }
-        } catch (IOException e) {
-            ShindoLogger.warn("Failed to load tokens: " + e.getMessage());
-        }
-    }
-
-    private void saveTokens() {
-        File tokenFile = new File(fileManager.getMusicDir(), TOKEN_FILE_NAME);
-        Properties props = new Properties();
-        props.setProperty("accessToken", spotifyApi.getAccessToken());
-        props.setProperty("refreshToken", spotifyApi.getRefreshToken());
-        try (FileOutputStream out = new FileOutputStream(tokenFile)) {
-            props.store(out, "Spotify Tokens");
-        } catch (IOException e) {
-            ShindoLogger.error("Failed to save tokens", e);
-            Shindo.getInstance().getNotificationManager().post(TranslateText.SPOTIFY_AUTH, TranslateText.SPOTIFY_FAILED_TO_SAVE_TOKENS, NotificationType.ERROR);
-        }
-    }
-
-    private void startServer() throws IOException {
-        server = HttpServer.create(new InetSocketAddress(8888), 0);
-        server.createContext("/callback", new SpotifyCallbackHandler());
-        server.setExecutor(Executors.newSingleThreadExecutor(r -> {
-            Thread t = new Thread(r);
-            t.setDaemon(true);
-            return t;
-        }));
-        server.start();
-    }
-
-    public String getAuthorizationCodeUri() {
-        AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApi.authorizationCodeUri()
-                .scope("user-read-private user-read-email user-modify-playback-state user-read-playback-state")
-                .show_dialog(true)
-                .build();
-        final URI uri = authorizationCodeUriRequest.execute();
-        return uri.toString();
-    }
-
-    private void requestAccessToken(String code) {
-        try {
-            AuthorizationCodeRequest authorizationCodeRequest = spotifyApi.authorizationCode(code).build();
-            final AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRequest.execute();
-
-            spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
-            spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
-
-            isAuthorized = true;
-            saveTokens(); // Save tokens after successful authorization
-
-            Shindo.getInstance().getNotificationManager().post(TranslateText.SPOTIFY_AUTH, TranslateText.SPOTIFY_AUTH_TOKEN_RECEIVED, NotificationType.SUCCESS);
-        } catch (IOException | SpotifyWebApiException | ParseException e) {
-            ShindoLogger.error("Failed to request access token", e);
-            Shindo.getInstance().getNotificationManager().post(TranslateText.SPOTIFY_AUTH, TranslateText.SPOTIFY_AUTH_FAILED, NotificationType.ERROR);
-        }
-    }
-
-    public boolean isAuthorized() {
-        return isAuthorized;
-    }
-
-
-    public CompletableFuture<List<Track>> searchTracks(String query) {
-        return searchCache.computeIfAbsent(query, q ->
-                throttleRequest("search", () -> CompletableFuture.supplyAsync(() -> {
-                    try {
-                        final SearchTracksRequest request = spotifyApi.searchTracks(q)
-                                .limit(SEARCH_LIMIT)
-                                .build();
-                        List<Track> tracks = Arrays.asList(request.execute().getItems());
-
-                        CompletableFuture.runAsync(() -> {
-                            for (int i = 0; i < tracks.size(); i += BATCH_SIZE) {
-                                int end = Math.min(i + BATCH_SIZE, tracks.size());
-                                List<Track> batch = tracks.subList(i, end);
-                                batch.forEach(this::prefetchAlbumArt);
-                                try {
-                                    Thread.sleep(THROTTLE_DELAY);
-                                } catch (InterruptedException e) {
-                                    Thread.currentThread().interrupt();
-                                }
-                            }
-                        });
-
-                        return tracks;
-                    } catch (Exception e) {
-                        ShindoLogger.error("Search failed", e);
-                        throw new CompletionException(e);
-                    } finally {
-                        searchCache.remove(query);
-                    }
-                }))
-        );
-    }
-
-    public CompletableFuture<List<PlaylistSimplified>> searchPlaylists(String query) {
-        return playlistCache.computeIfAbsent("search:" + query, q ->
-                throttleRequest("search_playlist", () -> CompletableFuture.supplyAsync(() -> {
-                    try {
-                        final SearchPlaylistsRequest request = spotifyApi.searchPlaylists(query)
-                                .limit(SEARCH_LIMIT)
-                                .build();
-                        List<PlaylistSimplified> playlists = Arrays.asList(request.execute().getItems());
-
-                        CompletableFuture.runAsync(() -> {
-                            for (int i = 0; i < playlists.size(); i += BATCH_SIZE) {
-                                int end = Math.min(i + BATCH_SIZE, playlists.size());
-                                List<PlaylistSimplified> batch = playlists.subList(i, end);
-                                batch.forEach(this::getPlaylistImageUrl);
-                                try {
-                                    Thread.sleep(THROTTLE_DELAY);
-                                } catch (InterruptedException e) {
-                                    Thread.currentThread().interrupt();
-                                }
-                            }
-                        });
-
-                        return playlists;
-                    } catch (Exception e) {
-                        ShindoLogger.error("Playlist search failed", e);
-                        throw new CompletionException(e);
-                    } finally {
-                        playlistCache.remove("search:" + query);
-                    }
-                }))
-        );
-    }
-
-    private void prefetchAlbumArt(Track track) {
-        if (track != null && track.getAlbum() != null &&
-                track.getAlbum().getImages() != null &&
-                track.getAlbum().getImages().length > 0) {
-
-            String imageUrl = track.getAlbum().getImages()[0].getUrl();
-            if (imageUrl == null) {
-                return;
-            }
-
-            try {
-                albumArtCache.getCachedAlbumArtUrlAsync(track.getId(), imageUrl)
-                        .exceptionally(ex -> {
-                            ShindoLogger.warn("Failed to prefetch album art: " + ex.getMessage());
-                            return imageUrl;
-                        });
-            } catch (Exception e) {
-                ShindoLogger.warn("Error during album art prefetch: " + e.getMessage());
-            }
-        }
-    }
-
-    public CompletableFuture<Void> addToQueue(String trackUri) {
-        return CompletableFuture.runAsync(() -> {
-            try {
-                String deviceId = getActiveDeviceId();
-                if (deviceId == null) {
-                    throw new IllegalStateException("No active device found");
-                }
-
-                AddItemToUsersPlaybackQueueRequest addItemRequest = spotifyApi.addItemToUsersPlaybackQueue(trackUri)
-                        .device_id(deviceId)
-                        .build();
-                addItemRequest.execute();
-
-                fetchCurrentPlaybackState();
-            } catch (IOException | SpotifyWebApiException | ParseException e) {
-                ShindoLogger.error("Failed to add track to queue", e);
-                throw new CompletionException(e);
-            }
-        });
-    }
-
-    public void play(String trackUri) {
-        CompletableFuture.runAsync(() -> {
-            try {
-                String deviceId = getActiveDeviceId();
-                fetchCurrentPlaybackState();
-                if (deviceId == null) {
-                    Shindo.getInstance().getNotificationManager().post(TranslateText.SPOTIFY_PLAYBACK, TranslateText.SPOTIFY_NO_ACTIVE_DEVICE, NotificationType.ERROR);
-                    return;
-                }
-
-                final StartResumeUsersPlaybackRequest playbackRequest = spotifyApi.startResumeUsersPlayback()
-                        .device_id(deviceId)
-                        .uris(JsonParser.parseString("[\"" + trackUri + "\"]").getAsJsonArray())
-                        .build();
-                try {
-                    playbackRequest.execute();
-                    isPlaying = true;
-                    updatePlaybackState();
-                    Shindo.getInstance().getNotificationManager().post(TranslateText.SPOTIFY_PLAYBACK, TranslateText.SPOTIFY_PLAYBACK_STARTED, NotificationType.SUCCESS);
-                } catch (Exception e) {
-                    if (e.getMessage() != null && e.getMessage().contains("Restriction violated")) {
-                        ShindoLogger.warn("Play command restricted - likely due to Spotify Premium requirement or device limitations");
-                        Shindo.getInstance().getNotificationManager().post(
-                                TranslateText.SPOTIFY_PLAYBACK,
-                                TranslateText.SPOTIFY_PLAYBACK_RESTRICTED,
-                                NotificationType.WARNING
-                        );
-
-                        fetchCurrentPlaybackState();
-                    } else {
-                        throw e;
-                    }
-                }
-            } catch (Exception e) {
-                handleSpotifyException("start playback", e);
-            }
-        });
-    }
-
-    public void pause() {
-        if (!isPlaying) return;
-        CompletableFuture.runAsync(() -> {
-            try {
-                final PauseUsersPlaybackRequest pauseRequest = spotifyApi.pauseUsersPlayback().build();
-                fetchCurrentPlaybackState();
-                pauseRequest.execute();
-                isPlaying = false;
-            } catch (Exception e) {
-                handleSpotifyException("pause playback", e);
-            }
-        });
-    }
-
-    public void resume() {
-        if (isPlaying) return;
-        CompletableFuture.runAsync(() -> {
-            try {
-                String deviceId = getActiveDeviceId();
-                if (deviceId == null) {
-                    Shindo.getInstance().getNotificationManager().post(TranslateText.SPOTIFY_PLAYBACK, TranslateText.SPOTIFY_NO_ACTIVE_DEVICE, NotificationType.ERROR);
-                    return;
-                }
-
-                final StartResumeUsersPlaybackRequest resumeRequest = spotifyApi.startResumeUsersPlayback()
-                        .device_id(deviceId)
-                        .build();
-                fetchCurrentPlaybackState();
-                resumeRequest.execute();
-                isPlaying = true;
-            } catch (Exception e) {
-                if (e.getMessage() != null && e.getMessage().contains("Restriction violated")) {
-                    ShindoLogger.warn("Resume playback restricted - likely due to Spotify Premium requirement or device limitations");
-                    Shindo.getInstance().getNotificationManager().post(
-                            TranslateText.SPOTIFY_PLAYBACK,
-                            TranslateText.SPOTIFY_PREMIUM_REQUIRED,
-                            NotificationType.WARNING
-                    );
-                    fetchCurrentPlaybackState();
-                } else {
-                    handleSpotifyException("resume playback", e);
-                }
-            }
-        });
-    }
-
-    public void fetchAndUpdateVolume() {
-        try {
-            CurrentlyPlayingContext playbackState = spotifyApi.getInformationAboutUsersCurrentPlayback().build().execute();
-            if (playbackState != null && playbackState.getDevice() != null) {
-                currentVolume = playbackState.getDevice().getVolume_percent();
-            }
-        } catch (Exception e) {
-            ShindoLogger.warn("Error fetching current volume: " + e.getMessage());
-        }
-    }
-
-    public int getVolume() {
-        try {
-            if (!isPlaying && currentVolume == 100) {
-                fetchAndUpdateVolume();
-            }
-        } catch (Exception ignored) {
-        }
-        return currentVolume;
-    }
-
-    public void setVolume(int volumePercent) {
-        if (volumePercent == currentVolume) return;
-        CompletableFuture.runAsync(() -> {
-            try {
-                CurrentlyPlayingContext playbackState = spotifyApi.getInformationAboutUsersCurrentPlayback().build().execute();
-                if (playbackState != null) {
-                    currentVolume = playbackState.getDevice().getVolume_percent();
-
-                    if (volumePercent == currentVolume) {
-                        return;
-                    }
-                }
-
-                spotifyApi.setVolumeForUsersPlayback(volumePercent).build().execute();
-                currentVolume = volumePercent;
-            } catch (Exception e) {
-                handleSpotifyException("set volume", e);
-            }
-        });
-    }
-
-    public void nextTrack() {
-        CompletableFuture.runAsync(() -> {
-            try {
-                spotifyApi.skipUsersPlaybackToNextTrack().build().execute();
-                fetchCurrentPlaybackState();
-                updatePlaybackState();
-            } catch (Exception e) {
-                handleSpotifyException("skip to next track", e);
-            }
-        });
-    }
-
-    public void previousTrack() {
-        CompletableFuture.runAsync(() -> {
-            try {
-                spotifyApi.skipUsersPlaybackToPreviousTrack().build().execute();
-                fetchCurrentPlaybackState();
-                updatePlaybackState();
-            } catch (Exception e) {
-                handleSpotifyException("skip to previous track", e);
-            }
-        });
-    }
-
-    public void seekToPosition(long positionMs) {
-        CompletableFuture.runAsync(() -> {
-            try {
-                spotifyApi.seekToPositionInCurrentlyPlayingTrack((int) positionMs).build().execute();
-                synchronized (this) {
-                    trackPosition = positionMs;
-                    lastPositionUpdateTime = System.currentTimeMillis();
-                    notifyTrackInfoUpdated();
-                }
-                scheduler.schedule(this::synchronizePlaybackPosition, 300, TimeUnit.MILLISECONDS);
-            } catch (Exception e) {
-                handleSpotifyException("seek to position", e);
-            }
-        });
-    }
-
-    private void updatePlaybackState() {
-        try {
-            CurrentlyPlaying currentlyPlaying = spotifyApi.getUsersCurrentlyPlayingTrack().build().execute();
-            if (currentlyPlaying != null && currentlyPlaying.getItem() != null) {
-                currentTrack = (Track) currentlyPlaying.getItem();
-                isPlaying = currentlyPlaying.getIs_playing();
-                trackPosition = currentlyPlaying.getProgress_ms();
-                trackDuration = currentTrack.getDurationMs();
-                notifyTrackInfoUpdated();
-            }
-        } catch (Exception e) {
-            ShindoLogger.error("Error updating playback state", e);
-        }
-    }
-
-    private void handleSpotifyException(String action, Exception e) {
-        String errorMessage = "Failed to " + action + ": " + e.getMessage();
-        ShindoLogger.error(errorMessage, e);
-
-        // Create a specific error message based on the action
-        TranslateText errorText;
-        switch (action) {
-            case "start playback":
-                errorText = TranslateText.SPOTIFY_PLAYBACK_START_FAILED;
-                break;
-            case "pause playback":
-                errorText = TranslateText.SPOTIFY_PLAYBACK_PAUSE_FAILED;
-                break;
-            case "resume playback":
-                errorText = TranslateText.SPOTIFY_PLAYBACK_RESUME_FAILED;
-                break;
-            case "set volume":
-                errorText = TranslateText.SPOTIFY_VOLUME_SET_FAILED;
-                break;
-            case "play playlist":
-                errorText = TranslateText.SPOTIFY_FAILED_TO_PLAY_PLAYLIST;
-                break;
-            default:
-                // For any other action use a generic error message
-                errorText = TranslateText.ERROR;
-                break;
-        }
-
-        Shindo.getInstance().getNotificationManager().post(
-                TranslateText.SPOTIFY_PLAYBACK,
-                errorText,
-                NotificationType.ERROR
-        );
-    }
-
-    private String getActiveDeviceId() {
-        try {
-            final Device[] devices = spotifyApi.getUsersAvailableDevices().build().execute();
-            if (devices == null || devices.length == 0) {
-                ShindoLogger.warn("No Spotify devices found");
-                return null;
-            }
-
-            for (Device device : devices) {
-                if (device.getIs_active()) {
-                    return device.getId();
-                }
-            }
-
-            if (devices.length > 0) {
-                ShindoLogger.info("No active device found, using first available: " + devices[0].getName());
-                return devices[0].getId();
-            }
-
-            ShindoLogger.warn("No active device found");
-        } catch (IOException | SpotifyWebApiException | ParseException e) {
-            ShindoLogger.error("Failed to get active device", e);
-        }
-        return null;
-    }
-
-    public String getAlbumArtUrl(Track track) {
-        if (track == null || track.getAlbum() == null ||
-                track.getAlbum().getImages() == null ||
-                track.getAlbum().getImages().length == 0) {
-            return null;
-        }
-
-        String imageUrl = track.getAlbum().getImages()[0].getUrl();
-        if (imageUrl == null) {
-            return null;
-        }
-
-        try {
-            return albumArtCache.getCachedAlbumArtUrlAsync(track.getId(), imageUrl)
-                    .get(800, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            return imageUrl;
-        } catch (Exception e) {
-            return imageUrl;
-        }
-    }
-
-    private void fetchCurrentPlaybackState() {
-        try {
-            CurrentlyPlayingContext playbackState = spotifyApi.getInformationAboutUsersCurrentPlayback().build().execute();
-            if (playbackState != null) {
-                isPlaying = playbackState.getIs_playing();
-                trackPosition = playbackState.getProgress_ms();
-                lastPositionUpdateTime = System.currentTimeMillis();
-
-                if (playbackState.getDevice() != null) {
-                    currentVolume = playbackState.getDevice().getVolume_percent();
-                }
-
-                if (playbackState.getItem() != null && playbackState.getItem() instanceof Track) {
-                    Track newTrack = (Track) playbackState.getItem();
-                    if (currentTrack == null || !currentTrack.getId().equals(newTrack.getId())) {
-                        currentTrack = newTrack;
-                        trackDuration = currentTrack.getDurationMs();
-                    }
-                }
-
-                notifyTrackInfoUpdated();
-            }
-        } catch (Exception e) {
-            ShindoLogger.error("Error fetching playback state", e);
-        }
-    }
-
-    public Track getCurrentTrack() {
-        return currentTrack;
-    }
-
-    public boolean isPlaying() {
-        return isPlaying;
-    }
-
-    private void startPlaybackStateUpdater() {
-        scheduler.scheduleAtFixedRate(() -> {
-            if (rateLimiter.tryAcquire()) {
-                fetchCurrentPlaybackState();
-            } else if (isPlaying) {
-                long currentPosition = getCurrentPosition();
-                if (currentPosition != trackPosition) {
-                    trackPosition = currentPosition;
-                    notifyTrackInfoUpdated();
-                }
-            }
-        }, 0, PLAYBACK_UPDATE_INTERVAL, TimeUnit.MILLISECONDS);
-    }
-
-    public long getCurrentPosition() {
-        if (!isPlaying) return trackPosition;
-
-        long now = System.currentTimeMillis();
-        long elapsed = (lastPositionUpdateTime > 0) ? now - lastPositionUpdateTime : 0;
-
-        if (elapsed > 3000) {
-            synchronizePlaybackPosition();
-            return trackPosition;
-        }
-
-        return Math.min(trackPosition + elapsed, trackDuration);
-    }
-
-    public CompletableFuture<Void> synchronizePlaybackPosition() {
-        return CompletableFuture.runAsync(() -> {
-            try {
-                if (rateLimiter.tryAcquire()) {
-                    CurrentlyPlayingContext playbackState = spotifyApi.getInformationAboutUsersCurrentPlayback().build().execute();
-                    if (playbackState != null) {
-                        synchronized (this) {
-                            isPlaying = playbackState.getIs_playing();
-                            trackPosition = playbackState.getProgress_ms();
-                            lastPositionUpdateTime = System.currentTimeMillis();
-
-                            if (playbackState.getItem() != null && playbackState.getItem() instanceof Track) {
-                                Track newTrack = (Track) playbackState.getItem();
-                                if (currentTrack == null || !currentTrack.getId().equals(newTrack.getId())) {
-                                    currentTrack = newTrack;
-                                    trackDuration = newTrack.getDurationMs();
-                                }
-                            }
-
-                            notifyTrackInfoUpdated();
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                ShindoLogger.error("Error during position sync: " + e.getMessage());
-            }
-        });
-    }
-
-    public float getCurrentTime() {
-        return (float) getCurrentPosition() / 1000;
-    }
-
-    public float getEndTime() {
-        return (float) trackDuration / 1000;
-    }
-
-    private void notifyTrackInfoUpdated() {
-        if (trackInfoCallback != null) {
-            trackInfoCallback.onTrackInfoUpdated(getCurrentPosition(), trackDuration);
-        }
-    }
-
-    public void setTrackInfoCallback(TrackInfoCallback callback) {
-        this.trackInfoCallback = callback;
-    }
-
-    public void refreshAccessToken() {
-        try {
-            final AuthorizationCodeCredentials authorizationCodeCredentials = spotifyApi.authorizationCodeRefresh()
-                    .build().execute();
-
-            spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
-
-            if (authorizationCodeCredentials.getRefreshToken() != null) {
-                spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
-            }
-
-            saveTokens();
-        } catch (IOException | SpotifyWebApiException | ParseException e) {
-            ShindoLogger.error("Failed to refresh access token automatically", e);
-            isAuthorized = false;
-            Shindo.getInstance().getNotificationManager().post(TranslateText.SPOTIFY_AUTH, TranslateText.SPOTIFY_AUTH_REFRESH_FAILED, NotificationType.ERROR);
-        }
-    }
-
-    private void scheduleTokenRefresh() {
-        long refreshInterval = 3600 - 300;
-        tokenRefreshScheduler.scheduleAtFixedRate(this::refreshAccessToken, refreshInterval, refreshInterval, TimeUnit.SECONDS);
-    }
-
-    public void cleanup() {
-        searchCache.clear();
-        playlistCache.clear();
-        albumArtCache.cleanup();
-        if (lyricsManager != null) {
-            lyricsManager.shutdown();
-        }
-        if (server != null) {
-            server.stop(0);
-        }
-        if (scheduler != null) {
-            scheduler.shutdownNow();
-        }
-        if (tokenRefreshScheduler != null) {
-            tokenRefreshScheduler.shutdownNow();
-        }
-        saveTokens();
-    }
-
-    @Override
-    public void close() {
-        cleanup();
-        if (lyricsManager != null) {
-            lyricsManager.shutdown();
-        }
-    }
-
-    public CompletableFuture<List<PlaylistSimplified>> getUserPlaylists() {
-        String cacheKey = "userPlaylists";
-        return playlistCache.computeIfAbsent(cacheKey, k ->
-                throttleRequest("playlists", () -> CompletableFuture.supplyAsync(() -> {
-                    try {
-                        List<PlaylistSimplified> allPlaylists = new ArrayList<>();
-                        int offset = 0;
-                        boolean hasMore = true;
-
-                        while (hasMore && offset < 200) {
-                            GetListOfCurrentUsersPlaylistsRequest request = spotifyApi.getListOfCurrentUsersPlaylists()
-                                    .limit(PLAYLIST_LIMIT)
-                                    .offset(offset)
-                                    .build();
-
-                            PlaylistSimplified[] batch = request.execute().getItems();
-                            if (batch.length == 0) {
-                                hasMore = false;
-                            } else {
-                                allPlaylists.addAll(Arrays.asList(batch));
-                                offset += batch.length;
-                                Thread.sleep(THROTTLE_DELAY);
-                            }
-                        }
-
-                        CompletableFuture.runAsync(() ->
-                                prefetchPlaylistImages(allPlaylists));
-
-                        return allPlaylists;
-                    } catch (Exception e) {
-                        ShindoLogger.error("Failed to fetch playlists", e);
-                        return Collections.emptyList();
-                    } finally {
-                        playlistCache.remove(cacheKey);
-                    }
-                }))
-        );
-    }
-
-    private void prefetchPlaylistImages(List<PlaylistSimplified> playlists) {
-        try {
-            for (int i = 0; i < playlists.size(); i += BATCH_SIZE) {
-                int end = Math.min(i + BATCH_SIZE, playlists.size());
-                List<PlaylistSimplified> batch = playlists.subList(i, end);
-
-                batch.parallelStream()
-                        .filter(p -> p != null && p.getImages() != null && p.getImages().length > 0)
-                        .forEach(this::getPlaylistImageUrl);
-
-                Thread.sleep(THROTTLE_DELAY);
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    private <T> CompletableFuture<T> throttleRequest(String key, Supplier<CompletableFuture<T>> request) {
-        return CompletableFuture.supplyAsync(() -> {
-            long lastTime = lastRequestTime.getOrDefault(key, 0L);
-            long now = System.currentTimeMillis();
-            long timeSinceLastRequest = now - lastTime;
-
-            if (timeSinceLastRequest < THROTTLE_DELAY) {
-                try {
-                    Thread.sleep(THROTTLE_DELAY - timeSinceLastRequest);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-            }
-
-            lastRequestTime.put(key, System.currentTimeMillis());
-            return request.get().join();
-        });
-    }
-
-    public void playPlaylist(String playlistUri) {
-        CompletableFuture.runAsync(() -> {
-            try {
-                StartResumeUsersPlaybackRequest request = spotifyApi.startResumeUsersPlayback()
-                        .context_uri(playlistUri)
-                        .build();
-                request.execute();
-            } catch (Exception e) {
-                ShindoLogger.error("Failed to play playlist", e);
-                handleSpotifyException("play playlist", e);
-            }
-        });
-    }
-
-    public String getPlaylistImageUrl(PlaylistSimplified playlist) {
-        if (playlist == null || playlist.getImages() == null || playlist.getImages().length == 0) {
-            return null;
-        }
-
-        String imageUrl = playlist.getImages()[0].getUrl();
-        if (imageUrl == null) {
-            return null;
-        }
-
-        try {
-            String cachedUrl = albumArtCache.getAlbumArt(imageUrl);
-            return cachedUrl != null ? cachedUrl : imageUrl;
-        } catch (Exception e) {
-            ShindoLogger.warn("Using direct playlist image URL: " + e.getMessage());
-            return imageUrl;
-        }
-    }
-
-    public LyricsManager getLyricsManager() {
-        return lyricsManager;
-    }
-
-    public long getTrackPosition() {
-        return trackPosition;
-    }
-
-    public interface TrackInfoCallback {
-        void onTrackInfoUpdated(long position, long duration);
-    }
-
-    private static final class SimpleRateLimiter {
-        private final long minTimeBetweenRequests;
-        private long lastRequestTime;
-
-        SimpleRateLimiter(double requestsPerSecond) {
-            this.minTimeBetweenRequests = (long) (1000.0 / requestsPerSecond);
-            this.lastRequestTime = 0;
-        }
-
-        synchronized boolean tryAcquire() {
-            long now = System.currentTimeMillis();
-            if (now - lastRequestTime >= minTimeBetweenRequests) {
-                lastRequestTime = now;
-                return true;
-            }
-            return false;
-        }
-    }
-
-    private class SpotifyCallbackHandler implements HttpHandler {
-        @Override
-        public void handle(HttpExchange exchange) throws IOException {
-            String query = exchange.getRequestURI().getQuery();
-            String response = "Authorization successful! You can close this window now.";
-            exchange.sendResponseHeaders(200, response.length());
-            OutputStream os = exchange.getResponseBody();
-            os.write(response.getBytes());
-            os.close();
-
-            if (query != null && query.startsWith("code=")) {
-                String authorizationCode = query.substring(5);
-                CompletableFuture.runAsync(() -> requestAccessToken(authorizationCode));
-            } else {
-                ShindoLogger.warn("Received callback without authorization code");
-            }
-        }
-    }
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+
+public class MusicManager {
+
+	private VolumeSpectrumAudioDevice volumeSpectrumAudioDevice;
+
+	private final Object lock = new Object();
+	private final CopyOnWriteArrayList<Music> musics = new CopyOnWriteArrayList<Music>();
+	private AdvancedPlayer player;
+	private Thread playThread;
+	private final Ytdlp ytdlp = new Ytdlp();
+	private volatile boolean paused = false;
+	private volatile boolean stopped = false;
+	private float volume; // De 0.0f a 1.0f
+
+	private Music currentMusic;
+
+
+	
+	public MusicManager() {
+		load();
+		loadData();
+	}
+	
+	public void loadData() {
+		
+		FileManager fileManager = Shindo.getInstance().getFileManager();
+		File cacheDir = new File(fileManager.getCacheDir(), "music");
+		File dataJson = new File(cacheDir, "Data.json");
+		
+		ArrayList<String> favorites = new ArrayList<String>();
+		
+		if(!dataJson.exists()) {
+			fileManager.createFile(dataJson);
+		}
+		
+		try (FileReader reader = new FileReader(dataJson)) {
+			
+			Gson gson = new GsonBuilder().create();
+			JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
+			
+			if(jsonObject != null) {
+				
+				JsonArray jsonArray = JsonUtils.getArrayProperty(jsonObject, "Favorite Musics");
+				
+				if(jsonArray != null) {
+					
+					Iterator<JsonElement> iterator = jsonArray.iterator();
+					
+					while(iterator.hasNext()) {
+						
+						JsonElement jsonElement = (JsonElement) iterator.next();
+						JsonObject rJsonObject = gson.fromJson(jsonElement, JsonObject.class);
+						
+						favorites.add(JsonUtils.getStringProperty(rJsonObject, "Favorite", "null"));
+					}
+				}
+			}
+		} catch (Exception e) {
+			ShindoLogger.error("An Error Occurred while loading data from file " + dataJson.getAbsolutePath(), e);
+		}
+		
+		for(Music m : musics) {
+			if(favorites.contains(m.getName())) {
+				m.setType(MusicType.FAVORITE);
+			}
+		}
+	}
+	
+	public void saveData() {
+		
+		FileManager fileManager = Shindo.getInstance().getFileManager();
+		File cacheDir = new File(fileManager.getCacheDir(), "music");
+		File dataJson = new File(cacheDir, "Data.json");
+		
+		if(!dataJson.exists()) {
+			fileManager.createFile(dataJson);
+		}
+		
+		try(FileWriter writer = new FileWriter(dataJson)) {
+			
+			JsonObject jsonObject = new JsonObject();
+			JsonArray jsonArray = new JsonArray();
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			
+			for(Music m : musics) {
+				
+				if(m.getType().equals(MusicType.FAVORITE)) {
+					
+					JsonObject innerJsonObject = new JsonObject();
+					
+					innerJsonObject.addProperty("Favorite", m.getName());
+					
+					jsonArray.add(innerJsonObject);
+				}
+			}
+			
+			jsonObject.add("Favorite Musics", jsonArray);
+			
+			gson.toJson(jsonObject, writer);
+			
+		} catch(Exception e) {
+			ShindoLogger.error("An Error Occurred while saving data to file " + dataJson.getAbsolutePath(), e);
+		}
+	}
+
+	public void load() {
+
+		FileManager fileManager = Shindo.getInstance().getFileManager();
+		File musicDir = fileManager.getMusicDir();
+		File cacheDir = new File(fileManager.getCacheDir(), "music");
+
+		if(!cacheDir.exists()) {
+			fileManager.createDir(cacheDir);
+		}
+
+		for(File f : musicDir.listFiles()) {
+
+			if(FileUtils.getExtension(f).equals("mp3")) {
+
+				File imageFile = new File(cacheDir, f.getName().replace(".mp3", ""));
+
+				if(!imageFile.exists()) {
+
+					try {
+
+						Mp3File mp3File = new Mp3File(f);
+
+						if(mp3File.hasId3v2Tag()) {
+
+							ID3v2 id3v2tag = mp3File.getId3v2Tag();
+
+							if(id3v2tag.getAlbumImage() != null) {
+
+								byte[] imageData = id3v2tag.getAlbumImage();
+
+								FileOutputStream fos = new FileOutputStream(imageFile);
+
+								fos.write(imageData);
+								fos.close();
+
+								ImageIO.write(ImageUtils.resize(ImageIO.read(imageFile), 256, 256), "png", imageFile);
+							}
+						}
+
+					} catch(Exception e) {
+						ShindoLogger.error("An Error Occurred while loading data from file " + imageFile.getAbsolutePath(), e);
+					}
+				}
+			}
+		}
+
+		for(File f : musicDir.listFiles()) {
+			if(FileUtils.isAudioFile(f)) {
+
+				if(getMusicByAudioFile(f) != null) {
+					continue;
+				}
+
+				if(FileUtils.getExtension(f).equals("mp3")) {
+
+					File imageFile = new File(cacheDir, f.getName().replace(".mp3", ""));
+
+					if(imageFile.exists()) {
+						musics.add(new Music(f, imageFile, MusicType.ALL));
+					}else {
+						musics.add(new Music(f, null, MusicType.ALL));
+					}
+				}else {
+					musics.add(new Music(f, null, MusicType.ALL));
+				}
+			}
+		}
+	}
+
+	public void loadAsync() {
+		Multithreading.runAsync(()-> {
+			load();
+		});
+	}
+
+	public void play() {
+
+		if (currentMusic == null) {
+			return;
+		}
+
+		if (paused) {
+			resume();
+			return;
+		}
+
+		if (isPlaying()) {
+			stop();
+		}
+
+
+		playThread = new Thread(() -> {
+			try (BufferedInputStream bis = new BufferedInputStream(Files.newInputStream(currentMusic.getAudio().toPath()))) {
+				player = new AdvancedPlayer(bis, createAudioDevice());
+				stopped = false;
+				paused = false;
+				player.play();
+			} catch (Exception e) {
+				ShindoLogger.error("could not play audio", e);
+			}
+		});
+		playThread.start();
+	}
+
+	public void setVolume() {
+		volume = InternalSettingsMod.getInstance().getVolumeSetting().getValueFloat();
+	}
+	public void next() {
+		if (currentMusic == null) {
+			return;
+		}
+
+		int max = musics.size();
+		int index = musics.indexOf(currentMusic);
+
+		if (index < max - 1) {
+			index++;
+		} else {
+			index = 0;
+		}
+		currentMusic = musics.get(index);
+		play();
+	}
+
+	public void back() {
+		if (currentMusic == null) {
+			return;
+		}
+
+		int max = musics.size();
+		int index = musics.indexOf(currentMusic);
+
+		if (index > 0) {
+			index--;
+		} else {
+			index = max - 1;
+		}
+
+		currentMusic = musics.get(index);
+		play();
+	}
+
+	public void switchPlayBack() {
+		if (player != null) {
+			if (isPlaying()) pause();
+			else resume();
+		}
+	}
+
+	public void pause() {
+		paused = true;
+	}
+
+	public void resume() {
+		paused = false;
+		synchronized (lock) {
+			lock.notifyAll();
+		}
+	}
+
+	public void stop() {
+		stopped = true;
+		paused = false;
+		if (player != null) {
+			player.close();
+		}
+		if (playThread != null) {
+			playThread.interrupt();
+		}
+	}
+
+	public boolean isPlaying() {
+		return !paused && playThread != null && playThread.isAlive();
+	}
+
+	public Music getMusicByName(String name) {
+		
+		for(Music m : musics) {
+			if(m.getName().equals(name)) {
+				return m;
+			}
+		}
+		
+		return null;
+	}
+	
+	public Music getMusicByAudioFile(File file) {
+		
+		for(Music m : musics) {
+			if(m.getAudio().equals(file)) {
+				return m;
+			}
+		}
+		
+		return null;
+	}
+	
+	public void delete(Music m) {
+		musics.remove(m);
+		m.getAudio().delete();
+		load();
+	}
+
+	public CopyOnWriteArrayList<Music> getMusics() {
+		return musics;
+	}
+
+	public Music getCurrentMusic() {
+		return currentMusic;
+	}
+
+	public void setCurrentMusic(Music currentMusic) {
+		this.currentMusic = currentMusic;
+	}
+
+	public Ytdlp getYtdlp() {
+		return ytdlp;
+	}
+
+	private AudioDevice createAudioDevice() throws JavaLayerException {
+		volumeSpectrumAudioDevice = new VolumeSpectrumAudioDevice();
+		return volumeSpectrumAudioDevice;
+	}
+
+	public float getCurrentTime() {
+		if (volumeSpectrumAudioDevice != null) {
+			return volumeSpectrumAudioDevice.getCurrentTime();
+		}
+		return 0;
+	}
+
+	public float getEndTime() {
+		try {
+			File audioFile = currentMusic.getAudio().toPath().toFile();
+			AudioFileFormat fileFormat = AudioSystem.getAudioFileFormat(audioFile);
+			Map<?, ?> properties = fileFormat.properties();
+			Long microseconds = (Long) properties.get("duration");
+			if (microseconds != null) {
+				return microseconds / 1_000_000.0F;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	private class VolumeSpectrumAudioDevice extends JavaSoundAudioDevice {
+
+		private final int fftSize = 1024;
+		private float[] audioBuffer = new float[fftSize];
+		private float[] magnitudes = new float[fftSize / 2];
+		private float[] phases = new float[fftSize / 2];
+		private FloatFFT_1D fft = new FloatFFT_1D(fftSize);
+
+		private long totalSamplesProcessed = 0;
+
+		@Override
+		protected void writeImpl(short[] samples, int offs, int len) throws JavaLayerException {
+			if (paused) {
+				synchronized (lock) {
+					try {
+						lock.wait();
+					} catch (InterruptedException e) {
+						return;
+					}
+				}
+			}
+
+			if (stopped) return;
+
+			// Aplica volume
+			for (int i = offs; i < offs + len; i++) {
+				samples[i] = (short) (samples[i] * (volume / 100f));
+			}
+
+			// Envia para o áudio
+			super.writeImpl(samples, offs, len);
+
+			// Atualiza total de samples para timestamp
+			totalSamplesProcessed += len;
+
+			// Preenche buffer para FFT (com o áudio já no volume aplicado)
+			int toCopy = Math.min(len, fftSize);
+			for (int i = 0; i < toCopy; i++) {
+				audioBuffer[i] = samples[offs + i] / 32768f; // normaliza para [-1,1]
+			}
+			if (toCopy < fftSize) {
+				Arrays.fill(audioBuffer, toCopy, fftSize, 0f);
+			}
+
+			// Prepara input complexo para FFT
+			float[] fftInput = new float[fftSize * 2];
+			for (int i = 0; i < fftSize; i++) {
+				fftInput[2 * i] = audioBuffer[i];
+				fftInput[2 * i + 1] = 0f;
+			}
+
+			// Executa FFT
+			fft.complexForward(fftInput);
+
+			// Calcula magnitude em dB e fase
+			for (int i = 0; i < fftSize / 2; i++) {
+				float re = fftInput[2 * i];
+				float im = fftInput[2 * i + 1];
+
+				float mag = (float) Math.sqrt(re * re + im * im);
+				float magDb = mag > 1e-7f ? 20f * (float) Math.log10(mag) : -100f;
+				magnitudes[i] = magDb;
+
+				phases[i] = (float) Math.atan2(im, re);
+			}
+
+			// Calcula timestamp (em segundos)
+			int sampleRate = getAudioFormat() != null ? (int) getAudioFormat().getSampleRate() : 44100;
+			double timestamp = (double) totalSamplesProcessed / sampleRate;
+			double duration = (double) fftSize / sampleRate;
+
+			spectrumDataUpdate(timestamp, duration, magnitudes, phases);
+		}
+
+		protected void spectrumDataUpdate(double timestamp, double duration, float[] magnitudes, float[] phases) {
+
+			ComboSetting setting = MusicInfoMod.getInstance().getDesignSetting();
+			boolean isWaveform = setting.getOption().getTranslate().equals(TranslateText.WAVEFORM);
+
+			for(int i = 0; i < 100; i++) {
+
+				if(isWaveform) {
+					MusicWaveform.visualizer[i] = (float) ((magnitudes[i] + 60) * (-1.17));
+				} else {
+					MusicWaveform.visualizer[i] = (float) ((magnitudes[i] + 60) * (-3.0));
+				}
+			}
+		}
+
+		public float getCurrentTime() {
+			if (getAudioFormat() == null) return 0.0F;
+			int sampleRate = (int) getAudioFormat().getSampleRate();
+			return  (float) totalSamplesProcessed / sampleRate;
+		}
+	}
 }

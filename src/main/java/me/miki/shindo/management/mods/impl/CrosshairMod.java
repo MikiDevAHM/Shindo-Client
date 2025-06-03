@@ -46,7 +46,7 @@ public class CrosshairMod extends Mod {
                 GlStateManager.tryBlendFuncSeparate(775, 769, 1, 0);
                 GlStateManager.enableAlpha();
                 GlStateManager.enableDepth();
-            	mc.getTextureManager().bindTexture(new ResourceLocation("soar/crosshair.png"));
+            	mc.getTextureManager().bindTexture(new ResourceLocation("shindo/crosshair.png"));
             	GlUtils.startScale(sr.getScaledWidth() / 2 - 7, sr.getScaledHeight() / 2 - 7, 16, 16, scaleSetting.getValueFloat());
             	RenderUtils.drawTexturedModalRect(sr.getScaledWidth() / 2 - 7, sr.getScaledHeight() / 2 - 7, index * 16, 0, 16, 16);
             	GlUtils.stopScale();

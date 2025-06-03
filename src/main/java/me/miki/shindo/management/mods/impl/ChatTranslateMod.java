@@ -1,8 +1,5 @@
 package me.miki.shindo.management.mods.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import me.miki.shindo.management.event.EventTarget;
 import me.miki.shindo.management.event.impl.EventReceivePacket;
 import me.miki.shindo.management.language.TranslateText;
@@ -17,6 +14,9 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ChatTranslateMod extends Mod {
 
@@ -37,7 +37,7 @@ public class ChatTranslateMod extends Mod {
 		if(event.getPacket() instanceof S02PacketChat) {
 			
 			S02PacketChat chatPacket = (S02PacketChat)event.getPacket();
-			IChatComponent translate = new ChatComponentText(" [" + String.valueOf('\u270E') + "]").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN).setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, ".soarcmd translate " + chatPacket.getChatComponent().getUnformattedText()))
+			IChatComponent translate = new ChatComponentText(" [" + String.valueOf('\u270E') + "]").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN).setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, ".scmd translate " + chatPacket.getChatComponent().getUnformattedText()))
 					.setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(TranslateText.CLICK_TO_TRANSLATE.getText()))));
             final String chatMessage = chatPacket.getChatComponent().getUnformattedText();
             

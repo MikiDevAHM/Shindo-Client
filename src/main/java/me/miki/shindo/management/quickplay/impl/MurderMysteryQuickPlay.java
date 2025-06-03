@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 public class MurderMysteryQuickPlay extends QuickPlay{
 
 	public MurderMysteryQuickPlay() {
-		super("Murder", new ResourceLocation("soar/icons/hypixel/MurderMystery.png"));
+		super("Murder", new ResourceLocation("shindo/icons/hypixel/MurderMystery.png"));
 	}
 
 	@Override

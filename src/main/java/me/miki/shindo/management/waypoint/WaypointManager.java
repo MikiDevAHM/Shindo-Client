@@ -28,7 +28,7 @@ public class WaypointManager {
 	public WaypointManager() {
 		
 		FileManager fileManager = Shindo.getInstance().getFileManager();
-		File waypointFile = new File(fileManager.getGlideDir(), "Waypoint.json");
+		File waypointFile = new File(fileManager.getShindoDir(), "Waypoint.json");
 		
 		fileManager.createFile(waypointFile);
 		
@@ -70,7 +70,7 @@ public class WaypointManager {
 	public void save() {
 		
 		FileManager fileManager = Shindo.getInstance().getFileManager();
-		File waypointFile = new File(fileManager.getGlideDir(), "Waypoint.json");
+		File waypointFile = new File(fileManager.getShindoDir(), "Waypoint.json");
 		
 		try (FileWriter writer = new FileWriter(waypointFile)) {
 			

@@ -3,8 +3,6 @@ package me.miki.shindo.gui.mainmenu;
 import me.miki.shindo.Shindo;
 import me.miki.shindo.gui.mainmenu.impl.*;
 import me.miki.shindo.gui.mainmenu.impl.welcome.*;
-import me.miki.shindo.gui.mainmenu.impl.*;
-import me.miki.shindo.gui.mainmenu.impl.welcome.*;
 import me.miki.shindo.logger.ShindoLogger;
 import me.miki.shindo.management.event.impl.EventRenderNotification;
 import me.miki.shindo.management.nanovg.NanoVGManager;
@@ -21,6 +19,7 @@ import me.miki.shindo.utils.animation.simple.SimpleAnimation;
 import me.miki.shindo.utils.mouse.MouseUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 
 import java.awt.*;
@@ -54,19 +53,17 @@ public class GuiShindoMainMenu extends GuiScreen {
 		scenes.add(new BackgroundScene(this));
 		scenes.add(new ShopScene(this));
 		scenes.add(new WelcomeMessageScene(this));
-		scenes.add(new ThemeSelectScene(this));
 		scenes.add(new LanguageSelectScene(this));
+		scenes.add(new ThemeSelectScene(this));
 		scenes.add(new AccentColorSelectScene(this));
+		scenes.add(new CheckingDataScene(this));
 		scenes.add(new LastMessageScene(this));
 		scenes.add(new UpdateScene(this));
-		scenes.add(new DiscontinuedSoar8(this));
 
 		if (instance.isFirstLogin()) {
 			currentScene = getSceneByClass(WelcomeMessageScene.class);
 		} else {
-			if (instance.getSoar8Released()) {
-				currentScene = getSceneByClass(DiscontinuedSoar8.class);
-			} else if (instance.getUpdateNeeded()) {
+			 if (instance.getUpdateNeeded()) {
 				currentScene = getSceneByClass(UpdateScene.class);
 			} else  {
 				currentScene = getSceneByClass(MainScene.class);
@@ -107,7 +104,7 @@ public class GuiShindoMainMenu extends GuiScreen {
 		if(fadeBackgroundAnimation == null || (fadeBackgroundAnimation != null && !fadeBackgroundAnimation.isDone(Direction.FORWARDS))) {
 			nvg.setupAndDraw(() -> drawSplashScreen(sr, nvg));
 			if(!soundPlayed) {
-				Sound.play("soar/audio/start.wav", true);
+				Sound.play("shindo/audio/start.wav", true);
 				soundPlayed = true;
 			}
 		}
@@ -175,7 +172,7 @@ public class GuiShindoMainMenu extends GuiScreen {
 			}
 			
 			nvg.drawRect(0, 0, sr.getScaledWidth(), sr.getScaledHeight(), new Color(0, 0, 0, fadeBackgroundAnimation != null ? (int) (255 - (fadeBackgroundAnimation.getValue() * 255)) : 255));
-			nvg.drawCenteredText(LegacyIcon.SOAR, sr.getScaledWidth() / 2, (sr.getScaledHeight() / 2) - (nvg.getTextHeight(LegacyIcon.SOAR, 130, Fonts.LEGACYICON) / 2) - 1, new Color(255, 255, 255, (int) (255 - (fadeIconAnimation.getValue() * 255))), 130, Fonts.LEGACYICON);
+			nvg.drawImage(new ResourceLocation("shindo/logo.png"), sr.getScaledWidth() / 2F - (130 / 2F), (sr.getScaledHeight() / 2F) - (130 / 2F) - 1, 130, 130);
 		}
 	}
 	

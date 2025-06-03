@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 public class UHCQuickPlay extends QuickPlay{
 
 	public UHCQuickPlay() {
-		super("UHC", new ResourceLocation("soar/icons/hypixel/UHC.png"));
+		super("UHC", new ResourceLocation("shindo/icons/hypixel/UHC.png"));
 	}
 
 	@Override

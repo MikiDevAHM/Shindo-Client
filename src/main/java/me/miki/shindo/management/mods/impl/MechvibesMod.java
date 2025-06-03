@@ -222,8 +222,8 @@ public class MechvibesMod extends Mod {
 	private void loadMouseSounds() {
 		Multithreading.runAsync(()->{
 			try {
-				mouseLeftSound.loadClip(new ResourceLocation("soar/mechvibes/mouse.wav"));
-				mouseRightSound.loadClip(new ResourceLocation("soar/mechvibes/mouse.wav"));
+				mouseLeftSound.loadClip(new ResourceLocation("shindo/mechvibes/mouse.wav"));
+				mouseRightSound.loadClip(new ResourceLocation("shindo/mechvibes/mouse.wav"));
 			} catch (Exception e) {}
 			loaded = true;
 		});

@@ -36,7 +36,6 @@ public class LegacyIcon {
 	public static final String LOGOUT = "d";
 	public static final String MAIL = "e";
 	public static final String MAP = "f";
-	public static final String SOAR = "g"; // todo: replace name with GLIDE
 	public static final String MINIMIZE = "h";
 	public static final String MONITOR = "i";
 	public static final String MORE_HORIZONTAL = "j";

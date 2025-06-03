@@ -1,12 +1,5 @@
 package me.miki.shindo.management.mods.impl.asyncscreenshot;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.imageio.ImageIO;
-
 import me.miki.shindo.Shindo;
 import me.miki.shindo.management.mods.impl.AsyncScreenshotMod;
 import net.minecraft.client.Minecraft;
@@ -14,6 +7,12 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class AsyncScreenshots extends Thread {
 
@@ -43,13 +42,13 @@ public class AsyncScreenshots extends Thread {
 
             if(AsyncScreenshotMod.getInstance().getMessageSetting().isToggled()) {
             	mc.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(EnumChatFormatting.UNDERLINE + "Saved screenshot" + EnumChatFormatting.RESET + " ")
-            			.appendSibling(new ChatComponentText("[Open] ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GOLD).setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, ".soarcmd screenshot open " + screenshot.getName())))
-            					.appendSibling(new ChatComponentText("[Copy] ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.BLUE).setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, ".soarcmd screenshot copy " + screenshot.getName())))
-            							.appendSibling(new ChatComponentText("[Delete]").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED).setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, ".soarcmd screenshot del " + screenshot.getName())))))));
+            			.appendSibling(new ChatComponentText("[Open] ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GOLD).setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, ".scmd screenshot open " + screenshot.getName())))
+            					.appendSibling(new ChatComponentText("[Copy] ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.BLUE).setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, ".scmd screenshot copy " + screenshot.getName())))
+            							.appendSibling(new ChatComponentText("[Delete]").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED).setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, ".scmd screenshot del " + screenshot.getName())))))));
             }
             
         	if(AsyncScreenshotMod.getInstance().getClipboardSetting().isToggled()) {
-        		mc.thePlayer.sendChatMessage(".soarcmd screenshot copy " + screenshot.getName());
+        		mc.thePlayer.sendChatMessage(".scmd screenshot copy " + screenshot.getName());
         	}
         } catch (Exception e) {}
 	}

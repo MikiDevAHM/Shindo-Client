@@ -1,36 +1,37 @@
 package me.miki.shindo.management.file;
 
-import java.io.File;
-import java.io.IOException;
-
 import me.miki.shindo.Shindo;
 import me.miki.shindo.logger.ShindoLogger;
 import net.minecraft.client.Minecraft;
 
+import java.io.File;
+import java.io.IOException;
+
 public class FileManager {
 
-	private File glideDir, profileDir, cacheDir, screenshotDir, soarDir, customCapeDir, capeCacheDir;
+	private File shindoDir, profileDir, cacheDir, screenshotDir, soarDir, customCapeDir, capeCacheDir;
 	private boolean migrationSuccess = false;
-	private File musicDir;
+	private File musicDir, externalDir;
 	public FileManager() {
-		
-		glideDir = new File(Minecraft.getMinecraft().mcDataDir, "shindo");
-		soarDir = new File(Minecraft.getMinecraft().mcDataDir, "soar");
-		profileDir = new File(glideDir, "profile");
-		cacheDir = new File(glideDir, "cache");
-		musicDir = new File(glideDir, "music");
-		screenshotDir = new File(glideDir, "screenshots");
+
+		shindoDir = new File(Minecraft.getMinecraft().mcDataDir, "shindo");
+		soarDir = new File(Minecraft.getMinecraft().mcDataDir, "shindo");
+		profileDir = new File(shindoDir, "profile");
+		cacheDir = new File(shindoDir, "cache");
+		musicDir = new File(shindoDir, "music");
+		externalDir = new File(soarDir, "external");
+		screenshotDir = new File(shindoDir, "screenshots");
 		customCapeDir = new File(cacheDir, "custom-cape");
 		capeCacheDir = new File(cacheDir, "cape");
 
 		try{
 
-			if(!glideDir.exists()){
+			if(!shindoDir.exists()){
 				if(soarDir.exists()) {
-					migrationSuccess = soarDir.renameTo(glideDir);
-					if(!migrationSuccess) createDir(glideDir);
+					migrationSuccess = soarDir.renameTo(shindoDir);
+					if(!migrationSuccess) createDir(shindoDir);
 				} else {
-					createDir(glideDir);
+					createDir(shindoDir);
 				}
 			}
 
@@ -73,8 +74,8 @@ public class FileManager {
 		return screenshotDir;
 	}
 
-	public File getGlideDir() {
-		return glideDir;
+	public File getShindoDir() {
+		return shindoDir;
 	}
 
 	public File getProfileDir() {
@@ -95,6 +96,10 @@ public class FileManager {
 
 	public File getMusicDir() {
 		return musicDir;
+	}
+
+	public File getExternalDir() {
+		return externalDir;
 	}
 
 }

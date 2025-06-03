@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 public class ArcadeQuickPlay extends QuickPlay {
 
 	public ArcadeQuickPlay() {
-		super("Arcade", new ResourceLocation("soar/icons/hypixel/Arcade.png"));
+		super("Arcade", new ResourceLocation("shindo/icons/hypixel/Arcade.png"));
 	}
 	
 	@Override

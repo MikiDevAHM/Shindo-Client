@@ -37,7 +37,7 @@ public abstract class MixinGuiScreen {
 		if(InternalSettingsMod.getInstance().getClickEffectsSetting().isToggled()) {
 			Shindo.getInstance().getClickEffects().addClickEffect(mouseX, mouseY);
 		}
-		Sound.play("soar/audio/click.wav", true);
+		Sound.play("shindo/audio/click.wav", true);
 	}
 	
 	@Overwrite

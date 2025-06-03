@@ -43,9 +43,9 @@ public class BackgroundManager {
 			fileManager.createFile(dataJson);
 		}
 		
-		backgrounds.add(new DefaultBackground(0, TranslateText.GRADIENT, new ResourceLocation("soar/mainmenu/background.png")));
-		backgrounds.add(new DefaultBackground(1, TranslateText.NIGHT, new ResourceLocation("soar/mainmenu/background-night.png")));
-		backgrounds.add(new DefaultBackground(2, TranslateText.DOLPHIN, new ResourceLocation("soar/mainmenu/background-dolphin.png")));
+		backgrounds.add(new DefaultBackground(0, TranslateText.GRADIENT, new ResourceLocation("shindo/mainmenu/background.png")));
+		backgrounds.add(new DefaultBackground(1, TranslateText.NIGHT, new ResourceLocation("shindo/mainmenu/background-night.png")));
+		backgrounds.add(new DefaultBackground(2, TranslateText.DOLPHIN, new ResourceLocation("shindo/mainmenu/background-dolphin.png")));
 		backgrounds.add(new DefaultBackground(999, TranslateText.ADD, null));
 		
 		ArrayList<String> removeImages = load();

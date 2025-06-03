@@ -1,14 +1,5 @@
 package me.miki.shindo.injection.mixin.mixins.gui;
 
-import java.awt.Color;
-import java.util.UUID;
-
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import org.spongepowered.asm.mixin.injection.Redirect;
-
 import me.miki.shindo.management.mods.impl.TabEditorMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -16,12 +7,20 @@ import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.NetworkManager;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.Redirect;
+
+import java.awt.*;
+import java.util.UUID;
 
 @Mixin(GuiPlayerTabOverlay.class)
 public class MixinGuiPlayerTabOverlay {
 	
 	@Redirect(method = "renderPlayerlist", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/FontRenderer;drawStringWithShadow(Ljava/lang/String;FFI)I", ordinal = 2))
-	public int renderGlideIcon(FontRenderer instance, String text, float x, float y, int color) {
+	public int renderShindoIcon(FontRenderer instance, String text, float x, float y, int color) {
 		
 		int i = instance.drawStringWithShadow(text, x, y, color);
 		

@@ -14,7 +14,7 @@ public enum ProfileIcon {
 	
 	private ProfileIcon(int id, String name) {
 		this.id = id;
-		this.icon = new ResourceLocation("soar/icons/" + name + ".png");
+		this.icon = new ResourceLocation("shindo/icons/" + name + ".png");
 	}
 
 	public ResourceLocation getIcon() {

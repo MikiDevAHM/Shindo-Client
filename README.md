@@ -5,7 +5,7 @@
 
 
 ## License 
-Shindo uses [GPL v3](https://github.com/GlideClient/client/blob/main/LICENSE)
+Shindo uses [GPL v3](https://github.com/MikiDevAHM/Shindo-Client/blob/master/LICENSE)
 
 ## Issues
 Please either contact us on discord or make a github issues if there is any issues you need to bring to our attention

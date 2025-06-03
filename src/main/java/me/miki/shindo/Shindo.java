@@ -14,7 +14,6 @@ import me.miki.shindo.management.mods.ModManager;
 import me.miki.shindo.management.mods.RestrictedMod;
 import me.miki.shindo.management.mods.impl.InternalSettingsMod;
 import me.miki.shindo.management.music.MusicManager;
-import me.miki.shindo.management.music.RomanizationManager;
 import me.miki.shindo.management.nanovg.NanoVGManager;
 import me.miki.shindo.management.notification.NotificationManager;
 import me.miki.shindo.management.profile.ProfileManager;
@@ -22,6 +21,7 @@ import me.miki.shindo.management.quickplay.QuickPlayManager;
 import me.miki.shindo.management.remote.blacklists.BlacklistManager;
 import me.miki.shindo.management.remote.changelog.ChangelogManager;
 import me.miki.shindo.management.remote.discord.DiscordStats;
+import me.miki.shindo.management.remote.download.DownloadManager;
 import me.miki.shindo.management.remote.news.NewsManager;
 import me.miki.shindo.management.remote.update.Update;
 import me.miki.shindo.management.screenshot.ScreenshotManager;
@@ -42,7 +42,7 @@ public class Shindo {
 
 	private static Shindo instance = new Shindo();
 	private Minecraft mc = Minecraft.getMinecraft();
-	private boolean updateNeeded, soar8Released;
+	private boolean updateNeeded;
 	private String name, version;
 	private int verIdentifier;
 	
@@ -50,6 +50,7 @@ public class Shindo {
 	private FileManager fileManager;
 	private LanguageManager languageManager;
 	private EventManager eventManager;
+	private DownloadManager downloadManager;
 	private ModManager modManager;
 	private CapeManager capeManager;
 	private ColorManager colorManager;
@@ -72,12 +73,11 @@ public class Shindo {
 	private ClickEffects clickEffects;
 	private BlacklistManager blacklistManager;
 	private RestrictedMod restrictedMod;
-	private RomanizationManager romanizationManager;
 	
 	public Shindo() {
 		name = "Shindo";
 		version = "5.1";
-		verIdentifier = 7201;
+		verIdentifier = 5101;
 	}
 	
 	public void start() {
@@ -94,6 +94,7 @@ public class Shindo {
 		firstLoginFile = new File(fileManager.getCacheDir(), "first.tmp");
 		languageManager = new LanguageManager();
 		eventManager = new EventManager();
+		downloadManager = new DownloadManager();
 		modManager = new ModManager();
 		
 		modManager.init();
@@ -118,8 +119,7 @@ public class Shindo {
 		update = new Update();
 		update.check();
 		waypointManager = new WaypointManager();
-		musicManager = new MusicManager(fileManager);
-		romanizationManager = new RomanizationManager();
+		musicManager = new MusicManager();
 
 		eventManager.register(new ShindoHandler());
 
@@ -130,11 +130,7 @@ public class Shindo {
 	
 	public void stop() {
 		profileManager.save();
-		Sound.play("soar/audio/close.wav", true);
-
-		if (romanizationManager != null) {
-			romanizationManager.shutdown();
-		}
+		Sound.play("shindo/audio/close.wav", true);
 	}
 	
 	private void removeOptifineZoom() {
@@ -180,6 +176,10 @@ public class Shindo {
 
 	public EventManager getEventManager() {
 		return eventManager;
+	}
+
+	public DownloadManager getDownloadManager() {
+		return downloadManager;
 	}
 
 	public NanoVGManager getNanoVGManager() {
@@ -265,12 +265,9 @@ public class Shindo {
 	public void setUpdateNeeded(boolean in) {updateNeeded = in;}
 	public boolean getUpdateNeeded() {return updateNeeded;}
 
-	public void setSoar8Released(boolean in) {soar8Released = in;}
-	public boolean getSoar8Released() {return soar8Released;}
 
 	public ClickEffects getClickEffects() {return clickEffects;}
 
 	public BlacklistManager getBlacklistManager() { return blacklistManager; }
 	public RestrictedMod getRestrictedMod() { return restrictedMod; }
-	public RomanizationManager getRomanizationManager() { return romanizationManager; }
 }

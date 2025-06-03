@@ -225,9 +225,9 @@ public class ModManager {
 
 	public void playToggleSound(boolean toggled){
 		if(toggled){
-			Sound.play("soar/audio/positive.wav", true);
+			Sound.play("shindo/audio/positive.wav", true);
 		} else {
-			Sound.play("soar/audio/negative.wav", true);
+			Sound.play("shindo/audio/negative.wav", true);
 		}
 
 	}

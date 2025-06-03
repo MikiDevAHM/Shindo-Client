@@ -44,7 +44,7 @@ public class SoundSubtitlesMod extends HUDMod {
 		
 		instance = this;
 		
-        ResourceLocation mapped = new ResourceLocation("soar/soundtitles/data.json");
+        ResourceLocation mapped = new ResourceLocation("shindo/soundtitles/data.json");
         
         try {
             JsonObject obj = new JsonParser().parse(read(mc.getResourceManager().getResource(mapped).getInputStream())).getAsJsonObject();

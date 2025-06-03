@@ -1,14 +1,8 @@
 package me.miki.shindo.gui.modmenu.category.impl;
 
-import java.awt.Color;
-import java.awt.Desktop;
-import java.net.URL;
-
 import me.miki.shindo.Shindo;
 import me.miki.shindo.gui.modmenu.GuiModMenu;
 import me.miki.shindo.gui.modmenu.category.Category;
-import me.miki.shindo.management.remote.changelog.Changelog;
-import me.miki.shindo.management.remote.changelog.ChangelogManager;
 import me.miki.shindo.management.color.AccentColor;
 import me.miki.shindo.management.color.ColorManager;
 import me.miki.shindo.management.color.palette.ColorPalette;
@@ -17,11 +11,16 @@ import me.miki.shindo.management.language.TranslateText;
 import me.miki.shindo.management.nanovg.NanoVGManager;
 import me.miki.shindo.management.nanovg.font.Fonts;
 import me.miki.shindo.management.nanovg.font.LegacyIcon;
+import me.miki.shindo.management.remote.changelog.Changelog;
+import me.miki.shindo.management.remote.changelog.ChangelogManager;
 import me.miki.shindo.management.remote.discord.DiscordStats;
 import me.miki.shindo.management.remote.news.News;
 import me.miki.shindo.management.remote.news.NewsManager;
 import me.miki.shindo.utils.mouse.MouseUtils;
 import me.miki.shindo.utils.mouse.Scroll;
+
+import java.awt.*;
+import java.net.URL;
 
 public class HomeCategory extends Category {
 
@@ -144,7 +143,7 @@ public class HomeCategory extends Category {
 		int discordStartY = this.getY() + 179;
 			if(MouseUtils.isInside(mouseX, mouseY, discordStartX + 174 - 60, discordStartY + 60, 52, 18)) {
 				try {
-					Desktop.getDesktop().browse(new URL("https://glideclient.github.io/discord").toURI());
+					Desktop.getDesktop().browse(new URL("https://MikiDevAHM.github.io/discord").toURI());
 				} catch (Exception e) {}}
 	}
 }

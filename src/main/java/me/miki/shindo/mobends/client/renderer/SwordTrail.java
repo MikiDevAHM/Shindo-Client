@@ -45,7 +45,7 @@ public class SwordTrail {
 	
 	public void render(ModelBendsPlayer model){
 		
-		Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation("soar/white.png"));
+		Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation("shindo/white.png"));
 		
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
 		GL11.glEnable(GL11.GL_BLEND);

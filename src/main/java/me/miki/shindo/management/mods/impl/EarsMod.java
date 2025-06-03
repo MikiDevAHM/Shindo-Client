@@ -20,7 +20,7 @@ public class EarsMod extends Mod {
 
 
 	public static void drawLeft(AbstractClientPlayer entitylivingbaseIn, float partialTicks, RenderPlayer playerRenderer) {
-		playerRenderer.bindTexture(new ResourceLocation("soar/cosmetics/ears/blackcatleft.png"));
+		playerRenderer.bindTexture(new ResourceLocation("shindo/cosmetics/ears/blackcatleft.png"));
 		int i = 0;
 		float f = entitylivingbaseIn.prevRotationYaw + (entitylivingbaseIn.rotationYaw - entitylivingbaseIn.prevRotationYaw) * partialTicks - (entitylivingbaseIn.prevRenderYawOffset + (entitylivingbaseIn.renderYawOffset - entitylivingbaseIn.prevRenderYawOffset) * partialTicks);
 		float f1 = entitylivingbaseIn.prevRotationPitch + (entitylivingbaseIn.rotationPitch - entitylivingbaseIn.prevRotationPitch) * partialTicks;
@@ -37,7 +37,7 @@ public class EarsMod extends Mod {
 	}
 
 	public static void drawRight(AbstractClientPlayer entitylivingbaseIn, float pt, RenderPlayer playerRenderer) {
-		playerRenderer.bindTexture(new ResourceLocation("soar/cosmetics/ears/blackcatright.png"));
+		playerRenderer.bindTexture(new ResourceLocation("shindo/cosmetics/ears/blackcatright.png"));
 		int i = 1;
 		float f = entitylivingbaseIn.prevRotationYaw + (entitylivingbaseIn.rotationYaw - entitylivingbaseIn.prevRotationYaw) * pt - (entitylivingbaseIn.prevRenderYawOffset + (entitylivingbaseIn.renderYawOffset - entitylivingbaseIn.prevRenderYawOffset) * pt);
 		float f1 = entitylivingbaseIn.prevRotationPitch + (entitylivingbaseIn.rotationPitch - entitylivingbaseIn.prevRotationPitch) * pt;

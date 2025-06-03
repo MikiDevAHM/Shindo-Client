@@ -1,7 +1,5 @@
 package me.miki.shindo.hooks;
 
-import java.awt.Color;
-
 import me.miki.shindo.utils.ColorUtils;
 import me.miki.shindo.utils.mouse.MouseUtils;
 import me.miki.shindo.utils.render.RenderUtils;
@@ -10,6 +8,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.EnumChatFormatting;
+
+import java.awt.*;
 
 public class GuiChatHook {
 
@@ -62,7 +62,7 @@ public class GuiChatHook {
     	
     	String lastMessage = message;
     	
-    	if(!lastMessage.startsWith(".soarcmd") || !lastMessage.startsWith("/")) {
+    	if(!lastMessage.startsWith(".scmd") || !lastMessage.startsWith("/")) {
     		try {
 				lastMessage = Translator.translate(lastMessage, Translator.AUTO_DETECT, translateTo);
 			} catch (Exception e) {}

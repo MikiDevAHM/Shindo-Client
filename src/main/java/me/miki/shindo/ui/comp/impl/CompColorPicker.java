@@ -125,12 +125,12 @@ public class CompColorPicker extends Comp {
 		}
 		
 		nvg.drawHSBBox(this.getX(), this.getY(), size, size, 6F * scale, Color.getHSBColor(colorSetting.getHue(), 1, 1));
-		nvg.drawRoundedImage(new ResourceLocation("soar/hue.png"), this.getX() + (106 * scale), this.getY(), 12 * scale, size, 3 * scale);
+		nvg.drawRoundedImage(new ResourceLocation("shindo/hue.png"), this.getX() + (106 * scale), this.getY(), 12 * scale, size, 3 * scale);
 		nvg.drawArc(this.getX() + (112 * scale), this.getY() + hueAnimation.getValue() + (6 * scale), 3 * scale, 0, 360, 1.2F * scale, Color.WHITE);
 		nvg.drawArc(this.getX() + saturationAnimation.getValue() + (6 * scale), this.getY() + size - brightnessAnimation.getValue() - (6 * scale), 3 * scale, 0, 360, 1.2F * scale, Color.WHITE);
 		
 		if(colorSetting.isShowAlpha()) {
-			nvg.drawRoundedImage(new ResourceLocation("soar/alpha.png"), this.getX(), this.getY() + (106 * scale), size + (18 * scale), 12 * scale, 3 * scale);
+			nvg.drawRoundedImage(new ResourceLocation("shindo/alpha.png"), this.getX(), this.getY() + (106 * scale), size + (18 * scale), 12 * scale, 3 * scale);
 			nvg.drawAlphaBar(this.getX(), this.getY() + (106 * scale), alphaWidth, 12 * scale, 3 * scale, Color.getHSBColor(colorSetting.getHue(), 1, 1));
 			nvg.drawArc(this.getX() + alphaAnimation.getValue() + (6 * scale), this.getY() + (112 * scale), 3 * scale, 0, 360, 1.2F * scale, Color.WHITE);
 		}

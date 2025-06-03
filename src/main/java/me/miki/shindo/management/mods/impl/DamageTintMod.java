@@ -17,7 +17,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class DamageTintMod extends Mod {
 
-	private ResourceLocation shape = new ResourceLocation("soar/shape.png");
+	private ResourceLocation shape = new ResourceLocation("shindo/shape.png");
     private SimpleAnimation animation = new SimpleAnimation(0.0F);
     
     private NumberSetting healthSetting = new NumberSetting(TranslateText.HEALTH, this, 10, 5, 16, true);

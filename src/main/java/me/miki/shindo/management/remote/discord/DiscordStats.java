@@ -8,7 +8,7 @@ import me.miki.shindo.utils.network.HttpUtils;
 
 /**
  * I know what people are like so il explain this class .
- *  This class checks the discord api to see how many members the glide server has
+ *  This class checks the discord api to see how many members the shindo server has
  *  you can see this within the ui from the home screen in the mod menu
  */
 public class DiscordStats {
@@ -30,7 +30,7 @@ public class DiscordStats {
     }
     public void checkDiscordValues(){
         DiscordStats discordStats = Shindo.getInstance().getDiscordStats();
-        JsonObject jsonObject = HttpUtils.readJson("https://discord.com/api/v9/invites/SQZb85eKJe?with_counts=true", null);
+        JsonObject jsonObject = HttpUtils.readJson("https://discord.com/api/v9/invites/uU56tvtXMU?with_counts=true", null);
 
         if(jsonObject != null) {
             discordStats.setMemberCount(JsonUtils.getIntProperty(jsonObject, "approximate_member_count", -1));

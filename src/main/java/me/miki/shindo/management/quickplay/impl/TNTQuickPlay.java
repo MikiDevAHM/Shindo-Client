@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 public class TNTQuickPlay extends QuickPlay{
 
 	public TNTQuickPlay() {
-		super("TNT", new ResourceLocation("soar/icons/hypixel/TNT.png"));
+		super("TNT", new ResourceLocation("shindo/icons/hypixel/TNT.png"));
 	}
 
 	@Override

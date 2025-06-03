@@ -1,7 +1,5 @@
 package me.miki.shindo.gui.mainmenu.impl.welcome;
 
-import java.awt.Color;
-
 import me.miki.shindo.Shindo;
 import me.miki.shindo.gui.mainmenu.GuiShindoMainMenu;
 import me.miki.shindo.gui.mainmenu.MainMenuScene;
@@ -20,6 +18,8 @@ import me.miki.shindo.utils.mouse.Scroll;
 import me.miki.shindo.utils.render.BlurUtils;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
+
+import java.awt.*;
 
 public class AccentColorSelectScene extends MainMenuScene {
 
@@ -59,7 +59,12 @@ public class AccentColorSelectScene extends MainMenuScene {
 		screenAlpha.wrap(() -> drawNanoVG(), fadeAnimation.getValueFloat());
 		
 		if(fadeAnimation.isDone(Direction.BACKWARDS)) {
-			this.setCurrentScene(this.getSceneByClass(LastMessageScene.class));
+			if (Shindo.getInstance().getDownloadManager().isDownloaded()) {
+				this.setCurrentScene(this.getSceneByClass(LastMessageScene.class));
+			} else {
+				this.setCurrentScene(this.getSceneByClass(CheckingDataScene.class));
+			}
+
 		}
 	}
 	
@@ -77,7 +82,7 @@ public class AccentColorSelectScene extends MainMenuScene {
 		nvg.drawCenteredText("Choose a accent color", x + (width / 2), y + 10, Color.WHITE, 16, Fonts.MEDIUM);
 		nvg.drawRect(x, y + 27, width, 1, Color.WHITE);
 		
-		nvg.drawRoundedImage(new ResourceLocation("soar/backgrounds/example-vertical.png"), x + width - 108, y + 40, 96, 96, 6);
+		nvg.drawRoundedImage(new ResourceLocation("shindo/backgrounds/example-vertical.png"), x + width - 108, y + 40, 96, 96, 6);
 		drawExampleHud(x + width - 96, y + 70.5F, currentColor);
 		
 		scroll.onScroll();

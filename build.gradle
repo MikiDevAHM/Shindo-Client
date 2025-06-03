@@ -66,16 +66,11 @@ dependencies {
         exclude module: 'gson'
         exclude module: 'commons-io'
     }
-    embed(files('libs/lwjgl-soar.jar'))
-    embed(files('libs/lwjgl-soar-natives.jar'))
-    embed("com.github.jikyo:romaji:0.0.4")
-    compile('se.michaelthelin.spotify:spotify-web-api-java:6.5.4') {
-        exclude group: 'com.google.code.gson', module: 'gson'
-    }
+    embed(files('libs/lwjgl-shindo.jar'))
+    embed(files('libs/lwjgl-shindo-natives.jar'))
 
-    compile 'com.google.code.gson:gson:2.8.6'
-    compileOnly 'com.google.code.gson:gson:2.2.4'
-    compile 'com.neovisionaries:nv-i18n:1.29'
+    embed('javazoom:jlayer:1.0.1')
+    embed("com.github.wendykierp:JTransforms:3.1")
 }
 
 mixin {

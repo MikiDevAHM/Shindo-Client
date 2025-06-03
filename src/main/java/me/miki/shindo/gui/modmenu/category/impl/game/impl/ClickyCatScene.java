@@ -20,7 +20,7 @@ public class ClickyCatScene extends GameScene {
 
 	// I wrote this barely awake don't bully me too hard please -breadcat
 
-	private final ResourceLocation catImage =  new ResourceLocation("soar/breadcat.png");
+	private final ResourceLocation catImage =  new ResourceLocation("shindo/breadcat.png");
 
 	// cat stuff
 	private float catX = 0, catY = 0;

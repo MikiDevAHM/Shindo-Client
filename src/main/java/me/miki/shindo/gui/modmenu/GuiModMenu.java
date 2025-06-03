@@ -1,26 +1,17 @@
 package me.miki.shindo.gui.modmenu;
 
-import java.awt.Color;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Objects;
-
 import eu.shoroa.contrib.render.ShBlur;
 import me.miki.shindo.Shindo;
-import me.miki.shindo.gui.modmenu.category.impl.*;
-import me.miki.shindo.gui.modmenu.category.impl.*;
-import me.miki.shindo.management.language.TranslateText;
-import me.miki.shindo.management.mods.impl.InternalSettingsMod;
-import me.miki.shindo.utils.file.FileUtils;
-import org.lwjgl.input.Keyboard;
-
 import me.miki.shindo.gui.GuiEditHUD;
 import me.miki.shindo.gui.modmenu.category.Category;
+import me.miki.shindo.gui.modmenu.category.impl.*;
 import me.miki.shindo.management.color.AccentColor;
 import me.miki.shindo.management.color.ColorManager;
 import me.miki.shindo.management.color.palette.ColorPalette;
 import me.miki.shindo.management.color.palette.ColorType;
 import me.miki.shindo.management.event.impl.EventRenderNotification;
+import me.miki.shindo.management.language.TranslateText;
+import me.miki.shindo.management.mods.impl.InternalSettingsMod;
 import me.miki.shindo.management.nanovg.NanoVGManager;
 import me.miki.shindo.management.nanovg.font.Fonts;
 import me.miki.shindo.management.nanovg.font.LegacyIcon;
@@ -31,11 +22,19 @@ import me.miki.shindo.utils.animation.normal.Direction;
 import me.miki.shindo.utils.animation.normal.easing.EaseBackIn;
 import me.miki.shindo.utils.animation.simple.SimpleAnimation;
 import me.miki.shindo.utils.buffer.ScreenAnimation;
+import me.miki.shindo.utils.file.FileUtils;
 import me.miki.shindo.utils.mouse.MouseUtils;
 import me.miki.shindo.utils.mouse.Scroll;
 import me.miki.shindo.utils.render.BlurUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.util.ResourceLocation;
+import org.lwjgl.input.Keyboard;
+
+import java.awt.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class GuiModMenu extends GuiScreen {
 
@@ -60,7 +59,7 @@ public class GuiModMenu extends GuiScreen {
 		categories.add(new HomeCategory(this));
 		categories.add(new ModuleCategory(this));
 		categories.add(new CosmeticsCategory(this));
-		categories.add(new SpotifyCategory(this));
+		categories.add(new MusicCategory(this));
 		categories.add(new GamesCategory(this));
 		categories.add(new ProfileCategory(this));
 		categories.add(new ScreenshotCategory(this));
@@ -134,7 +133,7 @@ public class GuiModMenu extends GuiScreen {
 		}
 
 		nvg.drawGradientRoundedRect(x + 5, y + 7, 22, 22, 11, currentColor.getColor1(), currentColor.getColor2());
-		nvg.drawText(LegacyIcon.SOAR, x + 8, y + 10, Color.WHITE, 16, Fonts.LEGACYICON);
+		nvg.drawImage(new ResourceLocation("shindo/logo.png"), x + 8, y + 10, 16,16);
 		if(currentCategory.isShowTitle()) {
 			nvg.save();
 			nvg.translate(currentCategory.getTextAnimation().getValue() * 15, 0);

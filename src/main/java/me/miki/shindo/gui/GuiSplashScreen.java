@@ -1,13 +1,7 @@
 package me.miki.shindo.gui;
 
-import java.awt.Color;
-
 import me.miki.shindo.Shindo;
-import org.lwjgl.opengl.GL11;
-
 import me.miki.shindo.management.nanovg.NanoVGManager;
-import me.miki.shindo.management.nanovg.font.Fonts;
-import me.miki.shindo.management.nanovg.font.LegacyIcon;
 import me.miki.shindo.utils.GlUtils;
 import me.miki.shindo.utils.animation.normal.Animation;
 import me.miki.shindo.utils.animation.normal.Direction;
@@ -16,6 +10,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.shader.Framebuffer;
+import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
 
 public class GuiSplashScreen {
 
@@ -63,8 +61,8 @@ public class GuiSplashScreen {
 	        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	        
 			nvg.setupAndDraw(() -> {
-				nvg.drawRect(0, 0, sr.getScaledWidth(), sr.getScaledHeight(), Color.BLACK);
-				nvg.drawCenteredText(LegacyIcon.SOAR, sr.getScaledWidth() / 2, (sr.getScaledHeight() / 2) - (nvg.getTextHeight(LegacyIcon.SOAR, 130, Fonts.LEGACYICON) / 2) - 1, new Color(255, 255, 255, (int) (fadeAnimation.getValue() * 255)), 130, Fonts.LEGACYICON);
+				nvg.drawRect(0, 0, sr.getScaledWidth(), sr.getScaledHeight(), Color.WHITE);
+				nvg.drawImage(new ResourceLocation("shindo/logo.png"), sr.getScaledWidth() / 2F - (130 / 2F), (sr.getScaledHeight() / 2F) - (130 / 2F) - 1, 130, 130);;
 			});
 			
 	        framebuffer.unbindFramebuffer();

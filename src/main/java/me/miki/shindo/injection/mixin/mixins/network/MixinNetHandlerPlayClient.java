@@ -1,5 +1,6 @@
 package me.miki.shindo.injection.mixin.mixins.network;
 
+import net.minecraft.network.Packet;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,9 +36,9 @@ public class MixinNetHandlerPlayClient {
     private NetworkManager netManager;
 	
 	@Redirect(method = "handleJoinGame", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetworkManager;sendPacket(Lnet/minecraft/network/Packet;)V"))
-	public void sendBrand() {
+	public void sendBrand(NetworkManager instance, Packet packetIn) {
 		
-		PacketBuffer data = new PacketBuffer(Unpooled.buffer()).writeString("GlideClient");
+		PacketBuffer data = new PacketBuffer(Unpooled.buffer()).writeString("ShindoClient");
 		
 		if(ClientSpooferMod.getInstance().isToggled()) {
 			

@@ -549,6 +549,25 @@ public class NanoVGManager {
 			imagePaint.free();
 		}
 	}
+
+	public void drawImage(ResourceLocation location, float x, float y, float width, float height, int alpha) {
+
+		if(assetManager.loadImage(nvg, location)) {
+
+			NVGPaint imagePaint = NVGPaint.calloc();
+
+			int image = assetManager.getImage(location);
+
+			NanoVG.nvgBeginPath(nvg);
+			NanoVG.nvgImagePattern(nvg, x, y, width, height, 0, image, alpha, imagePaint);
+
+			NanoVG.nvgRect(nvg, x, y, width, height);
+			NanoVG.nvgFillPaint(nvg, imagePaint);
+			NanoVG.nvgFill(nvg);
+
+			imagePaint.free();
+		}
+	}
 	
 	public void drawImage(File file, float x, float y, float width, float height) {
 		

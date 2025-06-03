@@ -66,7 +66,7 @@ public class LastMessageScene extends MainMenuScene {
 					break;
 			}
 			if(!soundPlayed) {
-				Sound.play("soar/audio/success.wav", true);
+				Sound.play("shindo/audio/success.wav", true);
 				soundPlayed = true;
 			}
 			nvg.setupAndDraw(() -> {

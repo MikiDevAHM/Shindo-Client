@@ -62,17 +62,16 @@ public class CapeManager {
 		add("United Kingdom", "flag/united-kingdom-sample.png", "flag/united-kingdom.png", CapeCategory.FLAG);
 		add("United States", "flag/united-states-sample.png", "flag/united-states.png", CapeCategory.FLAG);
 
-		add("Blue", "soar/blue-sample.png", "soar/blue.png", CapeCategory.SOAR);
-		add("Orange", "soar/orange-sample.png", "soar/orange.png", CapeCategory.SOAR);
-		add("Terminal", "soar/terminal-sample.png", "soar/terminal.png", CapeCategory.SOAR);
-		add("Candy", "soar/candy-sample.png", "soar/candy.png", CapeCategory.SOAR);
-		add("Candy Floss", "soar/candyfloss-sample.png", "soar/candyfloss.png", CapeCategory.SOAR);
-		add("Northern Lights", "soar/northenlights-sample.png", "soar/northenlights.png", CapeCategory.SOAR);
-		add("Ocean", "soar/ocean-sample.png", "soar/ocean.png", CapeCategory.SOAR);
-		add("Parrot", "soar/parrot-sample.png", "soar/parrot.png", CapeCategory.SOAR);
-		add("Skylight", "soar/skylight-sample.png", "soar/skylight.png", CapeCategory.SOAR);
-		add("Sour Apple", "soar/sourapple-sample.png", "soar/sourapple.png", CapeCategory.SOAR);
-		add("Shindo", "soar/glide-sample.png", "soar/glide.png", CapeCategory.SOAR);
+		add("Blue", "shindo/blue-sample.png", "shindo/blue.png", CapeCategory.SOAR);
+		add("Orange", "shindo/orange-sample.png", "shindo/orange.png", CapeCategory.SOAR);
+		add("Terminal", "shindo/terminal-sample.png", "shindo/terminal.png", CapeCategory.SOAR);
+		add("Candy", "shindo/candy-sample.png", "shindo/candy.png", CapeCategory.SOAR);
+		add("Candy Floss", "shindo/candyfloss-sample.png", "shindo/candyfloss.png", CapeCategory.SOAR);
+		add("Northern Lights", "shindo/northenlights-sample.png", "shindo/northenlights.png", CapeCategory.SOAR);
+		add("Ocean", "shindo/ocean-sample.png", "shindo/ocean.png", CapeCategory.SOAR);
+		add("Parrot", "shindo/parrot-sample.png", "shindo/parrot.png", CapeCategory.SOAR);
+		add("Skylight", "shindo/skylight-sample.png", "shindo/skylight.png", CapeCategory.SOAR);
+		add("Sour Apple", "shindo/sourapple-sample.png", "shindo/sourapple.png", CapeCategory.SOAR);
 
 		add("Aurora", "cartoon/aurora-sample.png", "cartoon/aurora.png", CapeCategory.CARTOON);
 		add("Beach Girl", "cartoon/beachgirl-sample.png", "cartoon/beachgirl.png", CapeCategory.CARTOON);
@@ -157,7 +156,7 @@ public class CapeManager {
 	
 	private void add(String name, String samplePath, String capePath, CapeCategory category) {
 		
-		String cosmeticPath = "soar/cosmetics/cape/";
+		String cosmeticPath = "shindo/cosmetics/cape/";
 		
 		capes.add(new NormalCape(name, new ResourceLocation(cosmeticPath + samplePath), new ResourceLocation(cosmeticPath + capePath), category));
 	}
