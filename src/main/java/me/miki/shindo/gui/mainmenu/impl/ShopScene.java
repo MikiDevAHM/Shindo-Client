@@ -23,21 +23,21 @@ public class ShopScene extends MainMenuScene {
     private Animation introAnimation;
     private final ScreenAnimation screenAnimation = new ScreenAnimation();
 
-    private ArrayList<TranslateText> premiumFeatures = new ArrayList<>();
-    private ArrayList<TranslateText> premiumPlusFeatures = new ArrayList<>();
-    private TranslateText premiumInfo;
+    private ArrayList<TranslateText> goldFeatures = new ArrayList<>();
+    //private ArrayList<TranslateText> diamondFeatures = new ArrayList<>();
+    private TranslateText info;
 
     public ShopScene(GuiShindoMainMenu parent) {
         super(parent);
 
-        premiumFeatures.add(TranslateText.SPECIAL_BADGE);
-        premiumFeatures.add(TranslateText.SPECIAL_CAPE);
+        goldFeatures.add(TranslateText.SPECIAL_BADGE);
+        goldFeatures.add(TranslateText.SPECIAL_CAPE);
 
-        premiumPlusFeatures.add(TranslateText.PREMIUM_FEATURES);
-        premiumPlusFeatures.add(TranslateText.SPECIAL_BADGE);
-        premiumPlusFeatures.add(TranslateText.SPECIAL_CAPE);
-        premiumPlusFeatures.add(TranslateText.CUSTOM_CAPE);
-        premiumInfo = TranslateText.PURCHASE;
+        //diamondFeatures.add(TranslateText.SPECIAL_BADGE);
+        //diamondFeatures.add(TranslateText.SPECIAL_CAPE);
+        //diamondFeatures.add(TranslateText.CUSTOM_CAPE);
+
+        info = TranslateText.PURCHASE;
     }
 
     @Override
@@ -80,9 +80,9 @@ public class ShopScene extends MainMenuScene {
 
         nvg.drawRoundedRect(acX + 25, acY + 158 - 5, 72, 20, 6, this.getBackgroundColor());
         nvg.drawRoundedRect(acX + 25, acY + 158 - 5, 72, 20, 6, this.getBackgroundColor());
-        nvg.drawCenteredText(premiumInfo.getText(), acX + 25 + (72 / 2F), acY + 159, Color.WHITE, 10, Fonts.MEDIUM);
+        nvg.drawCenteredText(info.getText(), acX + 25 + (72 / 2F), acY + 159, Color.WHITE, 10, Fonts.MEDIUM);
 
-        for(TranslateText t : premiumFeatures) {
+        for(TranslateText t : goldFeatures) {
 
             nvg.drawText(LegacyIcon.CHECK_CIRCLE, acX + 25, acY + 87 + offsetY, Color.WHITE, 9, Fonts.LEGACYICON);
             nvg.drawText(t.getText(), acX + 36, acY + 88 + offsetY, Color.WHITE, 8, Fonts.REGULAR);
@@ -90,22 +90,22 @@ public class ShopScene extends MainMenuScene {
             offsetY+=12;
         }
 
-        nvg.drawCenteredText(TranslateText.PREMIUM.getText() + "+", acX + acWidth - (82) - 20 + (82 / 2F), acY + 58, Color.WHITE, 12, Fonts.MEDIUM);
-        nvg.drawCenteredText("60$ / " + TranslateText.LIFETIME.getText(), acX + acWidth - (82) - 20 + (82 / 2F), acY + 71, Color.WHITE, 8, Fonts.REGULAR);
+        nvg.drawCenteredText(TranslateText.SOON.getText(), acX + acWidth - (82) - 20 + (82 / 2F), acY + 58, Color.WHITE, 12, Fonts.MEDIUM);
+        nvg.drawCenteredText("?? / " + TranslateText.MONTH.getText(), acX + acWidth - (82) - 20 + (82 / 2F), acY + 71, Color.WHITE, 8, Fonts.REGULAR);
         nvg.drawRect(acX + acWidth - (82) - 20, acY + 80, 82, 1, Color.WHITE);
 
         nvg.drawRoundedRect(acX + acWidth - (82) - 20 + 5, acY + 158 - 5, 72, 20, 6, this.getBackgroundColor());
         nvg.drawRoundedRect(acX + acWidth - (82) - 20 + 5, acY + 158 - 5, 72, 20, 6, this.getBackgroundColor());
-        nvg.drawCenteredText(TranslateText.PURCHASE.getText(), acX + acWidth - (82) - 15 + (72 / 2F), acY + 159, Color.WHITE, 10, Fonts.MEDIUM);
+        nvg.drawCenteredText(TranslateText.SOON.getText(), acX + acWidth - (82) - 15 + (72 / 2F), acY + 159, Color.WHITE, 10, Fonts.MEDIUM);
 
-        offsetY = 0;
-        for(TranslateText t : premiumPlusFeatures) {
-
-            nvg.drawText(LegacyIcon.CHECK_CIRCLE, acX + acWidth - (82) - 20 + 5, acY + 87 + offsetY, Color.WHITE, 9, Fonts.LEGACYICON);
-            nvg.drawText(t.getText(), acX + acWidth - (82) - 20 + 16, acY + 88 + offsetY, Color.WHITE, 8, Fonts.REGULAR);
-
-            offsetY+=12;
-        }
+        //offsetY = 0;
+        //for(TranslateText t : diamondFeatures) {
+        //
+        //    nvg.drawText(LegacyIcon.CHECK_CIRCLE, acX + acWidth - (82) - 20 + 5, acY + 87 + offsetY, Color.WHITE, 9, Fonts.LEGACYICON);
+        //    nvg.drawText(t.getText(), acX + acWidth - (82) - 20 + 16, acY + 88 + offsetY, Color.WHITE, 8, Fonts.REGULAR);
+        //
+        //    offsetY+=12;
+        //}
     }
 
     @Override

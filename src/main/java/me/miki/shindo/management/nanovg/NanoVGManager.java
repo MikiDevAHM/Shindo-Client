@@ -18,16 +18,6 @@ package me.miki.shindo.management.nanovg;
 * https://github.com/Polyfrost/OneConfig/blob/develop-v0/LICENSE
 */
 
-import java.awt.Color;
-import java.io.File;
-import java.util.HashMap;
-
-import org.lwjgl.nanovg.NVGColor;
-import org.lwjgl.nanovg.NVGPaint;
-import org.lwjgl.nanovg.NanoVG;
-import org.lwjgl.nanovg.NanoVGGL2;
-import org.lwjgl.opengl.GL11;
-
 import me.miki.shindo.logger.ShindoLogger;
 import me.miki.shindo.management.nanovg.asset.AssetManager;
 import me.miki.shindo.management.nanovg.font.Font;
@@ -37,6 +27,15 @@ import me.miki.shindo.utils.MathUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.nanovg.NVGColor;
+import org.lwjgl.nanovg.NVGPaint;
+import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.nanovg.NanoVGGL2;
+import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
+import java.io.File;
+import java.util.HashMap;
 
 public class NanoVGManager {
 
@@ -530,7 +529,6 @@ public class NanoVGManager {
             imagePaint.free();
         }
 	}
-	
 	public void drawImage(ResourceLocation location, float x, float y, float width, float height) {
 		
 		if(assetManager.loadImage(nvg, location)) {

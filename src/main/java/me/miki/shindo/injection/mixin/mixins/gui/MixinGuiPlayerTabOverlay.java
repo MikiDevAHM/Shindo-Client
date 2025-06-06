@@ -1,12 +1,17 @@
 package me.miki.shindo.injection.mixin.mixins.gui;
 
+import me.miki.shindo.Shindo;
+import me.miki.shindo.ShindoAPI;
 import me.miki.shindo.management.mods.impl.TabEditorMod;
+import me.miki.shindo.utils.render.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.util.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -21,10 +26,43 @@ public class MixinGuiPlayerTabOverlay {
 	
 	@Redirect(method = "renderPlayerlist", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/FontRenderer;drawStringWithShadow(Ljava/lang/String;FFI)I", ordinal = 2))
 	public int renderShindoIcon(FontRenderer instance, String text, float x, float y, int color) {
-		
-		int i = instance.drawStringWithShadow(text, x, y, color);
-		
-		return i;
+		Minecraft mc = Minecraft.getMinecraft();
+
+		NetworkPlayerInfo playerInfo = mc.getNetHandler().getPlayerInfoMap().stream()
+				.filter(info -> info.getGameProfile().getName().equalsIgnoreCase(text))
+				.findFirst()
+				.orElse(null);
+
+		// Tamanho do ícone
+		int iconSize = 8;
+		int iconOffset = 2; // espaço entre ícone e texto
+
+		if (playerInfo != null) {
+			String uuid = Shindo.getInstance().getShindoAPI().isUUIDBad()
+					? playerInfo.getGameProfile().getName()
+					: playerInfo.getGameProfile().getId().toString();
+
+			if (Shindo.getInstance().getShindoAPI().isOnline(uuid)) {
+				String texture = "shindo/logo.png";
+				ShindoAPI api = Shindo.getInstance().getShindoAPI();
+
+				if (api.hasPrivilege(uuid, "Staff")) {
+					texture = "shindo/logo-staff.png";
+				} else if (api.hasPrivilege(uuid, "Diamond")) {
+					texture = "shindo/logo-diamond.png";
+				} else if (api.hasPrivilege(uuid, "Gold")) {
+					texture = "shindo/logo-gold.png";
+				}
+
+				mc.getTextureManager().bindTexture(new ResourceLocation(texture));
+				RenderUtils.drawModalRectWithCustomSizedTexture((int) x, (int) y, 0, 0, iconSize, iconSize, iconSize, iconSize);
+
+				x += iconSize + iconOffset;
+			}
+		}
+
+		// Renderiza o texto (com X ajustado se necessário)
+		return instance.drawStringWithShadow(text, x, y, color);
 	}
 	
 	@Redirect(method = "renderPlayerlist", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/WorldClient;getPlayerEntityByUUID(Ljava/util/UUID;)Lnet/minecraft/entity/player/EntityPlayer;"))

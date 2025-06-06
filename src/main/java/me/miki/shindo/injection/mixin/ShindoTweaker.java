@@ -18,18 +18,18 @@ public class ShindoTweaker implements ITweaker {
 
     private final List<String> launchArguments = new ArrayList<>();
 
-	public static boolean hasOptifine = false;
-	
+    public static boolean hasOptifine = false;
+
     @Override
     public void acceptOptions(List<String> args, File gameDir, File assetsDir, String profile) {
-    	
-    	try {
-			Class.forName("optifine.Patcher");
-			hasOptifine = true;
-		}
-		catch(ClassNotFoundException e) {
-		}
-		
+
+        try {
+            Class.forName("optifine.Patcher");
+            hasOptifine = true;
+        }
+        catch(ClassNotFoundException e) {
+        }
+
         this.launchArguments.addAll(args);
 
         if (profile != null) {
@@ -51,15 +51,15 @@ public class ShindoTweaker implements ITweaker {
     @Override
     public void injectIntoClassLoader(LaunchClassLoader classLoader) {
 
-    	classLoader.registerTransformer(LwjglTransformer.class.getName());
-    	
+        classLoader.registerTransformer(LwjglTransformer.class.getName());
+
         MixinBootstrap.init();
 
         MixinEnvironment env = MixinEnvironment.getDefaultEnvironment();
         Mixins.addConfiguration("mixins.shindo.json");
 
         if (env.getObfuscationContext() == null) {
-        	env.setObfuscationContext("notch");
+            env.setObfuscationContext("notch");
         }
 
         env.setSide(MixinEnvironment.Side.CLIENT);
@@ -76,7 +76,7 @@ public class ShindoTweaker implements ITweaker {
     public String[] getLaunchArguments() {
         return launchArguments.toArray(new String[0]);
     }
-    
+
     @SuppressWarnings("unchecked")
     private void unlockLwjgl() {
         try {

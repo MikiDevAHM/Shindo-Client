@@ -1,10 +1,5 @@
 package me.miki.shindo.gui.modmenu.category.impl;
 
-import java.awt.Color;
-import java.util.ArrayList;
-
-import org.lwjgl.input.Keyboard;
-
 import me.miki.shindo.Shindo;
 import me.miki.shindo.gui.modmenu.GuiModMenu;
 import me.miki.shindo.gui.modmenu.category.Category;
@@ -17,25 +12,12 @@ import me.miki.shindo.management.mods.Mod;
 import me.miki.shindo.management.mods.ModCategory;
 import me.miki.shindo.management.mods.ModManager;
 import me.miki.shindo.management.mods.settings.Setting;
-import me.miki.shindo.management.mods.settings.impl.BooleanSetting;
-import me.miki.shindo.management.mods.settings.impl.ColorSetting;
-import me.miki.shindo.management.mods.settings.impl.ComboSetting;
-import me.miki.shindo.management.mods.settings.impl.ImageSetting;
-import me.miki.shindo.management.mods.settings.impl.KeybindSetting;
-import me.miki.shindo.management.mods.settings.impl.NumberSetting;
-import me.miki.shindo.management.mods.settings.impl.SoundSetting;
-import me.miki.shindo.management.mods.settings.impl.TextSetting;
+import me.miki.shindo.management.mods.settings.impl.*;
 import me.miki.shindo.management.nanovg.NanoVGManager;
 import me.miki.shindo.management.nanovg.font.Fonts;
 import me.miki.shindo.management.nanovg.font.LegacyIcon;
 import me.miki.shindo.ui.comp.Comp;
-import me.miki.shindo.ui.comp.impl.CompColorPicker;
-import me.miki.shindo.ui.comp.impl.CompComboBox;
-import me.miki.shindo.ui.comp.impl.CompImageSelect;
-import me.miki.shindo.ui.comp.impl.CompKeybind;
-import me.miki.shindo.ui.comp.impl.CompSlider;
-import me.miki.shindo.ui.comp.impl.CompSoundSelect;
-import me.miki.shindo.ui.comp.impl.CompToggleButton;
+import me.miki.shindo.ui.comp.impl.*;
 import me.miki.shindo.ui.comp.impl.field.CompModTextBox;
 import me.miki.shindo.utils.ColorUtils;
 import me.miki.shindo.utils.MathUtils;
@@ -46,6 +28,10 @@ import me.miki.shindo.utils.animation.normal.other.SmoothStepAnimation;
 import me.miki.shindo.utils.animation.simple.SimpleAnimation;
 import me.miki.shindo.utils.mouse.MouseUtils;
 import me.miki.shindo.utils.mouse.Scroll;
+import org.lwjgl.input.Keyboard;
+
+import java.awt.*;
+import java.util.ArrayList;
 
 public class ModuleCategory extends Category {
 
@@ -280,6 +266,15 @@ public class ModuleCategory extends Category {
 					soundSelect.setX(this.getX() + offsetX + 181);
 					soundSelect.setY(this.getY() + offsetY + 11 + s.openAnimation.getValue());
 				}
+
+				if (s.comp instanceof CompCellGrid) {
+					CompCellGrid grid = (CompCellGrid) s.comp;
+
+					grid.setX(this.getX() + offsetX + 122);
+					grid.setY(this.getY() + offsetY + 11 + s.openAnimation.getValue());
+					grid.setWidth(270);
+					grid.setHeight(160);
+				}
 				
 				s.comp.draw(mouseX, (int) (mouseY - settingScroll.getValue()), partialTicks);
 				
@@ -447,6 +442,15 @@ public class ModuleCategory extends Category {
 									picker.setScale(0.8F);
 									
 									comps.add(new ModuleSetting(s, picker));
+								}
+
+								if (s instanceof CellGridSetting) {
+									CellGridSetting setting = (CellGridSetting) s;
+									CompCellGrid cellGrid = new CompCellGrid(270, 160, setting);
+									cellGrid.setX(this.getX() + offsetX + 122);
+									cellGrid.setY(this.getY() + offsetY + 11);
+
+									comps.add(new ModuleSetting(s, cellGrid));
 								}
 								
 								offsetX+=194;

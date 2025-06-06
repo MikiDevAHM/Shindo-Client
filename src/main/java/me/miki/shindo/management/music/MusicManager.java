@@ -22,14 +22,10 @@ import me.miki.shindo.utils.file.FileUtils;
 import org.jtransforms.fft.FloatFFT_1D;
 
 import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioSystem;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -77,16 +73,13 @@ public class MusicManager {
 				JsonArray jsonArray = JsonUtils.getArrayProperty(jsonObject, "Favorite Musics");
 				
 				if(jsonArray != null) {
-					
-					Iterator<JsonElement> iterator = jsonArray.iterator();
-					
-					while(iterator.hasNext()) {
-						
-						JsonElement jsonElement = (JsonElement) iterator.next();
-						JsonObject rJsonObject = gson.fromJson(jsonElement, JsonObject.class);
-						
-						favorites.add(JsonUtils.getStringProperty(rJsonObject, "Favorite", "null"));
-					}
+
+                    for (JsonElement jsonElement : jsonArray) {
+
+                        JsonObject rJsonObject = gson.fromJson(jsonElement, JsonObject.class);
+
+                        favorites.add(JsonUtils.getStringProperty(rJsonObject, "Favorite", "null"));
+                    }
 				}
 			}
 		} catch (Exception e) {
@@ -369,18 +362,17 @@ public class MusicManager {
 	}
 
 	public float getEndTime() {
+		if (currentMusic == null) {
+			return 0;
+		}
+
 		try {
-			File audioFile = currentMusic.getAudio().toPath().toFile();
-			AudioFileFormat fileFormat = AudioSystem.getAudioFileFormat(audioFile);
-			Map<?, ?> properties = fileFormat.properties();
-			Long microseconds = (Long) properties.get("duration");
-			if (microseconds != null) {
-				return microseconds / 1_000_000.0F;
-			}
+			Mp3File mp3 = new Mp3File(currentMusic.getAudio());
+			return mp3.getLengthInSeconds();
 		} catch (Exception e) {
 			e.printStackTrace();
+			return 0;
 		}
-		return 0;
 	}
 
 	private class VolumeSpectrumAudioDevice extends JavaSoundAudioDevice {

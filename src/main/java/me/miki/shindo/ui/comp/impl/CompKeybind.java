@@ -1,10 +1,6 @@
 package me.miki.shindo.ui.comp.impl;
 
-import java.awt.Color;
-
 import me.miki.shindo.Shindo;
-import org.lwjgl.input.Keyboard;
-
 import me.miki.shindo.management.color.AccentColor;
 import me.miki.shindo.management.color.ColorManager;
 import me.miki.shindo.management.mods.settings.impl.KeybindSetting;
@@ -12,6 +8,9 @@ import me.miki.shindo.management.nanovg.NanoVGManager;
 import me.miki.shindo.management.nanovg.font.Fonts;
 import me.miki.shindo.ui.comp.Comp;
 import me.miki.shindo.utils.mouse.MouseUtils;
+import org.lwjgl.input.Keyboard;
+
+import java.awt.*;
 
 public class CompKeybind extends Comp {
 
@@ -47,8 +46,8 @@ public class CompKeybind extends Comp {
 	}
 	
 	@Override
-	public void mouseClicked(int mouseX, int mosueY, int mouseButton) {
-		if(MouseUtils.isInside(mouseX, mosueY, this.getX(), this.getY(), width, 16) && mouseButton == 0) {
+	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+		if(MouseUtils.isInside(mouseX, mouseY, this.getX(), this.getY(), width, 16) && mouseButton == 0) {
 			binding = !binding;
 		}
 	}

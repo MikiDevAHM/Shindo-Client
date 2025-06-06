@@ -1,5 +1,11 @@
 package me.miki.shindo.injection.mixin.mixins.render;
 
+import me.miki.shindo.Shindo;
+import me.miki.shindo.ShindoAPI;
+import me.miki.shindo.utils.render.RenderUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -23,6 +29,10 @@ public abstract class MixinRender <T extends Entity>  {
     @Shadow
     public abstract FontRenderer getFontRendererFromRenderManager();
 
+    /**
+     * @author MikiDevAHM
+     * @reason Client Logo Rendering
+     */
     @Overwrite
     protected void renderLivingLabel(T entityIn, String str, double x, double y, double z, int maxDistance) {
 
@@ -47,27 +57,47 @@ public abstract class MixinRender <T extends Entity>  {
             WorldRenderer worldrenderer = tessellator.getWorldRenderer();
             int i = 0;
 
-            if (str.equals("deadmau5")) {
-                i = -10;
-            }
-
             int j = fontrenderer.getStringWidth(str) / 2;
 
             GlStateManager.disableTexture2D();
             worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-            worldrenderer.pos((double)(-j - 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-            worldrenderer.pos((double)(-j - 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            worldrenderer.pos((double)(-j - 11), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            worldrenderer.pos((double)(-j - 11), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
             worldrenderer.pos((double)(j + 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
             worldrenderer.pos((double)(j + 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
             tessellator.draw();
 
             GlStateManager.enableTexture2D();
 
-            fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2 + 0, i, 553648127);
+            if (entityIn instanceof AbstractClientPlayer) {
+                String uuid = Shindo.getInstance().getShindoAPI().isUUIDBad() ? ((AbstractClientPlayer) entityIn).getName() : ((AbstractClientPlayer) entityIn).getGameProfile().getId().toString();
+                if (Shindo.getInstance().getShindoAPI().isOnline(uuid)) {
+                    String texture = "shindo/logo.png";
+                    ShindoAPI api = Shindo.getInstance().getShindoAPI();
+
+                    if (api.hasPrivilege(uuid, "Staff")) {
+                        texture = "shindo/logo-staff.png";
+                    } else if (api.hasPrivilege(uuid, "Diamond")) {
+                        texture = "shindo/logo-diamond.png";
+                    } else if (api.hasPrivilege(uuid, "Gold")) {
+                        texture = "shindo/logo-gold.png";
+                    }
+
+                    Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation(texture));
+                    RenderUtils.drawModalRectWithCustomSizedTexture(-fontrenderer.getStringWidth(entityIn.getDisplayName().getFormattedText()) / 2F - 10, -1,  9, 9, 9, 9, 9, 9);
+                }
+            }
+            if (str.equals("deadmau5")) {
+                i = -10;
+            }
+
+
+
+            fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2, i, 553648127);
             GlStateManager.enableDepth();
             GlStateManager.depthMask(true);
 
-            fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2 + 0, i, -1);
+            fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2, i, -1);
             GlStateManager.enableLighting();
             GlStateManager.disableBlend();
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

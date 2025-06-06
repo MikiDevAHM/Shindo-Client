@@ -176,9 +176,10 @@ public enum TranslateText {
 	SPOTIFY_PLAYBACK_RESTRICTED("text.spotify.playback_restricted"),
 
 	// SHINDO
-	PREMIUM_FEATURES("text.premium_features"),
 	SHINDO("text.shindo"),
-	API("text.api");
+	API("text.api"),
+	GOLD("text.gold"),
+	DIAMOND("text.diamond");
 
 	private String key, text;
 

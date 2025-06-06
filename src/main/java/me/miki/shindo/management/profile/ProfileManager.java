@@ -2,6 +2,7 @@ package me.miki.shindo.management.profile;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import me.miki.shindo.Shindo;
 import me.miki.shindo.logger.ShindoLogger;
@@ -194,6 +195,25 @@ public class ProfileManager {
 							
 							sJsonObject.addProperty(s.getNameKey(), sSetting.getSound() == null ? "null" : sSetting.getSound().getName());
 						}
+
+						if (s instanceof CellGridSetting) {
+							CellGridSetting cgSetting = (CellGridSetting) s;
+
+							JsonArray outerArray = new JsonArray();
+
+							boolean[][] cells = cgSetting.getCells();
+
+							for (boolean[] row : cells) {
+								JsonArray innerArray = new JsonArray();
+								for (boolean cell : row) {
+									innerArray.add(cell);
+								}
+								outerArray.add(innerArray);
+							}
+
+
+							sJsonObject.add(s.getNameKey(), outerArray);
+						}
 					}
 					
 					mJsonObject.add("Settings", sJsonObject);
@@ -334,6 +354,23 @@ public class ProfileManager {
 											sSetting.setSound(image);
 										}
 									}
+								}
+
+								if (s instanceof  CellGridSetting) {
+									CellGridSetting cgSetting = (CellGridSetting) s;
+
+									JsonArray outerArray = sJsonObject.getAsJsonArray(s.getNameKey());
+									boolean[][] cells = new boolean[outerArray.size()][];
+
+									for (int i = 0; i < outerArray.size(); i++) {
+										JsonArray innerArray = outerArray.get(i).getAsJsonArray();
+										cells[i] = new boolean[innerArray.size()];
+
+										for (int j = 0; j < innerArray.size(); j++) {
+											cells[i][j] = innerArray.get(j).getAsBoolean();
+										}
+									}
+									cgSetting.setCells(cells);
 								}
 							}
 						}

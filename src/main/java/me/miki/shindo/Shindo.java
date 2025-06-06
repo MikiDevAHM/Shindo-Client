@@ -73,6 +73,7 @@ public class Shindo {
 	private ClickEffects clickEffects;
 	private BlacklistManager blacklistManager;
 	private RestrictedMod restrictedMod;
+	private ShindoAPI shindoAPI;
 	
 	public Shindo() {
 		name = "Shindo";
@@ -81,6 +82,7 @@ public class Shindo {
 	}
 	
 	public void start() {
+		ShindoLogger.info("Starting Shindo");
 		try {
 			OptifineUtils.disableFastRender();
 			this.removeOptifineZoom();
@@ -121,6 +123,9 @@ public class Shindo {
 		waypointManager = new WaypointManager();
 		musicManager = new MusicManager();
 
+		shindoAPI = new ShindoAPI();
+
+		shindoAPI.start();
 		eventManager.register(new ShindoHandler());
 
 		InternalSettingsMod.getInstance().setToggled(true);
@@ -129,7 +134,9 @@ public class Shindo {
 	}
 	
 	public void stop() {
+		ShindoLogger.info("Stopping Shindo");
 		profileManager.save();
+		shindoAPI.stop();
 		Sound.play("shindo/audio/close.wav", true);
 	}
 	
@@ -260,6 +267,10 @@ public class Shindo {
 
 	public Update getUpdateInstance(){
 		return update;
+	}
+
+	public ShindoAPI getShindoAPI() {
+		return shindoAPI;
 	}
 
 	public void setUpdateNeeded(boolean in) {updateNeeded = in;}

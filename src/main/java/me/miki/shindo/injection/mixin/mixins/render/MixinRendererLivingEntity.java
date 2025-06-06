@@ -1,20 +1,13 @@
 package me.miki.shindo.injection.mixin.mixins.render;
 
-import org.lwjgl.opengl.GL11;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
+import me.miki.shindo.Shindo;
+import me.miki.shindo.ShindoAPI;
 import me.miki.shindo.injection.interfaces.IMixinRenderPlayer;
 import me.miki.shindo.management.event.impl.EventHitOverlay;
 import me.miki.shindo.management.event.impl.EventRendererLivingEntity;
 import me.miki.shindo.management.mods.impl.NametagMod;
 import me.miki.shindo.management.mods.impl.Skin3DMod;
+import me.miki.shindo.utils.render.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.FontRenderer;
@@ -27,6 +20,12 @@ import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RendererLivingEntity.class)
 public abstract class MixinRendererLivingEntity <T extends EntityLivingBase> extends Render<T> {
@@ -72,15 +71,34 @@ public abstract class MixinRendererLivingEntity <T extends EntityLivingBase> ext
 					Tessellator tessellator = Tessellator.getInstance();
 					WorldRenderer worldrenderer = tessellator.getWorldRenderer();
 					worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-					worldrenderer.pos((double)(-i - 1), -1.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-					worldrenderer.pos((double)(-i - 1), 8.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+					worldrenderer.pos((double)(-i - 11), -1.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+					worldrenderer.pos((double)(-i - 11), 8.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
 					worldrenderer.pos((double)(i + 1), 8.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
 					worldrenderer.pos((double)(i + 1), -1.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
 					tessellator.draw();
 					GlStateManager.enableTexture2D();
 					GlStateManager.depthMask(true);
 
-					fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2 + 0, 0, 553648127);
+					if (entity instanceof AbstractClientPlayer) {
+						String uuid = Shindo.getInstance().getShindoAPI().isUUIDBad() ? ((AbstractClientPlayer) entity).getName() : ((AbstractClientPlayer) entity).getGameProfile().getId().toString();
+						if (Shindo.getInstance().getShindoAPI().isOnline(uuid)) {
+							String texture = "shindo/logo.png";
+							ShindoAPI api = Shindo.getInstance().getShindoAPI();
+
+							if (api.hasPrivilege(uuid, "Staff")) {
+								texture = "shindo/logo-staff.png";
+							} else if (api.hasPrivilege(uuid, "Diamond")) {
+								texture = "shindo/logo-diamond.png";
+							} else if (api.hasPrivilege(uuid, "Gold")) {
+								texture = "shindo/logo-gold.png";
+							}
+
+							Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation(texture));
+							RenderUtils.drawModalRectWithCustomSizedTexture(-fontrenderer.getStringWidth(entity.getDisplayName().getFormattedText()) / 2F - 10, -1,  9,9, 9, 9, 9, 9);
+						}
+					}
+
+					fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, 0, 553648127);
 					GlStateManager.enableLighting();
 					GlStateManager.disableBlend();
 					GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -114,12 +132,7 @@ public abstract class MixinRendererLivingEntity <T extends EntityLivingBase> ext
 		
 		return manager.livingPlayer;
 	}
-	
-    @Redirect(method = "renderName(Lnet/minecraft/entity/EntityLivingBase;DDD)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/RenderManager;playerViewX:F"))
-    private float fixNametagPerspective(RenderManager instance) {
-        return instance.playerViewX * Minecraft.getMinecraft().gameSettings.thirdPersonView == 2 ? -1 : 1;
-    }
-    
+
 	@Inject(method = "renderModel", at = @At("TAIL"))
     private void renderModelLayers(T p_renderModel_1_, float p_renderModel_2_, float p_renderModel_3_, float p_renderModel_4_, float p_renderModel_5_, float p_renderModel_6_, float p_renderModel_7_, CallbackInfo info) {
     	

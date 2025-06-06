@@ -21,13 +21,11 @@ public class DownloadManager {
     public DownloadManager() {
 
         FileManager fileManager = Shindo.getInstance().getFileManager();
-
         downloaded = false;
-
-        downloadFiles.add(new DownloadFile("https://www.dropbox.com/scl/fi/8ytipx5ekzti37cofsk2p/ytdlp.exe?rlkey=kxdld220hhr7mz9dc9vheemcz&st=qoffgkq1&dl=1",
-                "ytdlp.exe", new File(fileManager.getExternalDir(), "ytdlp"), 18145266));
-        downloadFiles.add(new DownloadZipFile("https://www.dropbox.com/scl/fi/jjk44dfze2uu05qltfi4d/ffmpeg.zip?rlkey=hsb4375u7tav54fht58gsef7t&st=a07r3syl&dl=1",
-                "ffmpeg.zip", new File(fileManager.getExternalDir(), "ffmpeg"), 182914028, 472508356));
+        downloadFiles.add(new DownloadFile("https://github.com/MikiDevAHM/RESOURCES/releases/download/release/ytdlp.exe",
+                "ytdlp.exe", new File(fileManager.getExternalDir(), "ytdlp"), 18182514));
+        downloadFiles.add(new DownloadZipFile("https://github.com/MikiDevAHM/RESOURCES/releases/download/release/ffmpeg.zip",
+                "ffmpeg.zip", new File(fileManager.getExternalDir(), "ffmpeg"), 148280843, 413897555));
         Multithreading.runAsync(() -> startDownloads());
     }
 
@@ -47,7 +45,7 @@ public class DownloadManager {
 
                     File outputFile = new File(dzf.getOutputDir(), dzf.getFileName());
 
-                    HttpUtils.downloadFile(dzf.getUrl(), outputFile);
+                    HttpUtils.downloadFile(dzf.getUrl(), outputFile, dzf.getSize());
                     FileUtils.unzip(outputFile, dzf.getOutputDir());
                     outputFile.delete();
                 }
@@ -56,7 +54,7 @@ public class DownloadManager {
                 File outputFile = new File(df.getOutputDir(), df.getFileName());
 
                 if (outputFile.length() != df.getSize()) {
-                    HttpUtils.downloadFile(df.getUrl(), outputFile);
+                    HttpUtils.downloadFile(df.getUrl(), outputFile, df.getSize());
                 }
             }
         }
