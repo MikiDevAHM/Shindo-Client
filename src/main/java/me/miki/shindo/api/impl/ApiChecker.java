@@ -4,13 +4,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.miki.shindo.logger.ShindoLogger;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -49,34 +47,34 @@ public class ApiChecker {
     }
 
     private JsonObject fetchUserInfo(String uuid) {
-        String url = ApiSender.API_BASE + "/get-user?uuid=" + uuid;
+        try {
+            URL url = new URL(ApiSender.API_BASE + "/get-user?uuid=" + uuid);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(3000);
+            connection.setReadTimeout(3000);
 
-        try (CloseableHttpClient client = HttpClients.createDefault()) {
-            HttpGet request = new HttpGet(url);
-            request.setHeader("Accept", "application/json");
+            int responseCode = connection.getResponseCode();
+            if (responseCode != 200) {
+                ShindoLogger.error("[API] Erro ao obter informações para UUID " + uuid + ": HTTP " + responseCode);
+                return null;
+            }
 
-            try (CloseableHttpResponse response = client.execute(request)) {
-                int statusCode = response.getStatusLine().getStatusCode();
-
-                if (statusCode != 200) {
-                    ShindoLogger.error("[API] Erro ao obter informações para UUID " + uuid + ": HTTP " + statusCode);
-                    return null;
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
                 }
 
-                HttpEntity entity = response.getEntity();
-                if (entity == null) {
-                    return null;
-                }
-
-                String responseBody = EntityUtils.toString(entity);
-                JsonObject json = JsonParser.parseString(responseBody).getAsJsonObject();
+                JsonObject json = JsonParser.parseString(response.toString()).getAsJsonObject();
 
                 ensureDefault(json, "online", false);
                 ensureDefault(json, "name", (String) null);
                 ensureDefault(json, "accountType", (String) null);
 
-                if (!json.has("privileges") || !json.get("privileges").isJsonArray()) {
-                    json.add("privileges", new JsonArray());
+                if (!json.has("privileges") || !json.get("privileges").isJsonObject()) {
+                    json.add("privileges", new JsonObject());
                 }
 
                 return json;

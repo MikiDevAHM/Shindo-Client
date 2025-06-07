@@ -92,7 +92,6 @@ public class ClientApiManager {
             }
         } catch (Exception e) {
             ShindoLogger.warn("[API] Falha ao atualizar cache do UUID " + uuid + ": " + e.getMessage());
-            // Não limpa cache — aguarda próxima tentativa de atualização automática
         }
     }
 

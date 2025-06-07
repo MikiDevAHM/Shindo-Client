@@ -68,7 +68,7 @@ public class GamesCategory extends Category {
 		
 		nvg.save();
 		nvg.translate((float) -(600 - (sceneAnimation.getValue() * 600)), 0);
-		
+		nvg.translate(0, scroll.getValue());
 		for(GameScene scene : scenes) {
 			
 			nvg.drawRoundedRect(this.getX() + 15, this.getY() + offsetY, this.getWidth() - 30, 40, 8, palette.getBackgroundColor(ColorType.DARK));
@@ -100,7 +100,7 @@ public class GamesCategory extends Category {
 		
 		for(GameScene scene : scenes) {
 			
-			if(MouseUtils.isInside(mouseX, mouseY, this.getX() + 15, this.getY() + offsetY, this.getWidth() - 30, 40) && mouseButton == 0 && currentScene == null) {
+			if(MouseUtils.isInside(mouseX, mouseY, this.getX() + 15, this.getY() + offsetY + scroll.getValue(), this.getWidth() - 30, 40) && mouseButton == 0 && currentScene == null) {
 				currentScene = scene;
 				this.setCanClose(false);
 				sceneAnimation.setDirection(Direction.BACKWARDS);

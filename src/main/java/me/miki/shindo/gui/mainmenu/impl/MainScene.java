@@ -6,13 +6,13 @@ import me.miki.shindo.gui.mainmenu.MainMenuScene;
 import me.miki.shindo.management.language.TranslateText;
 import me.miki.shindo.management.nanovg.NanoVGManager;
 import me.miki.shindo.management.nanovg.font.Fonts;
+import me.miki.shindo.management.nanovg.font.LegacyIcon;
 import me.miki.shindo.utils.animation.simple.SimpleAnimation;
 import me.miki.shindo.utils.mouse.MouseUtils;
 import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.client.gui.GuiSelectWorld;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.util.ResourceLocation;
 
 import java.awt.*;
 
@@ -63,8 +63,8 @@ public class MainScene extends MainMenuScene {
 		ScaledResolution sr = new ScaledResolution(mc);
 		
 		float yPos = sr.getScaledHeight() / 2F - 22;
-		
-		nvg.drawImage(new ResourceLocation("shindo/logo.png"), sr.getScaledWidth() / 2F - (54 / 2F), sr.getScaledHeight() / 2F - (54 / 2F) - 60, 54, 54);
+
+		nvg.drawCenteredText(LegacyIcon.SHINDO, sr.getScaledWidth() / 2F, sr.getScaledHeight() / 2F - (nvg.getTextHeight(LegacyIcon.SHINDO, 54, Fonts.LEGACYICON) / 2) - 60, Color.WHITE, 54, Fonts.LEGACYICON);
 
 		singlePlayerAnimation.setAnimation(MouseUtils.isInside(mouseX, mouseY, sr.getScaledWidth() / 2F - (180 / 2F), yPos, 180, 20) ? 1.0F : 0.0F, 16);
 

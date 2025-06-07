@@ -2,15 +2,7 @@ package me.miki.shindo.utils.network;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import me.miki.shindo.logger.ShindoLogger;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -22,45 +14,11 @@ import java.util.Map;
 
 public class HttpUtils {
 
-    private static final CloseableHttpClient httpClient = HttpClients.createDefault();
-
     private static String ACCEPTED_RESPONSE = "application/json";
     private static Gson gson = new Gson();
 
     public static JsonObject readJson(HttpURLConnection connection) {
         return gson.fromJson(readResponse(connection), JsonObject.class);
-    }
-
-
-    public static JsonObject getJson(String url) {
-        try {
-            HttpGet request = new HttpGet(url);
-            request.setHeader("Accept", "application/json");
-
-            try (CloseableHttpResponse response = httpClient.execute(request)) {
-                String json = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
-                return JsonParser.parseString(json).getAsJsonObject();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new JsonObject(); // Retorna objeto vazio em erro
-        }
-    }
-
-    public static JsonObject postJson(String url, JsonObject payload) {
-        try {
-            HttpPost request = new HttpPost(url);
-            request.setHeader("Content-Type", "application/json");
-            request.setEntity(new StringEntity(payload.toString(), StandardCharsets.UTF_8));
-
-            try (CloseableHttpResponse response = httpClient.execute(request)) {
-                String json = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
-                return JsonParser.parseString(json).getAsJsonObject();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new JsonObject();
-        }
     }
 
     public static JsonObject postJson(String url, Object request) {
@@ -81,7 +39,6 @@ public class HttpUtils {
             return null;
         }
     }
-
 
     public static String get(String url) {
         try {

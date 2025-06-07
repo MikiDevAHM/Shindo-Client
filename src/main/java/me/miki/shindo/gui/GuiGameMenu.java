@@ -73,7 +73,7 @@ public class GuiGameMenu extends GuiScreen {
         offset += standardPadding;
         drawButton(nvg, I18n.format("gui.achievements"), LegacyIcon.MAP, offset);
         offset += standardPadding;
-        drawButton(nvg, TranslateText.OPEN_MOD_MENU.getText(), new ResourceLocation("shindo/logo.png"), offset);
+        drawButton(nvg, TranslateText.OPEN_MOD_MENU.getText(), LegacyIcon.SHINDO, offset);
         offset += standardPadding;
         drawButton(nvg, !this.mc.isIntegratedServerRunning() ? I18n.format("menu.disconnect") : TranslateText.EXIT_WORLD_SINGLEPLAYER.getText(), LegacyIcon.LOGOUT, offset);
     }

@@ -28,7 +28,6 @@ import me.miki.shindo.utils.mouse.Scroll;
 import me.miki.shindo.utils.render.BlurUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
@@ -133,7 +132,7 @@ public class GuiModMenu extends GuiScreen {
 		}
 
 		nvg.drawGradientRoundedRect(x + 5, y + 7, 22, 22, 11, currentColor.getColor1(), currentColor.getColor2());
-		nvg.drawImage(new ResourceLocation("shindo/logo.png"), x + 8, y + 10, 16,16);
+		nvg.drawText(LegacyIcon.SHINDO, x + 8, y + 10, Color.WHITE, 16, Fonts.LEGACYICON);
 		if(currentCategory.isShowTitle()) {
 			nvg.save();
 			nvg.translate(currentCategory.getTextAnimation().getValue() * 15, 0);

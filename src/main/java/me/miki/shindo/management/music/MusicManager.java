@@ -401,7 +401,7 @@ public class MusicManager {
 
 			// Aplica volume
 			for (int i = offs; i < offs + len; i++) {
-				samples[i] = (short) (samples[i] * (volume / 100f));
+				samples[i] = (short) (samples[i] * (volume / 80f));
 			}
 
 			// Envia para o áudio

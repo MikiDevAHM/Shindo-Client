@@ -172,7 +172,7 @@ public class GuiShindoMainMenu extends GuiScreen {
 			}
 			
 			nvg.drawRect(0, 0, sr.getScaledWidth(), sr.getScaledHeight(), new Color(0, 0, 0, fadeBackgroundAnimation != null ? (int) (255 - (fadeBackgroundAnimation.getValue() * 255)) : 255));
-			nvg.drawImage(new ResourceLocation("shindo/logo.png"), sr.getScaledWidth() / 2F - (130 / 2F), (sr.getScaledHeight() / 2F) - (130 / 2F) - 1, 130, 130);
+			nvg.drawCenteredText(LegacyIcon.SHINDO, sr.getScaledWidth() / 2F, (sr.getScaledHeight() / 2F) - (nvg.getTextHeight(LegacyIcon.SHINDO, 130, Fonts.LEGACYICON) / 2) - 1, new Color(255, 255, 255, (int) (255 - (fadeIconAnimation.getValue() * 255))), 130, Fonts.LEGACYICON);
 		}
 	}
 	

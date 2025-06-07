@@ -2,12 +2,10 @@ package me.miki.shindo.api.impl;
 
 import com.google.gson.JsonObject;
 import me.miki.shindo.logger.ShindoLogger;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -16,7 +14,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class RetryQueue {
-
     private final Queue<JsonObject> queue = new ConcurrentLinkedQueue<>();
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
@@ -33,28 +30,32 @@ public class RetryQueue {
 
         ShindoLogger.info("[API] Tentando reenviar " + queue.size() + " evento(s) pendente(s)...");
 
-        try (CloseableHttpClient client = HttpClients.createDefault()) {
-            for (JsonObject json : queue) {
-                try {
-                    HttpPost post = new HttpPost(ApiSender.API_BASE + "/client-status");
-                    post.setHeader("Content-Type", "application/json");
-                    post.setEntity(new StringEntity(json.toString(), StandardCharsets.UTF_8));
+        for (JsonObject json : queue) {
+            try {
+                URL url = new URL(ApiSender.API_BASE + "/client-status");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setDoOutput(true);
+                connection.setConnectTimeout(3000);
+                connection.setReadTimeout(3000);
 
-                    try (CloseableHttpResponse response = client.execute(post)) {
-                        int code = response.getStatusLine().getStatusCode();
-                        if (code == 200) {
-                            queue.remove(json);
-                            ShindoLogger.info("[API] Evento reenviado com sucesso.");
-                        } else {
-                            ShindoLogger.error("[API] Falha no reenvio do evento (HTTP " + code + ").");
-                        }
-                    }
-                } catch (Exception e) {
-                    ShindoLogger.error("[API] Erro ao reenviar evento: " + json + " -> " + e.getMessage(), e);
+                try (OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8)) {
+                    writer.write(json.toString());
+                    writer.flush();
                 }
+
+                int responseCode = connection.getResponseCode();
+                if (responseCode == 200) {
+                    queue.remove(json);
+                    ShindoLogger.info("[API] Evento reenviado com sucesso.");
+                } else {
+                    ShindoLogger.error("[API] Falha no reenvio do evento (HTTP " + responseCode + ").");
+                }
+
+            } catch (Exception e) {
+                ShindoLogger.error("[API] Erro ao reenviar evento: " + json + " -> " + e.getMessage(), e);
             }
-        } catch (Exception e) {
-            ShindoLogger.error("[API] Erro ao criar HttpClient para retry: " + e.getMessage(), e);
         }
     }
 

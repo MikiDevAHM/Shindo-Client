@@ -96,7 +96,7 @@ public class MusicInfoMod extends SimpleHUDMod {
                 MusicWaveform.animation[i].setAnimation(MusicWaveform.visualizer[i], 100);
                 nvg.drawRect(offsetX, sr.getScaledHeight() + MusicWaveform.animation[i].getValue(), 10, sr.getScaledHeight(), ColorUtils.applyAlpha(currentColor.getInterpolateColor(index), 80));
 
-                offsetX+=10;
+                offsetX+=15;
                 index--;
             }
         }

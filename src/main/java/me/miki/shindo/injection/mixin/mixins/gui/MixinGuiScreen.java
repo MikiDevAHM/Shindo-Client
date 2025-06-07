@@ -1,10 +1,10 @@
 package me.miki.shindo.injection.mixin.mixins.gui;
 
-import java.io.IOException;
-
 import me.miki.shindo.Shindo;
 import me.miki.shindo.management.mods.impl.InternalSettingsMod;
 import me.miki.shindo.utils.Sound;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -13,8 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
+import java.io.IOException;
 
 @Mixin(GuiScreen.class)
 public abstract class MixinGuiScreen {
@@ -40,6 +39,10 @@ public abstract class MixinGuiScreen {
 		Sound.play("shindo/audio/click.wav", true);
 	}
 	
+	/**
+	 * @author
+	 * @reason
+	 */
 	@Overwrite
     public void handleKeyboardInput() throws IOException {
         char c = Keyboard.getEventCharacter();

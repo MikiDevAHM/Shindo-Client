@@ -1,17 +1,12 @@
 package me.miki.shindo.injection.mixin.mixins.gui;
 
-import me.miki.shindo.Shindo;
-import me.miki.shindo.ShindoAPI;
 import me.miki.shindo.management.mods.impl.TabEditorMod;
-import me.miki.shindo.utils.render.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.util.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -26,6 +21,8 @@ public class MixinGuiPlayerTabOverlay {
 	
 	@Redirect(method = "renderPlayerlist", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/FontRenderer;drawStringWithShadow(Ljava/lang/String;FFI)I", ordinal = 2))
 	public int renderShindoIcon(FontRenderer instance, String text, float x, float y, int color) {
+
+		/*
 		Minecraft mc = Minecraft.getMinecraft();
 
 		NetworkPlayerInfo playerInfo = mc.getNetHandler().getPlayerInfoMap().stream()
@@ -60,7 +57,7 @@ public class MixinGuiPlayerTabOverlay {
 				x += iconSize + iconOffset;
 			}
 		}
-
+		*/
 		// Renderiza o texto (com X ajustado se necessário)
 		return instance.drawStringWithShadow(text, x, y, color);
 	}
