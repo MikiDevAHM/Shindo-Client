@@ -47,6 +47,10 @@ public class MixinWorldInfo {
 		}
 	}
 	
+	/**
+	 * @author
+	 * @reason
+	 */
 	@Overwrite
 	public long getWorldTime() {
 		

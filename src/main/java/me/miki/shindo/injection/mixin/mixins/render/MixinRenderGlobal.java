@@ -1,15 +1,5 @@
 package me.miki.shindo.injection.mixin.mixins.render;
 
-import java.util.Set;
-
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
 import me.miki.shindo.injection.interfaces.IMixinRenderGlobal;
 import me.miki.shindo.injection.interfaces.IMixinVisGraph;
 import me.miki.shindo.utils.EnumFacings;
@@ -17,6 +7,11 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.chunk.VisGraph;
 import net.minecraft.util.EnumFacing;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(RenderGlobal.class)
 public class MixinRenderGlobal implements IMixinRenderGlobal {
@@ -28,10 +23,11 @@ public class MixinRenderGlobal implements IMixinRenderGlobal {
     private EnumFacing[] setupTerrain$getCachedArray() {
         return EnumFacings.FACINGS;
     }
-    
-    @Inject(method = "getVisibleFacings", at = @At(value = "NEW", target = "Lnet/minecraft/client/renderer/chunk/VisGraph;<init>()V", shift = At.Shift.AFTER, remap = false), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void setLimitScan(CallbackInfoReturnable<Set<EnumFacing>> cir, VisGraph visgraph) {
+
+    @ModifyVariable(method = "getVisibleFacings", at = @At("STORE"), ordinal = 0)
+    private VisGraph onVisGraphCreated(VisGraph visgraph) {
         ((IMixinVisGraph) visgraph).setLimitScan(true);
+        return visgraph;
     }
     
 	@Override

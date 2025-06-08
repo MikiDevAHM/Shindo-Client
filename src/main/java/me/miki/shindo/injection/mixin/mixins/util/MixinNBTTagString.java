@@ -24,6 +24,10 @@ public class MixinNBTTagString {
         this.dataCache = null;
     }
 
+    /**
+     * @author
+     * @reason
+     */
     @Overwrite
     public String toString() {
         if (this.dataCache == null) {

@@ -20,9 +20,7 @@ public class ShindoAPI {
         apiManager.notifyEvent("leave");
         apiManager.shutdown();
     }
-
-
-
+    
     public boolean isStaff(String uuid) {
         //ShindoLogger.info("[API] UUID: " + uuid);
         //ShindoLogger.info("[API] STAFF: " + apiManager.isStaff(uuid));

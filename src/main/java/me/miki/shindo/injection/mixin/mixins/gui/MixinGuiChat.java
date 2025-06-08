@@ -35,15 +35,16 @@ public class MixinGuiChat extends GuiScreen {
 	}
 	
 	@Redirect(method = "keyTyped", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiChat;sendChatMessage(Ljava/lang/String;)V"))
-	public void cancelSendMessage() {
+	public void cancelSendMessage(GuiChat instance, String s) {
 		
-        String s = this.inputField.getText().trim();
+		s = this.inputField.getText().trim();
         
-        if (s.length() > 0) {
+        if (!s.isEmpty()) {
         	
     		if(ChatTranslateMod.getInstance().isToggled() && GuiChatHook.isToggled()) {
-    			Multithreading.runAsync(() -> {
-    				GuiChatHook.sendTranslatedMessage(s);
+				String finalS = s;
+				Multithreading.runAsync(() -> {
+    				GuiChatHook.sendTranslatedMessage(finalS);
     			});
     		} else {
     			this.sendChatMessage(s);

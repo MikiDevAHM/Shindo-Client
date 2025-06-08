@@ -1,36 +1,21 @@
 package me.miki.shindo.injection.mixin.mixins.gui;
 
-import java.util.List;
-
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import me.miki.shindo.hooks.GuiNewChatHook;
 import me.miki.shindo.management.mods.impl.ChatMod;
 import me.miki.shindo.management.mods.impl.ChatTranslateMod;
 import me.miki.shindo.utils.MathUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ChatLine;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.gui.GuiNewChat;
-import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.IChatComponent;
+import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+
+import java.util.List;
 
 @Mixin(GuiNewChat.class)
 public abstract class MixinGuiNewChat extends Gui {
@@ -97,6 +82,10 @@ public abstract class MixinGuiNewChat extends Gui {
         return instance.drawStringWithShadow(text, x, y, lastOpacity);
     }
     
+    /**
+     * @author
+     * @reason
+     */
     @Overwrite
 	public void printChatMessage(IChatComponent component) {
     	

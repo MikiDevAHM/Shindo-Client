@@ -11,7 +11,11 @@ import net.minecraft.client.multiplayer.ServerData;
 @Mixin(GuiMultiplayer.class)
 public class MixinGuiMultiplayer extends GuiScreen {
 	
-	@Overwrite
+	/**
+     * @author
+     * @reason
+     */
+    @Overwrite
     private void connectToServer(ServerData server){
         mc.displayGuiScreen(new GuiFixConnecting(this, mc, server));
     }

@@ -31,7 +31,11 @@ public abstract class MixinRenderItem {
 	@Shadow
     private TextureManager textureManager;
 	
-	@Overwrite
+	/**
+     * @author
+     * @reason
+     */
+    @Overwrite
     private void renderEffect(IBakedModel model){
 		
         int color = -8372020; 

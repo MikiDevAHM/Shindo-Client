@@ -18,6 +18,10 @@ public abstract class MixinLazyLoadBase<T> {
     @Shadow 
     protected abstract T load();
     
+    /**
+     * @author
+     * @reason
+     */
     @Overwrite
     public T getValue() {
         if (!this.isLoaded) {

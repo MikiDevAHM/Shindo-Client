@@ -119,5 +119,5 @@ public abstract class MixinGuiContainer extends GuiScreen {
     }
     
     @Redirect(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/inventory/GuiContainer;drawDefaultBackground()V"))
-    public void removeDrawDefaultBackground() {}
+    public void removeDrawDefaultBackground(GuiContainer instance) {}
 }

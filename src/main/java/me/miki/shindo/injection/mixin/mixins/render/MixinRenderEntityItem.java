@@ -23,7 +23,11 @@ public abstract class MixinRenderEntityItem {
 	@Shadow
     public abstract int func_177078_a(ItemStack stack);
 	
-	@Overwrite
+	/**
+     * @author
+     * @reason
+     */
+    @Overwrite
 	private int func_177077_a(EntityItem itemIn, double p_177077_2_, double p_177077_4_, double p_177077_6_, float p_177077_8_, IBakedModel p_177077_9_) {
 		return RenderEntityItemHook.func_177077_a(itemIn, p_177077_2_, p_177077_4_, p_177077_6_, p_177077_8_, p_177077_9_, func_177078_a(itemIn.getEntityItem()));
 	}

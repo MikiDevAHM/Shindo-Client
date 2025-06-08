@@ -1,22 +1,5 @@
 package me.miki.shindo.injection.mixin.mixins.world;
 
-import java.util.List;
-
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.Slice;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
 import me.miki.shindo.injection.interfaces.IMixinWorld;
 import me.miki.shindo.management.language.TranslateText;
 import me.miki.shindo.management.mods.impl.WeatherChangerMod;
@@ -34,6 +17,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+
+import java.util.List;
 
 @Mixin(World.class)
 public abstract class MixinWorld implements IMixinWorld {
@@ -84,7 +76,7 @@ public abstract class MixinWorld implements IMixinWorld {
 		return isChunkLoaded(x, z, allowEmpty);
 	}
 	
-    @ModifyVariable(method = "updateEntityWithOptionalForce", at = @At("STORE"), ordinal = 1)
+    @ModifyVariable(method = "updateEntityWithOptionalForce", at = @At("STORE"), ordinal = 0)
     private boolean checkIfWorldIsRemoteBeforeForceUpdating(boolean isForced) {
         return isForced && !this.isRemote;
     }

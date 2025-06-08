@@ -22,9 +22,7 @@ public class MixinEntity {
 
     @Inject(method = "spawnRunningParticles", at = @At("HEAD"), cancellable = true)
     private void checkGroundState(CallbackInfo ci) {
-        if (!this.onGround) {
-        	ci.cancel();
-        }
+        if (!this.onGround) ci.cancel();
     }
     
     @Redirect(method = "getBrightnessForRender", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isBlockLoaded(Lnet/minecraft/util/BlockPos;)Z"))

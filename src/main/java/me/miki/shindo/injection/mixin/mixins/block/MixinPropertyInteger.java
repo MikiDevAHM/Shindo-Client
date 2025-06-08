@@ -9,6 +9,10 @@ import net.minecraft.block.properties.PropertyInteger;
 @Mixin(PropertyInteger.class)
 public class MixinPropertyInteger {
 
+    /**
+     * @author
+     * @reason
+     */
     @Overwrite
     public int hashCode() {
         return ((ICachedHashcode)((Object)this)).getCachedHashcode();

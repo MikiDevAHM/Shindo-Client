@@ -10,6 +10,10 @@ import net.minecraft.client.gui.GuiScreen;
 @Mixin(GuiDownloadTerrain.class)
 public class MixinGuiDownloadTerrain extends GuiScreen {
 
+	/**
+	 * @author
+	 * @reason
+	 */
 	@Overwrite
 	public void initGui() {
 		this.buttonList.clear();

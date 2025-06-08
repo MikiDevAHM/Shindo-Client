@@ -30,4 +30,6 @@ public class MixinBlockModelRenderer {
     private EnumFacing[] renderModelBrightnessColor$getCachedArray() {
         return EnumFacings.FACINGS;
     }
+
+
 }

@@ -21,6 +21,10 @@ public class MixinBaseAttribute {
         this.cachedHashcode = this.hashCode();
     }
 
+    /**
+     * @author
+     * @reason
+     */
     @Overwrite
     public int hashCode() {
         return this.cachedHashcode;

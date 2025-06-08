@@ -2,6 +2,7 @@ package me.miki.shindo.injection.mixin.mixins.client;
 
 import eu.shoroa.contrib.render.ShBlur;
 import me.miki.shindo.Shindo;
+import net.minecraft.entity.player.EntityPlayer;
 import org.apache.commons.lang3.SystemUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -287,6 +288,10 @@ public abstract class MixinMinecraft implements IMixinMinecraft {
 		new EventRenderTick().call();
 	}
 	
+	/**
+	 * @author
+	 * @reason
+	 */
 	@Overwrite
     public int getLimitFramerate() {
 		
@@ -304,7 +309,11 @@ public abstract class MixinMinecraft implements IMixinMinecraft {
         return this.theWorld == null && this.currentScreen != null ? 60 : this.gameSettings.limitFramerate;
     }
 	
-    @Overwrite
+    /**
+	 * @author
+	 * @reason
+	 */
+	@Overwrite
     public boolean isFramerateLimitBelowMax() {
     	
 		FPSLimiterMod limiter = FPSLimiterMod.getInstance();
@@ -345,7 +354,7 @@ public abstract class MixinMinecraft implements IMixinMinecraft {
     @Redirect(method = "runGameLoop", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/stream/IStream;func_152922_k()V"))
     private void skipTwitchCode2(IStream instance) {}
     
-    @ModifyArg(method = "launchIntegratedServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;displayGuiScreen(Lnet/minecraft/client/gui/GuiScreen;)V", ordinal = 1))
+    @ModifyArg(method = "launchIntegratedServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;displayGuiScreen(Lnet/minecraft/client/gui/GuiScreen;)V", ordinal = 0))
     private GuiScreen displayWorkingScreen(GuiScreen original) {
         return new GuiScreenWorking();
     }
@@ -374,15 +383,19 @@ public abstract class MixinMinecraft implements IMixinMinecraft {
 	}
     
     @Redirect(method = "clickMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;swingItem()V"))
-    private void redirectSwing() {
+    private void redirectSwing(EntityPlayerSP instance) {
     		thePlayer.swingItem();
     }
     
     @Redirect(method = "clickMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/PlayerControllerMP;attackEntity(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/entity/Entity;)V"))
-    private void redirectAttack() {
+    private void redirectAttack(PlayerControllerMP instance, EntityPlayer playerIn, Entity targetEntity) {
     		playerController.attackEntity(thePlayer, objectMouseOver.entityHit);
     }
     
+	/**
+	 * @author
+	 * @reason
+	 */
 	@Overwrite
 	public static int getDebugFPS() {
 		

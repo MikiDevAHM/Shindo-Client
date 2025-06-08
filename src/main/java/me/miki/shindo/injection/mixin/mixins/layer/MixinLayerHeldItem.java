@@ -36,6 +36,10 @@ public abstract class MixinLayerHeldItem {
         this.livingEntityRenderer = rendererLivingEntity;
     }
 
+    /**
+     * @author
+     * @reason
+     */
     @Overwrite
     public void doRenderLayer(EntityLivingBase entitylivingbaseIn, float f, float g, float partialTicks, float h, float i, float j, float scale) {
     	
