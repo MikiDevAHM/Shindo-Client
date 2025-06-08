@@ -1,5 +1,10 @@
 package me.miki.shindo.injection.mixin.mixins.render;
 
+import me.miki.shindo.Shindo;
+import me.miki.shindo.ShindoAPI;
+import me.miki.shindo.utils.render.RenderUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -8,6 +13,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -52,7 +58,7 @@ public abstract class MixinRender <T extends Entity>  {
 
             int j = fontrenderer.getStringWidth(str) / 2;
 
-            /*
+
             if (entityIn instanceof AbstractClientPlayer) {
                 String uuid = Shindo.getInstance().getShindoAPI().isUUIDBad() ? ((AbstractClientPlayer) entityIn).getName() : ((AbstractClientPlayer) entityIn).getGameProfile().getId().toString();
                 if (Shindo.getInstance().getShindoAPI().isOnline(uuid)) {
@@ -80,7 +86,7 @@ public abstract class MixinRender <T extends Entity>  {
                     RenderUtils.drawModalRectWithCustomSizedTexture(-fontrenderer.getStringWidth(entityIn.getDisplayName().getFormattedText()) / 2F - 10, -1,  9, 9, 9, 9, 9, 9);
                 } else {
 
-             */
+
                     GlStateManager.disableTexture2D();
                     worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
                     worldrenderer.pos((double)(-j - 8), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
@@ -90,10 +96,10 @@ public abstract class MixinRender <T extends Entity>  {
                     tessellator.draw();
                     GlStateManager.enableTexture2D();
 
-                    /*
+
                 }
             }
-             */
+
             if (str.equals("deadmau5")) {
                 i = -10;
             }

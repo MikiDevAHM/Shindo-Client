@@ -73,7 +73,7 @@ public class Shindo {
 	private ClickEffects clickEffects;
 	private BlacklistManager blacklistManager;
 	private RestrictedMod restrictedMod;
-	//private ShindoAPI shindoAPI;
+	private ShindoAPI shindoAPI;
 	
 	public Shindo() {
 		name = "Shindo";
@@ -123,9 +123,9 @@ public class Shindo {
 		waypointManager = new WaypointManager();
 		musicManager = new MusicManager();
 
-		//shindoAPI = new ShindoAPI();
+		shindoAPI = new ShindoAPI();
 
-		//shindoAPI.start();
+		shindoAPI.start();
 		eventManager.register(new ShindoHandler());
 
 		InternalSettingsMod.getInstance().setToggled(true);
@@ -269,9 +269,9 @@ public class Shindo {
 		return update;
 	}
 
-	//public ShindoAPI getShindoAPI() {
-	//	return shindoAPI;
-	//}
+	public ShindoAPI getShindoAPI() {
+		return shindoAPI;
+	}
 
 	public void setUpdateNeeded(boolean in) {updateNeeded = in;}
 	public boolean getUpdateNeeded() {return updateNeeded;}

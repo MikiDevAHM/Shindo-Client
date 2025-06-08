@@ -48,7 +48,7 @@ public class ApiChecker {
 
     private JsonObject fetchUserInfo(String uuid) {
         try {
-            URL url = new URL(ApiSender.API_BASE + "/get-user?uuid=" + uuid);
+            URL url = new URL(ApiSender.API_BASE + "/client-status?uuid=" + uuid);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setConnectTimeout(3000);

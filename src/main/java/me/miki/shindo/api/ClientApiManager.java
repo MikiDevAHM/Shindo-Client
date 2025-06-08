@@ -20,9 +20,9 @@ public class ClientApiManager {
     private final String name;
     private final String accountType;
 
-    private final RetryQueue retryQueue;
     private final ApiSender apiSender;
     private final ApiChecker apiChecker;
+    private final RetryQueue retryQueue;
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
@@ -30,10 +30,10 @@ public class ClientApiManager {
 
     // CACHES
     private final Map<String, Boolean> onlineCache = new ConcurrentHashMap<>();
-    private final Map<String, JsonArray> privilegesCache = new ConcurrentHashMap<>();
     private final Map<String, String> nameCache = new ConcurrentHashMap<>();
     private final Map<String, String> accountTypeCache = new ConcurrentHashMap<>();
     private final Map<String, Long> lastUpdateTimestamps = new ConcurrentHashMap<>();
+    private final Map<String, JsonArray> privilegesCache = new ConcurrentHashMap<>();
 
     private static final long CACHE_TTL_MS = 5000;
 

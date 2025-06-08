@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 
 public class ApiSender {
 
-    public static final String API_BASE = "https://shindo-api.netlify.app/api";
+    public static final String API_BASE = "https://shindo-api.vercel.app/api";
 
     private final ExecutorService senderExecutor = Executors.newFixedThreadPool(2);
     private final RetryQueue retryQueue;
@@ -50,7 +50,6 @@ public class ApiSender {
                 }
 
                 ShindoLogger.info("[API] Evento enviado com sucesso.");
-
             } catch (Exception e) {
                 ShindoLogger.error("[API] Falha ao enviar evento, adicionando à fila: " + e.getMessage(), e);
                 retryQueue.add(json);
