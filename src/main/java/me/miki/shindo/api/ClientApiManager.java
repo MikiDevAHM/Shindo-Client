@@ -126,15 +126,15 @@ public class ClientApiManager {
     }
 
     public boolean isStaff(String uuid) {
-        return hasPrivilege(uuid, "Staff");
+        return hasPrivilege(uuid, "staff");
     }
 
     public boolean isDiamond(String uuid) {
-        return hasPrivilege(uuid, "Diamond");
+        return hasPrivilege(uuid, "diamond");
     }
 
     public boolean isGold(String uuid) {
-        return hasPrivilege(uuid, "Gold");
+        return hasPrivilege(uuid, "gold");
     }
 
     private void watchUUID(String uuid) {

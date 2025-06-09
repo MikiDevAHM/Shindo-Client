@@ -136,7 +136,7 @@ public class Shindo {
 	public void stop() {
 		ShindoLogger.info("Stopping Shindo");
 		profileManager.save();
-		//shindoAPI.stop();
+		shindoAPI.stop();
 		Sound.play("shindo/audio/close.wav", true);
 	}
 	

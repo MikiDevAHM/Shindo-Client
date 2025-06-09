@@ -102,8 +102,8 @@ public abstract class MixinRendererLivingEntity <T extends EntityLivingBase> ext
 
 							GlStateManager.disableTexture2D();
 							worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-							worldrenderer.pos((double)(-i - 8), -1.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-							worldrenderer.pos((double)(-i - 8), 8.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+							worldrenderer.pos((double)(-i - 1), -1.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+							worldrenderer.pos((double)(-i - 1), 8.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
 							worldrenderer.pos((double)(i + 1), 8.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
 							worldrenderer.pos((double)(i + 1), -1.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
 							tessellator.draw();

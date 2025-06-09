@@ -1,18 +1,20 @@
 package me.miki.shindo;
 
 import me.miki.shindo.api.ClientApiManager;
+import me.miki.shindo.api.utils.SSLBypass;
 import net.minecraft.client.Minecraft;
 
 import java.util.Objects;
 
 public class ShindoAPI {
 
-    String uuid = Minecraft.getMinecraft().getSession().getPlayerID();
+    String uuid = Objects.equals(Minecraft.getMinecraft().getSession().getUsername(), Minecraft.getMinecraft().getSession().getPlayerID()) && Minecraft.getMinecraft().getSession().getProfile().getId() == null ? Minecraft.getMinecraft().getSession().getUsername() : Minecraft.getMinecraft().getSession().getProfile().getId().toString();
     String username = Minecraft.getMinecraft().getSession().getUsername();
     String accountType = uuid.equals(username) ? "CRACKED" : "PREMIUM";
 
     private ClientApiManager apiManager = new ClientApiManager(uuid, username, accountType);
     public void start() {
+        SSLBypass.disableCertificateValidation();
         apiManager.notifyEvent("join");
     }
 

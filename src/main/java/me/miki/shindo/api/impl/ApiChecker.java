@@ -73,10 +73,11 @@ public class ApiChecker {
                 ensureDefault(json, "name", (String) null);
                 ensureDefault(json, "accountType", (String) null);
 
-                if (!json.has("privileges") || !json.get("privileges").isJsonObject()) {
-                    json.add("privileges", new JsonObject());
+                if (!json.has("privileges") || !json.get("privileges").isJsonArray()) {
+                    json.add("privileges", new JsonArray());
                 }
 
+                ShindoLogger.info(response.toString());
                 return json;
             }
 
