@@ -9,7 +9,7 @@ public class Fonts {
 	
 	private static final String PATH = "shindo/fonts/";
 
-	//public static final Font FLUENT = new Font("fluent", new ResourceLocation(PATH + "fluent.ttf"));
+	public static final Font FLUENT = new Font("fluent", new ResourceLocation(PATH + "fluent.ttf"));
 	public static final Font FALLBACK = new Font("fallback", new ResourceLocation(PATH + "fallback.ttf"));
 	public static final Font REGULAR = new Font("regular", new ResourceLocation(PATH + "inter/Inter-Regular.ttf"));
 	public static final Font MEDIUM = new Font("medium", new ResourceLocation(PATH + "inter/Inter-Medium.ttf"));

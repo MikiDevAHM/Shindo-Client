@@ -22,6 +22,7 @@ import me.miki.shindo.logger.ShindoLogger;
 import me.miki.shindo.management.nanovg.asset.AssetManager;
 import me.miki.shindo.management.nanovg.font.Font;
 import me.miki.shindo.management.nanovg.font.FontManager;
+import me.miki.shindo.management.nanovg.font.Fonts;
 import me.miki.shindo.utils.ColorUtils;
 import me.miki.shindo.utils.MathUtils;
 import net.minecraft.client.Minecraft;
@@ -380,6 +381,40 @@ public class NanoVGManager {
 		NanoVG.nvgText(nvg, x, y, text);
 	}
 
+	public void drawFormattedText(String text, float x, float y, Color defaultColor, float size, Font font) {
+		float cursorX = x;
+		Color currentColor = defaultColor;
+		boolean bold = false;
+		boolean italic = false;
+
+		for (int i = 0; i < text.length(); i++) {
+			char c = text.charAt(i);
+
+			if (c == '§' && i + 1 < text.length()) {
+				char code = Character.toLowerCase(text.charAt(++i));
+
+				if (code >= '0' && code <= 'f') {
+					currentColor = getColorByCode(code);
+					bold = italic = false;
+				} else if (code == 'l') {
+					bold = true;
+				} else if (code == 'o') {
+					italic = true;
+				} else if (code == 'r') {
+					currentColor = defaultColor;
+					bold = italic = false;
+				}
+				continue;
+			}
+
+			// Escolhe a fonte certa com base no estilo
+			Font styledFont = getFontWithStyle(font, bold, italic);
+			String s = String.valueOf(c);
+			drawText(s, cursorX, y, currentColor, size, styledFont);
+			cursorX += getTextWidth(s, size, styledFont);
+		}
+	}
+
 	public void drawTextGlowing(String text, float x, float y, Color color, float blurRadius, float size, Font font) {
 		drawTextGlowingBg(text, x, y, color, size, blurRadius, font);
 		drawText(text, x,y, color, size, font);
@@ -507,43 +542,44 @@ public class NanoVGManager {
 	public void scissor(float x, float y, float width, float height) {
 		NanoVG.nvgScissor(nvg, x, y, width, height);
 	}
-	
-	public void drawSvg(ResourceLocation location, float x, float y, float width, float height, Color color) {
-		
-        if (assetManager.loadSvg(nvg, location, width, height)) {
-        	
-            NVGPaint imagePaint = NVGPaint.calloc();
-            
-            int image = assetManager.getSvg(location, width, height);
-            
-            NanoVG.nvgBeginPath(nvg);
-            NanoVG.nvgImagePattern(nvg, x, y, width, height, 0, image, 1, imagePaint);
-            
-            imagePaint.innerColor(getColor(color));
-            imagePaint.outerColor(getColor(color));
-            
-            NanoVG.nvgRect(nvg, x, y, width, height);
-            NanoVG.nvgFillPaint(nvg, imagePaint);
-            NanoVG.nvgFill(nvg);            
 
-            imagePaint.free();
-        }
-	}
-	public void drawImage(ResourceLocation location, float x, float y, float width, float height) {
-		
-		if(assetManager.loadImage(nvg, location)) {
-			
+	public void drawSvg(ResourceLocation location, float x, float y, float width, float height, Color color) {
+
+		if (assetManager.loadSvg(nvg, location, width, height)) {
+
 			NVGPaint imagePaint = NVGPaint.calloc();
-			
-			int image = assetManager.getImage(location);
-			
+
+			int image = assetManager.getSvg(location, width, height);
+
 			NanoVG.nvgBeginPath(nvg);
 			NanoVG.nvgImagePattern(nvg, x, y, width, height, 0, image, 1, imagePaint);
-			
+
+			imagePaint.innerColor(getColor(color));
+			imagePaint.outerColor(getColor(color));
+
 			NanoVG.nvgRect(nvg, x, y, width, height);
 			NanoVG.nvgFillPaint(nvg, imagePaint);
 			NanoVG.nvgFill(nvg);
-			
+
+			imagePaint.free();
+		}
+	}
+
+	public void drawImage(ResourceLocation location, float x, float y, float width, float height) {
+
+		if(assetManager.loadImage(nvg, location)) {
+
+			NVGPaint imagePaint = NVGPaint.calloc();
+
+			int image = assetManager.getImage(location);
+
+			NanoVG.nvgBeginPath(nvg);
+			NanoVG.nvgImagePattern(nvg, x, y, width, height, 0, image, 1, imagePaint);
+
+			NanoVG.nvgRect(nvg, x, y, width, height);
+			NanoVG.nvgFillPaint(nvg, imagePaint);
+			NanoVG.nvgFill(nvg);
+
 			imagePaint.free();
 		}
 	}
@@ -760,5 +796,35 @@ public class NanoVGManager {
 	
 	public long getContext() {
 		return nvg;
+	}
+
+	public Color getColorByCode(char code) {
+		switch (Character.toLowerCase(code)) {
+			case '0': return new Color(0, 0, 0);
+			case '1': return new Color(0, 0, 170);
+			case '2': return new Color(0, 170, 0);
+			case '3': return new Color(0, 170, 170);
+			case '4': return new Color(170, 0, 0);
+			case '5': return new Color(170, 0, 170);
+			case '6': return new Color(255, 170, 0);
+			case '7': return new Color(170, 170, 170);
+			case '8': return new Color(85, 85, 85);
+			case '9': return new Color(85, 85, 255);
+			case 'a': return new Color(85, 255, 85);
+			case 'b': return new Color(85, 255, 255);
+			case 'c': return new Color(255, 85, 85);
+			case 'd': return new Color(255, 85, 255);
+			case 'e': return new Color(255, 255, 85);
+			case 'f': return new Color(255, 255, 255);
+			default:  return Color.WHITE;
+		}
+	}
+
+	public Font getFontWithStyle(Font base, boolean bold, boolean italic) {
+		// Exemplo simples. Implemente de acordo com seu FontManager
+		if (bold && italic) return Fonts.SEMIBOLD;
+		if (bold) return Fonts.MEDIUM;
+		if (italic) return Fonts.REGULAR;
+		return base;
 	}
 }

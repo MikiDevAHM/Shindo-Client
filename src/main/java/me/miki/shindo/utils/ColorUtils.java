@@ -1,8 +1,8 @@
 package me.miki.shindo.utils;
 
-import java.awt.Color;
-
 import net.minecraft.client.renderer.GlStateManager;
+
+import java.awt.*;
 
 public class ColorUtils {
 
@@ -21,6 +21,8 @@ public class ColorUtils {
         
         return ColorUtils.interpolateColorHue(start, end, angle / 360f);
     }
+
+
     
     private static Color interpolateColorHue(Color color1, Color color2, float amount) {
     	
@@ -107,5 +109,13 @@ public class ColorUtils {
         float a = (float)(color >> 24 & 255) / 255.0F;
         
         return a;
+	}
+
+	public static void color(int color) {
+		float alpha = (color >> 24 & 255) / 255f;
+		float red = (color >> 16 & 255) / 255f;
+		float green = (color >> 8 & 255) / 255f;
+		float blue = (color & 255) / 255f;
+		GlStateManager.color(red, green, blue, alpha);
 	}
 }

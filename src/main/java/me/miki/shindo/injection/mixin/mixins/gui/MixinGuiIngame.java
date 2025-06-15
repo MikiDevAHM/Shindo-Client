@@ -1,33 +1,15 @@
 package me.miki.shindo.injection.mixin.mixins.gui;
 
 import eu.shoroa.contrib.render.ShBlur;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.At.Shift;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import me.miki.shindo.gui.GuiEditHUD;
 import me.miki.shindo.gui.modmenu.GuiModMenu;
 import me.miki.shindo.injection.interfaces.IMixinGuiIngame;
-import me.miki.shindo.management.event.impl.EventRender2D;
-import me.miki.shindo.management.event.impl.EventRenderCrosshair;
-import me.miki.shindo.management.event.impl.EventRenderDamageTint;
-import me.miki.shindo.management.event.impl.EventRenderExpBar;
-import me.miki.shindo.management.event.impl.EventRenderNotification;
-import me.miki.shindo.management.event.impl.EventRenderPlayerStats;
-import me.miki.shindo.management.event.impl.EventRenderPumpkinOverlay;
-import me.miki.shindo.management.event.impl.EventRenderScoreboard;
-import me.miki.shindo.management.event.impl.EventRenderSelectedItem;
-import me.miki.shindo.management.event.impl.EventRenderTooltip;
-import me.miki.shindo.management.event.impl.EventRenderVisualizer;
+import me.miki.shindo.management.event.impl.*;
 import me.miki.shindo.management.mods.impl.AnimationsMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiIngame;
+import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
@@ -37,27 +19,26 @@ import net.minecraft.potion.Potion;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.util.ResourceLocation;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.At.Shift;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GuiIngame.class)
 public abstract class MixinGuiIngame implements IMixinGuiIngame {
 
-	@Shadow
-	public abstract boolean showCrosshair();
-	
-	@Final
-	@Shadow
-	private Minecraft mc;
-	
-	@Shadow
-    private int updateCounter;
-	
-	@Shadow
-    private int remainingHighlightTicks;
-	
-	@Shadow
-    private ItemStack highlightingItemStack;
-	
-    public int prevAmount;
+	@Shadow protected abstract boolean showCrosshair();
+	@Shadow @Final private Minecraft mc;
+	@Shadow private int updateCounter;
+	@Shadow private int remainingHighlightTicks;
+	@Shadow private ItemStack highlightingItemStack;
+	@Shadow @Final private GuiPlayerTabOverlay overlayPlayerList;
+    @Unique public int client$prevAmount;
     
 	@Redirect(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiIngame;showCrosshair()Z"))
 	public boolean preRenderCrosshair(GuiIngame guiIngame) {
@@ -80,7 +61,16 @@ public abstract class MixinGuiIngame implements IMixinGuiIngame {
         GlStateManager.enableDepth();
         GlStateManager.enableAlpha();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
+
 	}
+
+	// ----- DEBUG ONLY ----- //
+	//@Inject(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;color(FFFF)V", shift = Shift.BEFORE, ordinal = 2), locals = LocalCapture.CAPTURE_FAILSOFT)
+	//public void tabOverlayRender(float partialTicks, CallbackInfo ci, ScaledResolution scaledresolution, int i, int j, ItemStack itemstack, int k1, Scoreboard scoreboard, ScoreObjective scoreobjective, ScorePlayerTeam scoreplayerteam, ScoreObjective scoreobjective1) {
+	//	this.overlayPlayerList.updatePlayerList(true);
+	//	this.overlayPlayerList.renderPlayerlist(i, scoreboard, scoreobjective1);
+	//}
 
 	@Inject(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;color(FFFF)V", shift = At.Shift.BEFORE, ordinal = 2))
     public void postRenderGameOverlay(float partialTicks, CallbackInfo ci) {
@@ -103,7 +93,7 @@ public abstract class MixinGuiIngame implements IMixinGuiIngame {
     	AnimationsMod mod = AnimationsMod.getInstance();
     	
     	if(mod.isToggled() && mod.getHealthSetting().isToggled()) {
-        	if(textureX != prevAmount + 54) {
+        	if(textureX != client$prevAmount + 54) {
             	gui.drawTexturedModalRect(x, y, textureX, textureY, width, height);
         	}
     	}else {
@@ -133,7 +123,7 @@ public abstract class MixinGuiIngame implements IMixinGuiIngame {
                 i += 72;
             }
             
-            prevAmount = i;
+            client$prevAmount = i;
         }
     }
     

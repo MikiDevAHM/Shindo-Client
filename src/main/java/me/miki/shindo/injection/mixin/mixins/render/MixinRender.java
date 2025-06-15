@@ -2,6 +2,7 @@ package me.miki.shindo.injection.mixin.mixins.render;
 
 import me.miki.shindo.Shindo;
 import me.miki.shindo.ShindoAPI;
+import me.miki.shindo.management.nanovg.NanoVGManager;
 import me.miki.shindo.utils.render.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -49,65 +50,71 @@ public abstract class MixinRender <T extends Entity>  {
             GlStateManager.scale(-f1, -f1, f1);
             GlStateManager.disableLighting();
             GlStateManager.depthMask(false);
-            GlStateManager.disableDepth();
             GlStateManager.enableBlend();
+
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
             Tessellator tessellator = Tessellator.getInstance();
             WorldRenderer worldrenderer = tessellator.getWorldRenderer();
             int i = 0;
 
             int j = fontrenderer.getStringWidth(str) / 2;
-
-
-            if (entityIn instanceof AbstractClientPlayer) {
-                String uuid = Shindo.getInstance().getShindoAPI().isUUIDBad() ? ((AbstractClientPlayer) entityIn).getName() : ((AbstractClientPlayer) entityIn).getGameProfile().getId().toString();
-                if (Shindo.getInstance().getShindoAPI().isOnline(uuid)) {
-                    GlStateManager.disableTexture2D();
-                    worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-                    worldrenderer.pos((double)(-j - 11), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-                    worldrenderer.pos((double)(-j - 11), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-                    worldrenderer.pos((double)(j + 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-                    worldrenderer.pos((double)(j + 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-                    tessellator.draw();
-                    GlStateManager.enableTexture2D();
-
-                    String texture = "shindo/logo.png";
-                    ShindoAPI api = Shindo.getInstance().getShindoAPI();
-
-                    if (api.isStaff(uuid)) {
-                        texture = "shindo/logo-staff.png";
-                    } else if (api.isDiamond(uuid)) {
-                        texture = "shindo/logo-diamond.png";
-                    } else if (api.isGold(uuid)) {
-                        texture = "shindo/logo-gold.png";
-                    }
-
-                    Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation(texture));
-                    RenderUtils.drawModalRectWithCustomSizedTexture(-fontrenderer.getStringWidth(entityIn.getDisplayName().getFormattedText()) / 2F - 10, -1,  9, 9, 9, 9, 9, 9);
-                } else {
-
-
-                    GlStateManager.disableTexture2D();
-                    worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-                    worldrenderer.pos((double)(-j - 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-                    worldrenderer.pos((double)(-j - 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-                    worldrenderer.pos((double)(j + 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-                    worldrenderer.pos((double)(j + 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-                    tessellator.draw();
-                    GlStateManager.enableTexture2D();
-
-
-                }
-            }
-
             if (str.equals("deadmau5")) {
                 i = -10;
             }
 
-            fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2, i, 553648127);
-            GlStateManager.enableDepth();
-            GlStateManager.depthMask(true);
+            if (entityIn instanceof AbstractClientPlayer) {
+                AbstractClientPlayer player = (AbstractClientPlayer) entityIn;
+                String uuid = player.getGameProfile().getId().toString();
 
+                Shindo instance = Shindo.getInstance();
+                ShindoAPI api = instance.getShindoAPI();
+                NanoVGManager nvg = instance.getNanoVGManager();
+                if (api.isOnline(uuid)) {
+                    // fundo estendido
+                    GlStateManager.disableTexture2D();
+                    worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+                    worldrenderer.pos(-j - 11, -1 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    worldrenderer.pos(-j - 11, 8 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    worldrenderer.pos(j + 1, 8 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    worldrenderer.pos(j + 1, -1 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    tessellator.draw();
+                    GlStateManager.enableTexture2D();
+                    GlStateManager.depthMask(true);
+
+                    String texture;
+                    if (api.isStaff(uuid)) texture = "logo_red";
+                    else if (api.isDiamond(uuid)) texture = "logo_blue";
+                    else if (api.isGold(uuid)) texture = "logo_yellow";
+                    else texture = "logo";
+
+                    Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation("shindo/logos/" + texture + ".png"));
+                    RenderUtils.drawModalRectWithCustomSizedTexture(-fontrenderer.getStringWidth(str) / 2F - 10, -1, 0, 0, 9, 9, 9, 9);
+                } else {
+                    // fundo sem logo
+                    GlStateManager.disableTexture2D();
+                    worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+                    worldrenderer.pos(-j - 1, -1 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    worldrenderer.pos(-j - 1, 8 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    worldrenderer.pos(j + 1, 8 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    worldrenderer.pos(j + 1, -1 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    tessellator.draw();
+                    GlStateManager.enableTexture2D();
+                    GlStateManager.depthMask(true);
+                }
+            } else {
+
+                GlStateManager.disableTexture2D();
+                worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+                worldrenderer.pos(-j - 1, -1 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                worldrenderer.pos(-j - 1, 8 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                worldrenderer.pos(j + 1, 8 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                worldrenderer.pos(j + 1, -1 + i, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                tessellator.draw();
+                GlStateManager.enableTexture2D();
+                GlStateManager.depthMask(true);
+            }
+
+            fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2, i, 553648127);
             fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2, i, -1);
             GlStateManager.enableLighting();
             GlStateManager.disableBlend();

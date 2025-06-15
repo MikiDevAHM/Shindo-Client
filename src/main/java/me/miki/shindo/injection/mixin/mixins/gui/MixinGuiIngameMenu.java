@@ -1,6 +1,6 @@
 package me.miki.shindo.injection.mixin.mixins.gui;
 
-import me.miki.shindo.gui.GuiGameMenu;
+import me.miki.shindo.gui.minecraft.ingame.GuiShindoGameMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiIngameMenu;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,7 +14,7 @@ public abstract class MixinGuiIngameMenu {
 
     @Inject(method = "initGui", at = @At("HEAD"), cancellable = true)
     public void preInitGui(CallbackInfo ci) {
-        Minecraft.getMinecraft().displayGuiScreen(new GuiGameMenu());
+        Minecraft.getMinecraft().displayGuiScreen(new GuiShindoGameMenu());
         ci.cancel();
     }
 

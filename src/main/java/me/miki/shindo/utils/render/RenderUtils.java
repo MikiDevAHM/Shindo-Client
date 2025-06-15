@@ -1,9 +1,5 @@
 package me.miki.shindo.utils.render;
 
-import java.awt.Color;
-
-import org.lwjgl.opengl.GL11;
-
 import me.miki.shindo.utils.ColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -12,6 +8,11 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
+import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
+
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 
 public class RenderUtils {
 	
@@ -21,7 +22,7 @@ public class RenderUtils {
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.8F);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glLineWidth(0.5F);
@@ -31,7 +32,7 @@ public class RenderUtils {
         GL11.glEnd();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glDisable(GL11.GL_LINE_SMOOTH);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL_TEXTURE_2D);
         GL11.glPopMatrix();
     }
 
@@ -44,7 +45,7 @@ public class RenderUtils {
 
         GL11.glColor4f(red, green, blue, alpha);
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
         GL11.glPushMatrix();
@@ -57,7 +58,7 @@ public class RenderUtils {
         
         GL11.glEnd();
         GL11.glPopMatrix();
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_LINE_SMOOTH);
         GL11.glColor4f(1F, 1F, 1F, 1F);
     }
@@ -103,7 +104,9 @@ public class RenderUtils {
         worldrenderer.pos((double)x, (double)y, 0.0D).tex((double)(u * f), (double)(v * f1)).endVertex();
         tessellator.draw();
     }
-    
+
+
+
 	public static void drawRect(float x, float y, float width, float height, Color color) {
 		
         GL11.glEnable(3042);
@@ -197,4 +200,5 @@ public class RenderUtils {
         worldrenderer.pos((double)x, (double)y, 0.0D).tex((double)(u * f), (double)(v * f1)).endVertex();
         tessellator.draw();
     }
+
 }

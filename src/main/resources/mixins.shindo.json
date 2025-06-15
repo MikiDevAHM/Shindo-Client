@@ -75,7 +75,6 @@
     "optifine.MixinLightMap",
     "render.MixinAmbientOcclusionFace",
     "render.MixinBlockModelRenderer",
-    "render.MixinBlockModelRenderer_AmbientOcclusionFace",
     "render.MixinEntityRenderer",
     "render.MixinInventoryEffectRenderer",
     "render.MixinItemRenderer",

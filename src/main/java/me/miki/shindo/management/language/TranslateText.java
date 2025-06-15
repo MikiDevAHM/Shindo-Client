@@ -147,6 +147,9 @@ public enum TranslateText {
 	UI_SOUNDS("text.ui.sounds"), UI_SOUNDS_DESCRIPTION("text.ui.sounds.description") ,EXIT_WORLD_SINGLEPLAYER("text.gamemenu.exitworldsingleplayer"), OPEN_MOD_MENU("text.gamemenu.openshindomenu"), EDIT_HUD("text.gamemenu.edithud"), GRADIENT_SIMPLE("text.gradientsimple"), GENERAL("text.general"),  GENERAL_DESCRIPTION("text.general.description"),
 	UI_BLUR("text.ui.blur"), MC_FONT("text.hud.mcfont"), CHANGELOG("text.changelog"), NEWS("text.news"), SEARCH("text.search"),
 
+	// SHINDO MODS
+	PING_NUMBER("text.ping_number"),
+
 	// SHINDO
 	SHINDO("text.shindo"),
 	API("text.api"),

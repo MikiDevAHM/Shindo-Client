@@ -10,13 +10,28 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ApiChecker {
 
+    private final Set<String> failedLookups = ConcurrentHashMap.newKeySet();
+
     private static final long CACHE_EXPIRATION_MS = 30_000; // 30 segundos
 
     private final Map<String, CacheEntry> userCache = new ConcurrentHashMap<>();
+
+    private static final Set<String> globalFailedLookups = ConcurrentHashMap.newKeySet();
+
+    public static boolean globalFailedLookup(String uuid) {
+        return globalFailedLookups.contains(uuid);
+    }
+
+    private void markFailed(String uuid) {
+        failedLookups.add(uuid);
+        globalFailedLookups.add(uuid);
+    }
+
 
     private static class CacheEntry {
         JsonObject data;
@@ -112,4 +127,9 @@ public class ApiChecker {
     public void invalidateUser(String uuid) {
         userCache.remove(uuid);
     }
+
+    public boolean hasFailedLookup(String uuid) {
+        return failedLookups.contains(uuid);
+    }
 }
+

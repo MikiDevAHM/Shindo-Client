@@ -4,15 +4,28 @@ import me.miki.shindo.api.ClientApiManager;
 import me.miki.shindo.api.utils.SSLBypass;
 import net.minecraft.client.Minecraft;
 
-import java.util.Objects;
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 public class ShindoAPI {
 
-    String uuid = Objects.equals(Minecraft.getMinecraft().getSession().getUsername(), Minecraft.getMinecraft().getSession().getPlayerID()) && Minecraft.getMinecraft().getSession().getProfile().getId() == null ? Minecraft.getMinecraft().getSession().getUsername() : Minecraft.getMinecraft().getSession().getProfile().getId().toString();
     String username = Minecraft.getMinecraft().getSession().getUsername();
-    String accountType = uuid.equals(username) ? "CRACKED" : "PREMIUM";
+    String uuid;
+    String accountType;
+
+    {
+        UUID profileId = Minecraft.getMinecraft().getSession().getProfile().getId();
+        if (profileId == null) {
+            uuid = UUID.nameUUIDFromBytes(("OfflinePlayer:" + username).getBytes(StandardCharsets.UTF_8)).toString();
+            accountType = "CRACKED";
+        } else {
+            uuid = profileId.toString();
+            accountType = "PREMIUM";
+        }
+    }
 
     private ClientApiManager apiManager = new ClientApiManager(uuid, username, accountType);
+
     public void start() {
         SSLBypass.disableCertificateValidation();
         apiManager.notifyEvent("join");
@@ -64,10 +77,6 @@ public class ShindoAPI {
         //ShindoLogger.info("[API] UUID: " + uuid);
         //ShindoLogger.info("[API] getAccountType: " + apiManager.getAccountType(uuid));
         return apiManager.getAccountType(uuid);
-    }
-
-    public boolean isUUIDBad() {
-        return Objects.equals(uuid, username);
     }
 
 }

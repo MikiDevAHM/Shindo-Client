@@ -22,6 +22,10 @@ public class ApiSender {
     }
 
     public void sendEvent(JsonObject json) {
+        if (json.has("uuid") && ApiChecker.globalFailedLookup(json.get("uuid").getAsString())) {
+            ShindoLogger.warn("[API] Ignorando envio para UUID conhecido como inválido: " + json.get("uuid").getAsString());
+            return;
+        }
         if (json == null) {
             ShindoLogger.warn("[API] Tentativa de envio com JSON nulo.");
             return;

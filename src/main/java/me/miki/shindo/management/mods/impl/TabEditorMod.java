@@ -11,6 +11,7 @@ public class TabEditorMod extends Mod {
 	
 	private BooleanSetting backgroundSetting = new BooleanSetting(TranslateText.BACKGROUND, this, true);
     private BooleanSetting headSetting = new BooleanSetting(TranslateText.HEAD, this, true);
+	private BooleanSetting pingSetting = new BooleanSetting(TranslateText.PING_NUMBER, this, true);
     
 	public TabEditorMod() {
 		super(TranslateText.TAB_EDITOR, TranslateText.TAB_EDITOR_DESCRIPTION, ModCategory.RENDER);
@@ -28,5 +29,9 @@ public class TabEditorMod extends Mod {
 
 	public BooleanSetting getHeadSetting() {
 		return headSetting;
+	}
+
+	public BooleanSetting getPingSetting() {
+		return pingSetting;
 	}
 }
