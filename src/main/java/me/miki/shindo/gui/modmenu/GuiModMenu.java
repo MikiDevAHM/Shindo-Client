@@ -190,6 +190,13 @@ public class GuiModMenu extends GuiScreen {
 					nvg.drawRoundedRect(folderButtonX, folderButtonY, 18,18, 6, palette.getBackgroundColor(ColorType.DARK));
 					nvg.drawCenteredText(LegacyIcon.FOLDER,folderButtonX + 8.5F, folderButtonY + 9 - (nvg.getTextHeight(LegacyIcon.FOLDER, 9, Fonts.LEGACYICON)/2), palette.getFontColor(ColorType.NORMAL), 9, Fonts.LEGACYICON);
 				}
+
+				if(Objects.equals(currentCategory.getNameKey(), TranslateText.MUSIC.getKey())){
+					float folderButtonX = x + width - 198;
+					float folderButtonY = y + 6.5F;
+					nvg.drawRoundedRect(folderButtonX, folderButtonY, 18,18, 6, palette.getBackgroundColor(ColorType.DARK));
+					nvg.drawCenteredText(LegacyIcon.FOLDER,folderButtonX + 8.5F, folderButtonY + 9 - (nvg.getTextHeight(LegacyIcon.FOLDER, 9, Fonts.LEGACYICON)/2), palette.getFontColor(ColorType.NORMAL), 9, Fonts.LEGACYICON);
+				}
 				nvg.scissor(x + 32, y + yOff, width - 32, height - yOff);
 				nvg.translate(0, 50 - (c.getCategoryAnimation().getValue() * 50));
 				
@@ -244,6 +251,14 @@ public class GuiModMenu extends GuiScreen {
 			float folderButtonY = y + 6.5F;
 			if (MouseUtils.isInside(mouseX, mouseY, folderButtonX, folderButtonY, 18, 18)){
 				FileUtils.openFolderAtPath(Shindo.getInstance().getFileManager().getCustomCapeDir());
+			}
+		}
+
+		if(Objects.equals(currentCategory.getNameKey(), TranslateText.MUSIC.getKey())) {
+			float folderButtonX = x + width - 198;
+			float folderButtonY = y + 6.5F;
+			if (MouseUtils.isInside(mouseX, mouseY, folderButtonX, folderButtonY, 18, 18)){
+				FileUtils.openFolderAtPath(Shindo.getInstance().getFileManager().getMusicDir());
 			}
 		}
 		
