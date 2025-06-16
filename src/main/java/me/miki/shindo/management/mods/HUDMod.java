@@ -1,8 +1,5 @@
 package me.miki.shindo.management.mods;
 
-import java.awt.Color;
-import java.io.File;
-
 import eu.shoroa.contrib.render.ShBlur;
 import me.miki.shindo.Shindo;
 import me.miki.shindo.gui.GuiEditHUD;
@@ -17,6 +14,9 @@ import me.miki.shindo.management.nanovg.font.Font;
 import me.miki.shindo.management.nanovg.font.Fonts;
 import me.miki.shindo.utils.ColorUtils;
 import net.minecraft.util.ResourceLocation;
+
+import java.awt.*;
+import java.io.File;
 
 public class HUDMod extends Mod {
 
@@ -87,6 +87,13 @@ public class HUDMod extends Mod {
 		NanoVGManager nvg = instance.getNanoVGManager();
 
 		nvg.drawPlayerHead(location, x + (addX * scale), y + (addY * scale), width * scale, height * scale, radius * scale);
+	}
+
+	public void drawImage(ResourceLocation location, float addX, float addY, float width, float height) {
+		Shindo instance = Shindo.getInstance();
+		NanoVGManager nvg = instance.getNanoVGManager();
+
+		nvg.drawImage(location, addX, addY, width, height);
 	}
 
 	public void drawRoundedImage(int texture, float addX, float addY, float width, float height, float radius) {

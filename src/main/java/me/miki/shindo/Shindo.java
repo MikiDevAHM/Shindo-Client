@@ -77,8 +77,8 @@ public class Shindo {
 	
 	public Shindo() {
 		name = "Shindo";
-		version = "5.1";
-		verIdentifier = 5101;
+		version = "5.1.02";
+		verIdentifier = 5102;
 	}
 	
 	public void start() {

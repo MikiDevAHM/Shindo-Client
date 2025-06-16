@@ -1,36 +1,24 @@
 package me.miki.shindo.management.mods.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
+import me.miki.shindo.Shindo;
 import me.miki.shindo.management.event.EventTarget;
 import me.miki.shindo.management.event.impl.EventRender2D;
 import me.miki.shindo.management.language.TranslateText;
-import me.miki.shindo.management.mods.HUDMod;
-import me.miki.shindo.management.mods.settings.impl.BooleanSetting;
-import me.miki.shindo.management.mods.settings.impl.ComboSetting;
-import me.miki.shindo.management.mods.settings.impl.combo.Option;
-import me.miki.shindo.utils.GlUtils;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.RenderItem;
+import me.miki.shindo.management.mods.SimpleHUDMod;
+import me.miki.shindo.management.nanovg.NanoVGManager;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
-public class ArmorStatusMod extends HUDMod {
+public class ArmorStatusMod extends SimpleHUDMod {
 
-	private ComboSetting modeSetting = new ComboSetting(TranslateText.MODE, this, TranslateText.HORIZONTAL, new ArrayList<Option>(Arrays.asList(
-			new Option(TranslateText.VERTICAL), new Option(TranslateText.HORIZONTAL))));
-	private BooleanSetting valueSetting = new BooleanSetting(TranslateText.VALUE, this, false);
-	
 	public ArmorStatusMod() {
 		super(TranslateText.ARMOR_STATUS, TranslateText.ARMOR_STATUS_DESCRIPTION);
 	}
 
 	@EventTarget
 	public void onRender2D(EventRender2D event) {
-		
-		boolean vertical = modeSetting.getOption().getTranslate().equals(TranslateText.VERTICAL);
+
 		
 		ItemStack[] fakeStack = new ItemStack[4];
 		
@@ -38,49 +26,27 @@ public class ArmorStatusMod extends HUDMod {
 		fakeStack[2] = new ItemStack(Items.diamond_chestplate);
 		fakeStack[1] = new ItemStack(Items.diamond_leggings);
 		fakeStack[0] = new ItemStack(Items.diamond_boots);
-		
-		GlUtils.startScale(this.getX(), this.getY(), this.getScale());
-		this.renderItems(this.isEditing() ? fakeStack : mc.thePlayer.inventory.armorInventory, vertical);
-		GlUtils.stopScale();
-		
-		this.setWidth(vertical ? 16 : 16 * 4);
-		this.setHeight(vertical ? 16 * 4 : 16);
+
+
+		NanoVGManager nvg = Shindo.getInstance().getNanoVGManager();
+		nvg.setupAndDraw(() -> this.drawNanoVG(nvg, this.isEditing() ? fakeStack : mc.thePlayer.inventory.armorInventory));
 	}
-	
-	private void renderItems(ItemStack[] items, boolean vertical) {
-		
+
+	private void drawNanoVG(NanoVGManager nvg, ItemStack[] items) {
+
+		this.drawBackground(48, 64);
+
 		for(int i = 0; i < 4; i++) {
-			
 			ItemStack item = items[Math.abs(3 - i)];
-			int addX = vertical ? 0 : 16 * i;
-			int addY = vertical ? 16 * i : 0;
-			
-			if(item != null) {
-				this.drawItemStack(item, this.getX() + addX, this.getY() + addY);
+			int addY = 16 * i;
+			if (item != null) {
+				drawImage(new ResourceLocation("shindo/armor/" + item.getItem().getUnlocalizedName().replace("item.", "") + ".png"), getX() + 30, getY() + addY, 16, 16);
+				drawText(String.valueOf(item.getMaxDamage() - item.getItemDamage()), 5,  addY + 4, 9F, getHudFont(1));
 			}
 		}
+
+		this.setWidth(48);
+		this.setHeight(16 * 4);
 	}
-	
-	private void drawItemStack(ItemStack stack, int x, int y) {
-		
-		GlStateManager.pushMatrix();
-		RenderHelper.enableGUIStandardItemLighting();
-		RenderItem itemRender = mc.getRenderItem();
-		
-		GlStateManager.translate(0, 0, 32);
-		float prevZ = itemRender.zLevel;
-		
-		itemRender.zLevel = 0.0F;
-		
-		itemRender.renderItemAndEffectIntoGUI(stack, x, y);
-		
-		if(valueSetting.isToggled()) {
-			itemRender.renderItemOverlayIntoGUI(fr, stack, x, y, "");
-		}
-		
-		RenderHelper.disableStandardItemLighting();
-		GlStateManager.disableLighting();
-		GlStateManager.popMatrix();
-		itemRender.zLevel = prevZ;
-	}
+
 }
